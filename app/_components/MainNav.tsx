@@ -16,6 +16,8 @@ export default function MainNav({active} : MainNavProps) {
           itemName="Directory"
           active={active === "Directory"}
         />
+        <NavItem linkRedirect="/posts" itemName="Posts" active={active === "Posts"} />
+        <NavItem linkRedirect="/about" itemName="About" active={active === "About"} />
       </ul>
     </nav>
   );
