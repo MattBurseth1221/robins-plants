@@ -8,9 +8,22 @@ export default function Home() {
       <div className="p-10">
         <PageTitle title="Robin's Garden" />
         <MainNav active={"Home"} />
+
+        
       </div>
       
-      
+      <div className="w-[50%] h-24 bg-lg ">
+
+      </div>
+      <div className="w-[50%] h-24 bg-dg ">
+
+      </div>
+      <div className="w-[50%] h-24 bg-lb ">
+
+      </div>
+      <div className="w-[50%] h-24 bg-db">
+
+      </div>
     </main>
   );
 }
