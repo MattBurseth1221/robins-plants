@@ -12,7 +12,9 @@ type ResponseData = {
 
 const pool = new Pool();
 
-export default async function GET(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
-    console.log(await pool.query('SELECT NOW()'));
-    res.status(200).json({message: 'Hello!'});
+export async function GET() {
+    const queryResult = (await pool.query('SELECT NOW()')).rows[0].now;
+
+    console.log((await pool.query('SELECT NOW()')).rows[0].now);
+    return Response.json({message: 'Hello!', now: queryResult});
 }
