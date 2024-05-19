@@ -1,8 +1,14 @@
+"use client"
+
 import Image from "next/image";
 import MainNav from "./_components/MainNav"
 import PageTitle from "./_components/PageTitle";
 
 export default function Home() {
+  async function callAPI() {
+    await fetch('/api/posts');
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center">
       <div className="p-10">
@@ -12,18 +18,24 @@ export default function Home() {
         
       </div>
       
-      <div className="w-[50%] h-24 bg-lg ">
+      <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg">
 
       </div>
-      <div className="w-[50%] h-24 bg-dg ">
+      <div className="w-[50%] h-32 bg-gradient-to-b from-dg to-lb">
 
       </div>
-      <div className="w-[50%] h-24 bg-lb ">
+      <div className="w-[50%] h-32 bg-gradient-to-b from-lb to-db">
 
       </div>
-      <div className="w-[50%] h-24 bg-db">
+      <div className="w-[50%] h-32 bg-db">
 
       </div>
+
+      <button onClick={() => {
+        fetch('/api/posts');
+      }} >
+        Click me
+      </button>
     </main>
   );
 }
