@@ -1,20 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import pg from 'pg';
-const { Pool } = pg;
+import { pool } from "../../_lib/db";
 
-// const DB_HOST = process.env.DB_HOST;
-// const DB_USER = process.env.DB_USER;
-// const DB_PASSWORD = process.env.DB_PASSWORD;
+export async function GET(request: Request) {
+    const limit = new URL(request.url).searchParams.get('limit');
 
-type ResponseData = {
-    message: string
-}
+    const postQuery = `SELECT * FROM posts LIMIT ${limit}`;
+    const queryResult = (await pool.query(postQuery)).rows[0];
 
-const pool = new Pool();
-
-export async function GET() {
-    const queryResult = (await pool.query('SELECT NOW()')).rows[0].now;
-
-    console.log((await pool.query('SELECT NOW()')).rows[0].now);
-    return Response.json({message: 'Hello!', now: queryResult});
+    //console.log((await pool.query('SELECT NOW()')).rows[0].now);
+    return Response.json({message: 'Hello!', result: queryResult});
 }
