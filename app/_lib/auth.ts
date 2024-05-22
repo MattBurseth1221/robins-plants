@@ -1,4 +1,4 @@
-import { Lucia } from "lucia";
+import { Lucia, TimeSpan } from "lucia";
 import { NodePostgresAdapter } from '@lucia-auth/adapter-postgresql';
 import { pool } from "../_lib/db";
 import { cookies } from "next/headers";
@@ -16,6 +16,7 @@ const adapter = new NodePostgresAdapter(pool, {
 })
 
 export const lucia = new Lucia(adapter, {
+	// sessionExpiresIn: new TimeSpan(20, 's'),
 	sessionCookie: {
 		attributes: {
 			secure: process.env.NODE_ENV === "production"

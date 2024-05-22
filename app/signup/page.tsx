@@ -73,7 +73,7 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
   }
 
   try {
-    pool.query(query);
+    await pool.query(query);
 
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
