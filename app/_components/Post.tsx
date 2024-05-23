@@ -15,9 +15,13 @@ export default function Post({ postInfo }: any) {
   const [post, setPost] = useState<PostType>(postInfo);
 
   return (
-    <div className="border-black border-2">
-      <Image src="" alt="Flower?"/>
-      {post.title}
+    <div className="border-black border-2 bg-slate-100 w-[75%] mb-8 rounded-md text-center">
+      <Image src={""} width="600" height="800" alt="Flower?"/>
+
+      <h1>
+        {post.title}
+      </h1>
+      
     </div>
   );
 }

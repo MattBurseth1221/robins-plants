@@ -35,7 +35,7 @@ export default async function Page() {
     <main className="flex min-h-screen">
       <MainNav active={"Home"} />
 
-      <div className="p-10 flex flex-col text-center w-[60%] m-auto">
+      <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
         <PageTitle title="Robin's Garden" />
 
         <PostContainer />
