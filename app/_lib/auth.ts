@@ -7,9 +7,6 @@ import { cache } from "react";
 import type { Session, User } from "lucia";
 import type { DatabaseUser } from "../_lib/db";
 
-// import { webcrypto } from "crypto";
-// globalThis.crypto = webcrypto as Crypto;
-
 const adapter = new NodePostgresAdapter(pool, {
     user: "auth_user",
     session: "user_session"
@@ -28,8 +25,6 @@ export const lucia = new Lucia(adapter, {
 		};
 	}
 });
-
-
 
 export const validateRequest = cache(
 	async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {

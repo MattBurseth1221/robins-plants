@@ -1,34 +1,27 @@
+'use client';
+
 import MainNav from "./_components/MainNav";
 import PageTitle from "./_components/PageTitle";
 import ProfileBar from "@/app/_components/ProfileBar"
-import { lucia, validateRequest } from "./_lib/auth";
 import { redirect } from "next/navigation";
 import PostContainer from "./_components/PostContainer";
-import { cookies } from "next/headers";
-import { ActionResult } from "./_components/Form";
-//import { ContextType, useSession } from "./_lib/hooks/SessionContext";
+import { useSession } from "./_lib/hooks/SessionContext";
 
-export default async function Page() {
-  const { user, session } = {user: {name: 'matt'}, session: {id: '1'}};
+export default function Page() {
+  const { user, session } = useSession();
 
   if (!user) {
     redirect("/login");
   }
 
-  async function logout(): Promise<ActionResult> {
-    "use server";
-    
-    if (!session) {
-      return {
-        error: "Unauthorized"
-      };
+  async function logout() {
+    const result = await fetch(process.env.URL + "/api/auth");
+
+    try {
+      redirect(result.url);
+    } catch(e) {
+      console.log(e);
     }
-  
-    await lucia.invalidateSession(session.id);
-  
-    const sessionCookie = lucia.createBlankSessionCookie();
-    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    return redirect("/login");
   }
 
   return (
