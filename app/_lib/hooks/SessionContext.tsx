@@ -3,7 +3,7 @@
 import { createContext, useContext } from "react";
 import { validateRequest } from "@/app/_lib/auth";
 
-type ContextType = Awaited<ReturnType<typeof validateRequest>>;
+export type ContextType = Awaited<ReturnType<typeof validateRequest>>;
 
 const SessionContext = createContext<ContextType>({
   session: null,

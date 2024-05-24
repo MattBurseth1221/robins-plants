@@ -1,6 +1,3 @@
-"use server";
-
-import Image from "next/image";
 import MainNav from "./_components/MainNav";
 import PageTitle from "./_components/PageTitle";
 import ProfileBar from "@/app/_components/ProfileBar"
@@ -9,12 +6,12 @@ import { redirect } from "next/navigation";
 import PostContainer from "./_components/PostContainer";
 import { cookies } from "next/headers";
 import { ActionResult } from "./_components/Form";
-import { useSession } from "./_lib/hooks/SessionContext";
+//import { ContextType, useSession } from "./_lib/hooks/SessionContext";
 
 export default async function Page() {
-  useSession();
+  const { user, session } = {user: {name: 'matt'}, session: {id: '1'}};
 
-  if (false) {
+  if (!user) {
     redirect("/login");
   }
 
