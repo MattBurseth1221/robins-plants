@@ -1,6 +1,5 @@
 import { lucia, validateRequest } from "@/app/_lib/auth";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function GET(request: Request, response: Response) {
   const { user, session } = await validateRequest();

@@ -1,29 +1,10 @@
-'use client';
-
 import MainNav from "./_components/MainNav";
 import PageTitle from "./_components/PageTitle";
 import ProfileBar from "@/app/_components/ProfileBar"
-import { redirect } from "next/navigation";
 import PostContainer from "./_components/PostContainer";
-import { useSession } from "./_lib/hooks/SessionContext";
+import { Suspense } from "react";
 
 export default function Page() {
-  const { user, session } = useSession();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  async function logout() {
-    const result = await fetch(process.env.URL + "/api/auth");
-
-    try {
-      redirect(result.url);
-    } catch(e) {
-      console.log(e);
-    }
-  }
-
   return (
     <main className="flex min-h-screen">
       <MainNav active={"Home"} />
@@ -31,10 +12,12 @@ export default function Page() {
       <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
         <PageTitle title="Robin's Garden" />
 
-        <PostContainer />
+        <Suspense fallback={<div>Loading posts...</div>}>
+          <PostContainer />
+        </Suspense>
       </div>
 
-      <ProfileBar user={ user } logoutFunc={ logout }/>
+      <ProfileBar />
       
       {/* <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg"></div>
       <div className="w-[50%] h-32 bg-gradient-to-b from-dg to-lb"></div>
