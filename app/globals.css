@@ -30,6 +30,19 @@ body {
     rgb(var(--background-start-rgb));
 } */
 
+Form label {
+  margin-right: 1rem;
+  width: 100%;
+}
+
+Form input {
+  border: 1px solid gray;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  padding: 4px;
+  width: 100%;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

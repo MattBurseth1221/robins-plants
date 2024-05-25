@@ -3,23 +3,27 @@
 import { useFormState } from "react-dom";
 
 export function Form({
-	children,
-	action
+  children,
+  action,
 }: {
-	children: React.ReactNode;
-	action: (prevState: any, formData: FormData) => Promise<ActionResult>;
+  children: React.ReactNode;
+  action: (prevState: any, formData: FormData) => Promise<ActionResult>;
 }) {
-	const [state, formAction] = useFormState(action, {
-		error: null
-	});
-	return (
-		<form action={formAction}>
-			{children}
-			<p>{state.error}</p>
-		</form>
-	);
+  const [state, formAction] = useFormState(action, {
+    error: null,
+  });
+  return (
+    <form className="mb-4 mt-8" action={formAction}>
+      {children}
+      {state.error && (
+        <p className="bg-red-500 opacity-30 p-2 rounded-md text-black text-opacity-100 text-center">
+          {state.error}
+        </p>
+      )}
+    </form>
+  );
 }
 
 export interface ActionResult {
-	error: string | null;
+  error: string | null;
 }
