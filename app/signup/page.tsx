@@ -16,27 +16,29 @@ export default async function Page() {
     return redirect("/");
   }
   return (
-    <>
-      <h1>Create an account</h1>
-      <Form action={signup}>
-        <label htmlFor="username">Username</label>
-        <input name="username" id="username" />
-        <br />
-        <label htmlFor="password">Password</label>
-        <input type="password" name="password" id="password" />
-        <br />
-        <button>Continue</button>
-      </Form>
-      <Link href="/login">Sign in</Link>
-    </>
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
+      <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
+        <h1>Create an account</h1>
+        <Form action={signup}>
+          <label htmlFor="username">Username</label>
+          <input name="username" id="username" />
+          <br />
+          <label htmlFor="password">Password</label>
+          <input type="password" name="password" id="password" />
+          <br />
+          <button>Continue</button>
+        </Form>
+        <Link href="/login">Sign in</Link>
+      </div>
+    </main>
   );
 }
 
 function sha256(data: string): string {
-    const hash = crypto.createHash("sha256");
-    hash.update(data);
-    return hash.digest("hex");
-  }
+  const hash = crypto.createHash("sha256");
+  hash.update(data);
+  return hash.digest("hex");
+}
 
 async function signup(_: any, formData: FormData): Promise<ActionResult> {
   "use server";
@@ -68,9 +70,9 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
   const userId = generateId(15);
 
   const query = {
-    text: 'INSERT INTO auth_user(id, username, password_hash) VALUES($1, $2, $3)',
+    text: "INSERT INTO auth_user(id, username, password_hash) VALUES($1, $2, $3)",
     values: [userId, username, hashedPassword],
-  }
+  };
 
   try {
     await pool.query(query);

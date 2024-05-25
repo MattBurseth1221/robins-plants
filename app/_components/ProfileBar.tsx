@@ -27,7 +27,7 @@ export default function ProfileBar() {
       <ul className="flex flex-col justify-between items-center">
         {user && <p>{ user.username }</p>}
         {user ?
-            <button className="bg-slate-400 p-1 w-auto rounded-xl" onClick={() => {
+            <button className="bg-green-800 text-white p-2 px-4 w-auto rounded-xl hover:bg-green-700 hover:text-black transition" onClick={() => {
                 logout();
             }}>Log out</button>
         :

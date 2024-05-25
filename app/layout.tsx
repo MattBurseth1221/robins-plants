@@ -18,7 +18,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-gray max-h-screen">
+      <body className="max-h-screen bg-gradient-to-b from-lg via-dg to-lb">
         <SessionProvider value={session}>
           {children}
         </SessionProvider>
