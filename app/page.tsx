@@ -1,32 +1,37 @@
 import MainNav from "./_components/MainNav";
 import PageTitle from "./_components/PageTitle";
-import ProfileBar from "@/app/_components/ProfileBar"
+import ProfileBar from "@/app/_components/ProfileBar";
 import PostContainer from "./_components/PostContainer";
 import { Suspense } from "react";
+import Head from "next/head";
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen">
-      <MainNav active={"Home"} />
-
-      <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-        <PageTitle title="Robin's Garden" />
-
-        <Suspense fallback={<div>Loading posts...</div>}>
-          <PostContainer />
-        </Suspense>
-      </div>
-
-      <ProfileBar />
+    <>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       
-      {/* <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg"></div>
+      <main className="flex min-h-screen">
+        <MainNav active={"Home"} />
+
+        <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
+          <PageTitle title="Robin's Garden" />
+
+          <Suspense fallback={<div>Loading posts...</div>}>
+            <PostContainer />
+          </Suspense>
+        </div>
+
+        <ProfileBar />
+
+        {/* <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg"></div>
       <div className="w-[50%] h-32 bg-gradient-to-b from-dg to-lb"></div>
       <div className="w-[50%] h-32 bg-gradient-to-b from-lb to-db"></div>
       <div className="w-[50%] h-32 bg-db"></div> */}
 
-      {/* <div className="w-[50%] h-32">{JSON.stringify(user)};</div> */}
-
-      
-    </main>
+        {/* <div className="w-[50%] h-32">{JSON.stringify(user)};</div> */}
+      </main>
+    </>
   );
 }

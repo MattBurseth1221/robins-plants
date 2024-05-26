@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { SessionProvider } from "@/app/_lib/hooks/SessionContext";
-import { validateRequest } from "@/app/_lib/auth"
+import { validateRequest } from "@/app/_lib/auth";
 
 export const metadata: Metadata = {
   title: "Robin's Plants",
@@ -19,9 +19,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="max-h-screen bg-gradient-to-b from-lg via-dg to-lb">
-        <SessionProvider value={session}>
-          {children}
-        </SessionProvider>
+        <SessionProvider value={session}>{children}</SessionProvider>
       </body>
     </html>
   );
