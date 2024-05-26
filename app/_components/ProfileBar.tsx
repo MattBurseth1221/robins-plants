@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "../_lib/hooks/SessionContext";
 
 export default function ProfileBar() {
+
+  
   const { user } = useSession();
   const router = useRouter();
 

@@ -35,7 +35,7 @@ export default function PostContainer() {
   }, []);
 
   return posts ? (
-    <div className="w-[75%] max-w-[800px] bg-db flex flex-col items-center p-8 rounded-md">
+    <div className="w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md">
       {posts.map((post: PostType, index) => {
         return (
           <Post key={index} postInfo={post} />

@@ -7,20 +7,24 @@ export default function Post({ postInfo }: any) {
   const [post, setPost] = useState<PostType>(postInfo);
 
   return (
-    <div className="border-black border-2 bg-slate-100 mb-8 rounded-md text-center p-4">
+    <div className="border-black border-2 bg-slate-100 mb-8 rounded-md text-center p-8 justify-center w-[100%]">
       <Image
         src={
           "https://hips.hearstapps.com/hmg-prod/images/close-up-of-blossoming-rose-flower-royalty-free-image-1580853844.jpg"
         }
-        width="600"
-        height="800"
+        width="900"
+        height="0"
         alt="Flower?"
-        className="rounded-md"
+        className="rounded-md mx-auto"
       />
 
       <div className="min-h-16 mt-2">
-        <h1 className="mb-4 text-xl">{ post.title }</h1>
-        <p className="text-left">{ post.body }</p>
+        <div className="flex flex-row justify-between border-b-[1px] border-slate-500 border-opacity-20">
+          <h1 className="text-left text-xl max-w-[50%]">{ post.title }</h1>
+          <p className="max-w-[50%] text-right">{ new Date(post.create_date).toLocaleString() }</p>
+        </div>
+        
+        <p className="text-left mt-4">{ post.body }</p>
       </div>
     </div>
   );

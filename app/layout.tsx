@@ -7,6 +7,7 @@ import { validateRequest } from "@/app/_lib/auth";
 export const metadata: Metadata = {
   title: "Robin's Plants",
   description: "Robin's Plant website",
+  
 };
 
 export default async function RootLayout({
@@ -18,7 +19,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="max-h-screen bg-gradient-to-b from-lg via-dg to-lb">
+      <body className="bg-gradient-to-b from-lg via-dg to-lb bg-no-repeat bg-contain">
         <SessionProvider value={session}>{children}</SessionProvider>
       </body>
     </html>
