@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.11.1",
     "@lucia-auth/adapter-postgresql": "^3.1.2",
     "@types/pg": "^8.11.6",
     "dotenv": "^16.4.5",
