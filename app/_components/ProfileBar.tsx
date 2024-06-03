@@ -23,7 +23,7 @@ export default function ProfileBar() {
   }
 
   return (
-    <nav className="w-40 p-5 border-black border-2 h-64">
+    <nav className="w-40 p-5 h-64">
       <ul className="flex flex-col justify-between items-center">
         {user && <p>{user.username}</p>}
         {user ? (

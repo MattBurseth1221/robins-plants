@@ -3,8 +3,11 @@ import PageTitle from "./_components/PageTitle";
 import ProfileBar from "@/app/_components/ProfileBar";
 import PostContainer from "./_components/PostContainer";
 import { Suspense } from "react";
+import { validateRequest } from "./_lib/auth";
 
-export default function Page() {
+export default async function Page() {
+  //const { user } = await validateRequest();
+
   return (
     <main className="flex min-h-screen">
       <MainNav active={"Home"} />

@@ -1,12 +1,14 @@
-"use client"
-
-import NavItem from "./NavItem" 
+import { User } from "lucia";
+import NavItem from "./NavItem";
+import { validateRequest } from "../_lib/auth";
 
 type MainNavProps = {
-  active: string
-}
+  active: string;
+};
 
-export default function MainNav({active} : MainNavProps) {
+export default async function MainNav({ active }: MainNavProps) {
+  const { user } = await validateRequest();
+
   return (
     <nav className="w-40 px-5 pt-5 border-r-white-200 border-opacity-50">
       <ul>
@@ -16,8 +18,18 @@ export default function MainNav({active} : MainNavProps) {
           itemName="Directory"
           active={active === "Directory"}
         />
-        <NavItem linkRedirect="/posts" itemName="Posts" active={active === "Posts"} />
-        <NavItem linkRedirect="/about" itemName="About" active={active === "About"} />
+        <NavItem
+          linkRedirect="/about"
+          itemName="About"
+          active={active === "About"}
+        />
+        {user && user.username === "Robin" && (
+          <NavItem
+            linkRedirect="/admin"
+            itemName="Admin"
+            active={active === "Admin"}
+          />
+        )}
       </ul>
     </nav>
   );
