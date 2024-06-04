@@ -3,6 +3,7 @@ import MainNav from "../_components/MainNav";
 import PageTitle from "../_components/PageTitle";
 import ProfileBar from "../_components/ProfileBar";
 import { validateRequest } from "../_lib/auth";
+import UploadForm from "../_components/UploadForm";
 
 export default async function Page() {
   const { user } = await validateRequest();
@@ -16,6 +17,8 @@ export default async function Page() {
 
       <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
         <PageTitle title="- Robin's Admin Page -" />
+
+        <UploadForm />
       </div>
 
       <ProfileBar />
