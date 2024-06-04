@@ -32,7 +32,7 @@ export function useFileUpload() {
         headers: {
             'Access-Control-Allow-Origin': '*',
         }
-      });
+      }).catch((e) => console.log(e));
 
       console.log('here');
 
