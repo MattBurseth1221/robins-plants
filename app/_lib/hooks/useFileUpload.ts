@@ -14,10 +14,11 @@ export function useFileUpload() {
 
     console.log('made it');
 
-    Object.entries({ ...fields, file }).forEach(([key, value]) => {
+    Object.entries({ ...fields }).forEach(([key, value]) => {
       formData.append(key, value as string | Blob);
-      console.log(key, value);
     });
+
+    formData.append('file', file, filename);
 
     for (var pair of formData.entries()){
         console.log(pair[0]);
@@ -29,9 +30,6 @@ export function useFileUpload() {
     const upload = await fetch(url + `${filename}`, {
         method: "POST",
         body: formData,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-        }
       }).catch((e) => console.log(e));
 
       console.log('here');
