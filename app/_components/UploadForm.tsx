@@ -11,14 +11,28 @@ export default function UploadForm() {
 
     const file = formData.get("file") as File;
 
-    const uploadOk = await uploadFile(file.name, file);
+    // const result = await fetch('/api/upload')
+    // .then((res) => res.json());
 
-    if (uploadOk) {
-        console.log(uploadOk);
-      alert('good');
-    } else {
-      alert('bad');
-    }
+    // //const uploadOk = await uploadFile(file.name, file);
+
+    console.log(formData.get("file"));
+
+    const postres = await fetch('api/upload', 
+      {
+        method: 'POST',
+        body: formData,
+      }
+    ).then((res) => res.json());
+
+    console.log(postres);
+
+    // if (uploadOk) {
+    //     console.log(uploadOk);
+    //   alert('good');
+    // } else {
+    //   alert('bad');
+    // }
   };
 
   function displayError() {
