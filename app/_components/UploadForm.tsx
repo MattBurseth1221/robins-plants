@@ -25,7 +25,7 @@ export default function UploadForm() {
   return (
     <form action={handleFileSelect} className="flex flex-col gap-4">
       <label>
-        <span>Upload a file</span>
+        <span>Upload a Photo (JPG only I think)</span>
         <input type="file" name="file" />
       </label>
       <label>
@@ -34,7 +34,7 @@ export default function UploadForm() {
       </label>
       <label>
         <span>Body</span>
-        <input type="text" name="body" />
+        <textarea name="body" rows={5} className="w-[100%]"/>
       </label>
       <button type="submit">Submit</button>
     </form>

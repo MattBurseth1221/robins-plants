@@ -35,7 +35,7 @@ Form label {
   width: 100%;
 }
 
-Form input {
+Form input, Form textarea {
   border: 1px solid gray;
   margin-bottom: 1rem;
   border-radius: 4px;

@@ -18,7 +18,7 @@ export default function PostContainer() {
 
   useEffect(() => {
     async function getPosts() {
-      const postArray = await fetch(process.env.URL + "/api/posts?limit=2", {
+      const postArray = await fetch(process.env.URL + "/api/posts?limit=10&sort=date_desc", {
         method: "GET",
       })
         .then((res) => res.json())
