@@ -9,7 +9,7 @@ export default function Post({ postInfo }: any) {
   return post ? (
     <div className="border-black border-2 bg-slate-100 mb-8 rounded-md text-center p-8 justify-center w-[100%]">
       <Image
-        src={post.image_ref || ""}
+        src={`https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` || ""}
         width="900"
         height="0"
         alt="Flower?"

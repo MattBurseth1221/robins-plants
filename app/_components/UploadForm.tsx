@@ -1,38 +1,21 @@
 "use client";
 
-import { useFileUpload } from "../_lib/hooks/useFileUpload";
-// import { uploadFile } from "./upload-action";
+import { useRouter } from 'next/navigation';
 
 export default function UploadForm() {
-  const uploadFile = useFileUpload();
+  const router = useRouter();
 
   const handleFileSelect = async (formData: FormData) => {
-    console.log(formData.get("file"));
+    const response = await fetch('/api/posts', {
+      method: 'POST',
+      body: formData,
+    }).then((res) => res.json());
 
-    const file = formData.get("file") as File;
+    if (response.success) {
+      router.replace('/admin');
+    }
 
-    // const result = await fetch('/api/upload')
-    // .then((res) => res.json());
-
-    // //const uploadOk = await uploadFile(file.name, file);
-
-    console.log(formData.get("file"));
-
-    const postres = await fetch('api/upload', 
-      {
-        method: 'POST',
-        body: formData,
-      }
-    ).then((res) => res.json());
-
-    console.log(postres);
-
-    // if (uploadOk) {
-    //     console.log(uploadOk);
-    //   alert('good');
-    // } else {
-    //   alert('bad');
-    // }
+    console.log(response);
   };
 
   function displayError() {
@@ -44,6 +27,14 @@ export default function UploadForm() {
       <label>
         <span>Upload a file</span>
         <input type="file" name="file" />
+      </label>
+      <label>
+        <span>Title</span>
+        <input type="text" name="title" />
+      </label>
+      <label>
+        <span>Body</span>
+        <input type="text" name="body" />
       </label>
       <button type="submit">Submit</button>
     </form>
