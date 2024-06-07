@@ -5,22 +5,31 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function GET(request: Request) {
   const limitParam = new URL(request.url).searchParams.get("limit");
-  const sortParam = new URL(request.url).searchParams.get("sort");
+  const sortParam = new URL(request.url).searchParams.get("sortType");
+  const orderParam = new URL(request.url).searchParams.get("order");
   
   let sortQuery = "";
   let whereQuery = "";
 
-  switch (sortParam) {
-    case "sort_desc":
-      sortQuery = "create_date DESC";
-    case "sort_asc":
-      sortQuery = "create_date ASC";
+  switch (String(sortParam)) {
+    case "body":
+      sortQuery = "body";
+      break;
+    case "title":
+      sortQuery = "title";
+      break;
     default:
-      sortQuery = "create_date DESC";
+      sortQuery = "create_date";
+      break;
   }
 
-  const postQuery = `SELECT * FROM posts ${whereQuery}ORDER BY ${sortQuery} LIMIT ${limitParam}`;
+  const postQuery = `SELECT * FROM posts ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
+
+  console.log(postQuery);
+
   const queryResult = (await pool.query(postQuery)).rows;
+
+  console.log(queryResult);
 
   return Response.json({ message: "Hello!", result: queryResult });
 }
