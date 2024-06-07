@@ -33,10 +33,12 @@ export default function PostContainer() {
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(filters).toString();
+    const params = new URLSearchParams(filters);
+    params.set("order", sortOrder);
+    const paramsString = params.toString();
 
     async function getPosts() {
-      const postArray = await fetch(process.env.URL + `/api/posts?${params}`, {
+      const postArray = await fetch(process.env.URL + `/api/posts?${paramsString}`, {
         method: "GET",
       })
         .then((res) => res.json())
@@ -63,18 +65,19 @@ export default function PostContainer() {
 
   return posts ? (
     <>
-      <div>
+      <div className="">
         <select
           value={filters.sortType}
           name="sort"
           onChange={(e) => setFilters({ ...filters, sortType: e.target.value })}
+          className="border-2 rounded-md border-gray"
         >
           <option value="date">Date</option>
           <option value="title">Title</option>
           <option value="body">Body</option>
         </select>
 
-        <button onClick={toggleSortOrder}>
+        <button className="ml-2 p-1 bg-white rounded-md border-2" onClick={toggleSortOrder}>
           <FontAwesomeIcon
             icon={sortOrder === "DESC" ? faLongArrowDown : faLongArrowUp}
           />
