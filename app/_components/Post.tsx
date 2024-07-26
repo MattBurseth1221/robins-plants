@@ -1,10 +1,18 @@
+"use client";
+
 import { useState } from "react";
 import { PostType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import Image from "next/image";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrashCan
+} from "@fortawesome/free-solid-svg-icons";
+
 export default function Post({ postInfo }: any) {
   const [post, setPost] = useState<PostType>(postInfo);
+  
 
   return post ? (
     <div className="border-black border-2 bg-slate-100 mb-8 rounded-md text-center p-8 justify-center w-[100%]">
@@ -25,6 +33,12 @@ export default function Post({ postInfo }: any) {
         </div>
 
         <p className="text-left mt-4">{post.body}</p>
+      </div>
+
+      <div>
+        <button className="mt-2">
+          <FontAwesomeIcon icon={ faTrashCan } />
+        </button>
       </div>
     </div>
   ) : (<div>Loading post...</div>);
