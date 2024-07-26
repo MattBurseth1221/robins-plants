@@ -1,7 +1,7 @@
 "use client";
 
 import { UUID } from "crypto";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 
 import Post from "../_components/Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,12 +18,11 @@ export interface PostType {
   create_date: Date;
 }
 
-// interface FilterType {
-//   limit: string | "";
-//   where: string | "";
-// }
+const UserContext = createContext<any>(null);
 
-export default function PostContainer() {
+export default function PostContainer(user: any) {
+  const [currentUser, setCurrentUser] = useState(user);
+
   const [posts, setPosts] = useState<PostType[]>([]);
   const [sortOrder, setSortOrder] = useState("DESC");
   const [filters, setFilters] = useState({
@@ -31,6 +30,8 @@ export default function PostContainer() {
     order: "DESC",
     limit: "5",
   });
+
+  
 
   useEffect(() => {
     const params = new URLSearchParams(filters);
@@ -63,6 +64,10 @@ export default function PostContainer() {
     setPosts(newPosts);
   }
 
+  function deletePostFromArray(id: UUID) {
+    setPosts(posts.filter((post) => post.post_id !== id));
+  }
+
   return posts ? (
     <>
       <div className="">
@@ -85,7 +90,7 @@ export default function PostContainer() {
       </div>
       <div className="w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md">
         {posts.map((post: PostType) => {
-          return <Post key={post.post_id} postInfo={post} />;
+          return <UserContext.Provider value={ user }><Post key={post.post_id} postInfo={post} deletePostFromArray={ deletePostFromArray } /></UserContext.Provider>;
         })}
       </div>
     </>

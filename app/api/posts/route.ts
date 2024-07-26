@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
 import { uploadFileToS3 } from "../upload/route"
 import { v4 as uuidv4 } from 'uuid';
+import { NextApiRequest } from "next";
 
 export async function GET(request: Request) {
   const limitParam = new URL(request.url).searchParams.get("limit");
@@ -67,5 +68,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: "Post created.", fileName: fileName });
   } catch (e) {
     return NextResponse.json({ error: "Post was not created." });
+  }
+}
+
+export async function DELETE(request: any) {
+  console.log('do we get to the delete');
+
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const id = searchParams.get('id');
+
+    const query = {
+      text: `DELETE FROM posts WHERE post_id = '${id}'`
+    };
+
+  const queryResult = await pool.query(query);
+
+  console.log('query result');
+  console.log(queryResult);
+
+    return NextResponse.json({ success: "Post was deleted." });
+  } catch (e) {
+    return NextResponse.json({ error: "Could not delete post." });
   }
 }

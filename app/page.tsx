@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { validateRequest } from "./_lib/auth";
 
 export default async function Page() {
-  //const { user } = await validateRequest();
+  const { user }: any = await validateRequest();
 
   return (
     <main className="flex min-h-screen">
@@ -20,7 +20,7 @@ export default async function Page() {
         </Suspense>
       </div>
 
-      <ProfileBar />
+      <ProfileBar {...user} />
 
       {/* <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg"></div>
       <div className="w-[50%] h-32 bg-gradient-to-b from-dg to-lb"></div>
