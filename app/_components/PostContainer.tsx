@@ -9,6 +9,7 @@ import {
   faLongArrowDown,
   faLongArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { User } from "lucia";
 
 export interface PostType {
   post_id: UUID;
@@ -18,7 +19,7 @@ export interface PostType {
   create_date: Date;
 }
 
-export default function PostContainer(user: any) {
+export default function PostContainer(user: User) {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [sortOrder, setSortOrder] = useState("DESC");
   const [filters, setFilters] = useState({
@@ -45,7 +46,6 @@ export default function PostContainer(user: any) {
         .catch((e) => {
           console.log(e);
         });
-      //console.log(postArray);
 
       setPosts(postArray);
       console.log(posts);

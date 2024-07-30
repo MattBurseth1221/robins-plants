@@ -18,7 +18,7 @@ import {
 import { UserContext } from "../_providers/UserProvider";
 import { userIsAdmin } from "../_utils/helper-functions";
 
-export default function Post({ postInfo, deletePostFromArray }: any) {
+export default function Post({ postInfo, deletePostFromArray }: {postInfo: PostType, deletePostFromArray: Function}) {
   const user = useContext(UserContext);
   const [post, setPost] = useState<PostType>(postInfo);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
@@ -26,13 +26,12 @@ export default function Post({ postInfo, deletePostFromArray }: any) {
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
-      setConfirmDeletePost(true);
       setDeletePostUUID(post.post_id);
     } else {
-      setConfirmDeletePost(false);
       setDeletePostUUID(null);
     }
 
+    setConfirmDeletePost(!confirmDeletePost);
     return;
   }
 
@@ -45,11 +44,11 @@ export default function Post({ postInfo, deletePostFromArray }: any) {
 
     if (response.success) {
       console.log(response.success);
+      deletePostFromArray(deletePostUUID);
     } else {
       console.log(response.error);
+      alert("Something went wrong.");
     }
-
-    deletePostFromArray(deletePostUUID);
 
     setConfirmDeletePost(false);
   }
