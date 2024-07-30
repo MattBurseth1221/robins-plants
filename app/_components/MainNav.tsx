@@ -1,6 +1,7 @@
 import { User } from "lucia";
 import NavItem from "./NavItem";
 import { validateRequest } from "../_lib/auth";
+import { userIsAdmin } from "../_utils/helper-functions";
 
 type MainNavProps = {
   active: string;
@@ -23,7 +24,7 @@ export default async function MainNav({ active }: MainNavProps) {
           itemName="About"
           active={active === "About"}
         />
-        {user && user.username === "Robin" && (
+        {userIsAdmin(user) && (
           <NavItem
             linkRedirect="/admin"
             itemName="Admin"

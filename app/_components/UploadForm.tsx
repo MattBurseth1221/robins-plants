@@ -12,7 +12,9 @@ export default function UploadForm() {
     }).then((res) => res.json());
 
     if (response.success) {
-      router.replace('/admin');
+      alert("Photo uploaded successfully. (Maybe idk)");
+
+      //router.push('/admin');
     }
 
     console.log(response);
@@ -26,15 +28,15 @@ export default function UploadForm() {
     <form action={handleFileSelect} className="flex flex-col gap-4">
       <label>
         <span>Upload a Photo (JPG only I think)</span>
-        <input type="file" name="file" />
+        <input type="file" name="file" required/>
       </label>
       <label>
         <span>Title</span>
-        <input type="text" name="title" />
+        <input type="text" name="title" maxLength={50} required/>
       </label>
       <label>
         <span>Body</span>
-        <textarea name="body" rows={5} className="w-[100%]"/>
+        <textarea name="body" rows={5} className="w-[100%]" required/>
       </label>
       <button type="submit">Submit</button>
     </form>

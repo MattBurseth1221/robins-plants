@@ -7,12 +7,16 @@ import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+
 import {
   Description,
   Dialog,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { UserContext } from "../_providers/UserProvider";
+import { userIsAdmin } from "../_utils/helper-functions";
 
 export default function Post({ postInfo, deletePostFromArray }: any) {
   const user = useContext(UserContext);
@@ -65,8 +69,8 @@ export default function Post({ postInfo, deletePostFromArray }: any) {
         />
 
         <div className="min-h-16 mt-2 line-clamp-3">
-          <div className="flex flex-row justify-between border-b-[1px] border-slate-500 border-opacity-20">
-            <h1 className="text-left text-xl max-w-[50%]">{post.title}</h1>
+          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20">
+            <p className="text-left text-xl max-w-[50%]">{post.title}</p>
             <p className="max-w-[50%] text-right">
               {new Date(post.create_date).toLocaleString()}
             </p>
@@ -75,18 +79,28 @@ export default function Post({ postInfo, deletePostFromArray }: any) {
           <p className="text-left mt-4 break-words">{post.body}</p>
         </div>
 
-        
-        <div>
-          <button
-            className="mt-2"
-            onClick={() => {
-              handleDeletePost();
-              console.log(confirmDeletePost);
-            }}
-          >
-            <FontAwesomeIcon icon={faTrashCan} />
-          </button>
-        </div>
+        {userIsAdmin(user) && (
+          <div className="w-[20%] mx-auto mt-4 flex justify-between">
+            <button
+              className="hover:bg-slate-300 transition rounded-md p-1"
+              onClick={() => {
+                alert("You tryna edit this mf huh");
+              }}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </button>
+
+            <button
+              className="hover:bg-slate-300 transition rounded-md p-1"
+              onClick={() => {
+                handleDeletePost();
+                console.log(confirmDeletePost);
+              }}
+            >
+              <FontAwesomeIcon icon={faTrashCan} />
+            </button>
+          </div>
+        )}
       </div>
       <Dialog
         open={confirmDeletePost}

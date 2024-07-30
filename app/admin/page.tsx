@@ -4,10 +4,11 @@ import PageTitle from "../_components/PageTitle";
 import ProfileBar from "../_components/ProfileBar";
 import { validateRequest } from "../_lib/auth";
 import UploadForm from "../_components/UploadForm";
+import { userIsAdmin } from "../_utils/helper-functions";
 
 export default async function Page() {
   const { user } = await validateRequest();
-  if (!user || user.username !== "Robin") {
+  if (!userIsAdmin(user)) {
     return redirect("/");
   }
 

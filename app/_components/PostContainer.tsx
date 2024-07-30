@@ -18,11 +18,7 @@ export interface PostType {
   create_date: Date;
 }
 
-const UserContext = createContext<any>(null);
-
 export default function PostContainer(user: any) {
-  const [currentUser, setCurrentUser] = useState(user);
-
   const [posts, setPosts] = useState<PostType[]>([]);
   const [sortOrder, setSortOrder] = useState("DESC");
   const [filters, setFilters] = useState({
@@ -31,7 +27,9 @@ export default function PostContainer(user: any) {
     limit: "5",
   });
 
-  
+  // useEffect(() => {
+  //   const UserContext = createContext<any>(currentUser);
+  // })
 
   useEffect(() => {
     const params = new URLSearchParams(filters);
@@ -90,7 +88,9 @@ export default function PostContainer(user: any) {
       </div>
       <div className="w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md">
         {posts.map((post: PostType) => {
-          return <UserContext.Provider value={ user }><Post key={post.post_id} postInfo={post} deletePostFromArray={ deletePostFromArray } /></UserContext.Provider>;
+          return (
+              <Post key={post.post_id} postInfo={post} deletePostFromArray={ deletePostFromArray } />
+          )
         })}
       </div>
     </>
