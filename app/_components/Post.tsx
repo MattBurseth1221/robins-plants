@@ -70,9 +70,9 @@ export default function Post({
   }
 
   async function updatePost(formData: FormData) {
-    const title = formData.get('title');
-    const body = formData.get('body');
-    const file = formData.get('file') as File;
+    const title = formData.get("title");
+    const body = formData.get("body");
+    const file = formData.get("file") as File;
 
     if (title === post.title && body === post.body && file === null) {
       alert("No changes detected.");
@@ -188,11 +188,9 @@ export default function Post({
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
             <DialogTitle className="font-bold">Update Post</DialogTitle>
-            <Description>
-              This will edit the post.
-            </Description>
+            <Description>This will edit the post.</Description>
 
-            <form action={updatePost}>
+            <form action={updatePost} id="edit-form">
               <Image
                 src={
                   `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
@@ -205,7 +203,7 @@ export default function Post({
               />
               <label>
                 <span>Upload a Photo (JPG only I think)</span>
-                <input type="file" name="file" required />
+                <input type="file" name="file" />
               </label>
               <label>
                 <span>Title</span>
@@ -239,6 +237,7 @@ export default function Post({
               <button
                 className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
                 type="submit"
+                form="edit-form"
               >
                 Update
               </button>

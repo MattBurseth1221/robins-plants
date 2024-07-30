@@ -94,4 +94,13 @@ export async function DELETE(request: any) {
   }
 }
 
-export async function PUT(request: )
+export async function PUT(request: Request) {
+  const formData = await request.formData();
+  const file = formData.get("file") as File;
+  
+  if (file.size === 0) {
+    
+  }
+
+  return;
+}
