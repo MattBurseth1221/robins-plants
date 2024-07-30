@@ -71,6 +71,7 @@ export async function POST(request: Request) {
   }
 }
 
+//FIX REQUEST TYPE
 export async function DELETE(request: any) {
   console.log('do we get to the delete');
 
@@ -92,3 +93,5 @@ export async function DELETE(request: any) {
     return NextResponse.json({ error: "Could not delete post." });
   }
 }
+
+export async function PUT(request: )

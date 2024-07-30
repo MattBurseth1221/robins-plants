@@ -18,33 +18,77 @@ import {
 import { UserContext } from "../_providers/UserProvider";
 import { userIsAdmin } from "../_utils/helper-functions";
 
-export default function Post({ postInfo, deletePostFromArray }: {postInfo: PostType, deletePostFromArray: Function}) {
+export default function Post({
+  postInfo,
+  deletePostFromArray,
+}: {
+  postInfo: PostType;
+  deletePostFromArray: Function;
+}) {
   const user = useContext(UserContext);
   const [post, setPost] = useState<PostType>(postInfo);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
-  const [deletePostUUID, setDeletePostUUID] = useState<UUID | null>(null);
+  const [selectedPostUUID, setSelectedPostUUID] = useState<UUID | null>(null);
+  const [editingPost, setEditingPost] = useState<boolean>(false);
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
-      setDeletePostUUID(post.post_id);
+      setSelectedPostUUID(post.post_id);
     } else {
-      setDeletePostUUID(null);
+      setSelectedPostUUID(null);
     }
 
     setConfirmDeletePost(!confirmDeletePost);
-    return;
   }
 
   async function deletePost() {
-    if (!deletePostUUID) return;
+    if (!selectedPostUUID) return;
 
-    const response = await fetch(`/api/posts?id=${deletePostUUID}`, {
+    const response = await fetch(`/api/posts?id=${selectedPostUUID}`, {
       method: "DELETE",
     }).then((res) => res.json());
 
     if (response.success) {
       console.log(response.success);
-      deletePostFromArray(deletePostUUID);
+      deletePostFromArray(selectedPostUUID);
+    } else {
+      console.log(response.error);
+      alert("Something went wrong.");
+    }
+
+    setConfirmDeletePost(false);
+  }
+
+  function handleEditPost() {
+    if (!editingPost) {
+      setSelectedPostUUID(post.post_id);
+    } else {
+      setSelectedPostUUID(null);
+    }
+
+    setEditingPost(!editingPost);
+  }
+
+  async function updatePost(formData: FormData) {
+    const title = formData.get('title');
+    const body = formData.get('body');
+    const file = formData.get('file') as File;
+
+    if (title === post.title && body === post.body && file === null) {
+      alert("No changes detected.");
+      return;
+    }
+
+    if (!selectedPostUUID) return;
+
+    const response = await fetch(`/api/posts?id=${selectedPostUUID}`, {
+      method: "PUT",
+      body: formData,
+    }).then((res) => res.json());
+
+    if (response.success) {
+      console.log(response.success);
+      deletePostFromArray(selectedPostUUID);
     } else {
       console.log(response.error);
       alert("Something went wrong.");
@@ -83,7 +127,7 @@ export default function Post({ postInfo, deletePostFromArray }: {postInfo: PostT
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"
               onClick={() => {
-                alert("You tryna edit this mf huh");
+                handleEditPost();
               }}
             >
               <FontAwesomeIcon icon={faEdit} />
@@ -117,14 +161,86 @@ export default function Post({ postInfo, deletePostFromArray }: {postInfo: PostT
               the ass to put it back up again...
             </p>
             <div className="flex gap-4">
-              <button onClick={() => handleDeletePost()}>Cancel</button>
               <button
-                className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition"
+                className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
+                onClick={() => handleDeletePost()}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
                 onClick={() => {
                   deletePost();
                 }}
               >
                 Delete
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={editingPost}
+        onClose={() => handleEditPost()}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
+            <DialogTitle className="font-bold">Update Post</DialogTitle>
+            <Description>
+              This will edit the post.
+            </Description>
+
+            <form action={updatePost}>
+              <Image
+                src={
+                  `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
+                  ""
+                }
+                width="400"
+                height="0"
+                alt="Flower?"
+                className="rounded-md mx-auto mb-4"
+              />
+              <label>
+                <span>Upload a Photo (JPG only I think)</span>
+                <input type="file" name="file" required />
+              </label>
+              <label>
+                <span>Title</span>
+                <input
+                  defaultValue={post.title}
+                  type="text"
+                  name="title"
+                  maxLength={50}
+                  required
+                />
+              </label>
+              <label>
+                <span>Body</span>
+                <textarea
+                  defaultValue={post.body}
+                  name="body"
+                  rows={5}
+                  className="w-[100%]"
+                  required
+                />
+              </label>
+            </form>
+
+            <div className="flex gap-4">
+              <button
+                className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
+                onClick={() => handleEditPost()}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
+                type="submit"
+              >
+                Update
               </button>
             </div>
           </DialogPanel>

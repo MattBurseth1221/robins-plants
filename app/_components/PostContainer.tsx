@@ -19,7 +19,7 @@ export interface PostType {
   create_date: Date;
 }
 
-export default function PostContainer(user: User) {
+export default function PostContainer() {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [sortOrder, setSortOrder] = useState("DESC");
   const [filters, setFilters] = useState({
