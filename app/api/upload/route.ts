@@ -4,6 +4,7 @@ import {
   S3Client,
   ListObjectsCommand,
   PutObjectCommand,
+  DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 
 const Bucket = process.env.AMPLIFY_BUCKET;
@@ -70,3 +71,5 @@ export async function uploadFileToS3(file: File, fileName: string) {
     return e;
   }
 }
+
+//To get objects and check for photos to delete, can we use GetObjectCommand?

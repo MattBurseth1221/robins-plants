@@ -22,16 +22,17 @@ import { userIsAdmin } from "../_utils/helper-functions";
 export default function Post({
   postInfo,
   deletePostFromArray,
+  refreshPage,
 }: {
   postInfo: PostType;
   deletePostFromArray: Function;
+  refreshPage: Function;
 }) {
   const user = useContext(UserContext);
   const [post, setPost] = useState<PostType>(postInfo);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [selectedPostUUID, setSelectedPostUUID] = useState<UUID | null>(null);
   const [editingPost, setEditingPost] = useState<boolean>(false);
-  const router = useRouter();
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
@@ -83,20 +84,26 @@ export default function Post({
 
     if (!selectedPostUUID) return;
 
-    const response = await fetch(`/api/posts?id=${selectedPostUUID}`, {
-      method: "PUT",
-      body: formData,
-    }).then((res) => res.json());
+    try {
+      const response = await fetch(`/api/posts?id=${selectedPostUUID}`, {
+        method: "PUT",
+        body: formData,
+      }).then((res) => res.json());
 
-    if (response.success) {
-      console.log(response.success);
-    } else {
-      console.log(response.error);
-      alert("Something went wrong.");
+      if (response.success) {
+        console.log(response.success);
+      } else {
+        console.log(response.error);
+        alert("Something went wrong.");
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setEditingPost(false);
     }
 
-    setEditingPost(false);
-    router.refresh();
+    console.log("refreshing page...");
+    refreshPage();
   }
 
   return post ? (

@@ -10,6 +10,7 @@ import {
   faLongArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { User } from "lucia";
+import { useRouter } from "next/navigation";
 
 export interface PostType {
   post_id: UUID;
@@ -27,10 +28,12 @@ export default function PostContainer() {
     order: "DESC",
     limit: "5",
   });
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   const UserContext = createContext<any>(currentUser);
-  // })
+  const PostProps = {
+    deletePostFromArray,
+    refreshPage,
+  }
 
   useEffect(() => {
     const params = new URLSearchParams(filters);
@@ -38,9 +41,12 @@ export default function PostContainer() {
     const paramsString = params.toString();
 
     async function getPosts() {
-      const postArray = await fetch(process.env.URL + `/api/posts?${paramsString}`, {
-        method: "GET",
-      })
+      const postArray = await fetch(
+        process.env.URL + `/api/posts?${paramsString}`,
+        {
+          method: "GET",
+        }
+      )
         .then((res) => res.json())
         .then((data) => data.result)
         .catch((e) => {
@@ -48,14 +54,13 @@ export default function PostContainer() {
         });
 
       setPosts(postArray);
-      console.log(posts);
     }
 
     getPosts();
   }, [filters]);
 
   function toggleSortOrder() {
-    setSortOrder(sortOrder === 'DESC' ? 'ASC' : 'DESC');
+    setSortOrder(sortOrder === "DESC" ? "ASC" : "DESC");
 
     let newPosts = [...posts];
     newPosts.reverse();
@@ -65,6 +70,43 @@ export default function PostContainer() {
   function deletePostFromArray(id: UUID) {
     setPosts(posts.filter((post) => post.post_id !== id));
   }
+
+  function refreshPage() {
+    setTimeout(() => {
+      window.location.reload();
+      console.log("refreshed.");
+    }, 100);
+  }
+
+  // function editPostInArray(id: UUID, formData: FormData) {
+
+
+  //   if (!id) return;
+  //   if (!formData) return;
+
+  //   const newTitle = formData.get('title') as string;
+  //   const newBody = formData.get('body') as string;
+  //   const newFile = formData.get('file') as File;
+
+  //   const newPosts = [...posts];
+  //   var postIndex = -1;
+
+  //   for (let i = 0; i < newPosts.length; i++) {
+  //     if (newPosts[i].post_id === id) {
+  //       postIndex = i;
+  //       break;
+  //     }
+  //   }
+
+  //   if (postIndex === -1) return;
+
+  //   newPosts[postIndex].title = newTitle;
+  //   newPosts[postIndex].body = newBody;
+
+  //   if (newFile.size === 0) {
+      
+  //   }
+  // }
 
   return posts ? (
     <>
@@ -80,7 +122,10 @@ export default function PostContainer() {
           <option value="body">Body</option>
         </select>
 
-        <button className="ml-2 p-1 bg-white rounded-md border-2" onClick={toggleSortOrder}>
+        <button
+          className="ml-2 p-1 bg-white rounded-md border-2"
+          onClick={toggleSortOrder}
+        >
           <FontAwesomeIcon
             icon={sortOrder === "DESC" ? faLongArrowDown : faLongArrowUp}
           />
@@ -89,8 +134,12 @@ export default function PostContainer() {
       <div className="w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md">
         {posts.map((post: PostType) => {
           return (
-              <Post key={post.post_id} postInfo={post} deletePostFromArray={ deletePostFromArray } />
-          )
+            <Post
+              key={post.post_id}
+              postInfo={post}
+              {...PostProps}
+            />
+          );
         })}
       </div>
     </>
