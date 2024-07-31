@@ -4,6 +4,7 @@ import { useState, useContext } from "react";
 import { PostType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -30,6 +31,7 @@ export default function Post({
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [selectedPostUUID, setSelectedPostUUID] = useState<UUID | null>(null);
   const [editingPost, setEditingPost] = useState<boolean>(false);
+  const router = useRouter();
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
@@ -59,7 +61,7 @@ export default function Post({
     setConfirmDeletePost(false);
   }
 
-  function handleEditPost() {
+  function handleUpdatePost() {
     if (!editingPost) {
       setSelectedPostUUID(post.post_id);
     } else {
@@ -88,13 +90,13 @@ export default function Post({
 
     if (response.success) {
       console.log(response.success);
-      deletePostFromArray(selectedPostUUID);
     } else {
       console.log(response.error);
       alert("Something went wrong.");
     }
 
-    setConfirmDeletePost(false);
+    setEditingPost(false);
+    router.refresh();
   }
 
   return post ? (
@@ -127,7 +129,7 @@ export default function Post({
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"
               onClick={() => {
-                handleEditPost();
+                handleUpdatePost();
               }}
             >
               <FontAwesomeIcon icon={faEdit} />
@@ -137,7 +139,6 @@ export default function Post({
               className="hover:bg-slate-300 transition rounded-md p-1"
               onClick={() => {
                 handleDeletePost();
-                console.log(confirmDeletePost);
               }}
             >
               <FontAwesomeIcon icon={faTrashCan} />
@@ -182,7 +183,7 @@ export default function Post({
 
       <Dialog
         open={editingPost}
-        onClose={() => handleEditPost()}
+        onClose={() => handleUpdatePost()}
         className="relative z-50"
       >
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
@@ -203,7 +204,7 @@ export default function Post({
               />
               <label>
                 <span>Upload a Photo (JPG only I think)</span>
-                <input type="file" name="file" />
+                <input type="file" name="file" accept="image/*" />
               </label>
               <label>
                 <span>Title</span>
@@ -230,7 +231,7 @@ export default function Post({
             <div className="flex gap-4">
               <button
                 className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
-                onClick={() => handleEditPost()}
+                onClick={() => handleUpdatePost()}
               >
                 Cancel
               </button>

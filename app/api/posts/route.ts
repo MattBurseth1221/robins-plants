@@ -45,6 +45,8 @@ export async function POST(request: Request) {
 
     const file = formData.get("file") as File;
 
+    console.log("type " + file.type);
+
     //upload image to S3
     const fileName = await uploadFileToS3(file, file.name);
 
@@ -96,14 +98,16 @@ export async function PUT(request: NextRequest) {
     const id = searchParams.get("id");
 
     const formData = await request.formData();
+    const title = formData.get("title");
+    const body = formData.get("body");
     const file = formData.get("file") as File;
+
+    console.log(title + " " + body);
 
     var query = "";
 
     if (file.size === 0) {
-      query = `UPDATE posts SET title = '${formData.get(
-        "title"
-      )}' AND body = '${formData.get("body")}' WHERE id = '${id}'`;
+      query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
 
       console.log(query);
     } else {
@@ -112,10 +116,10 @@ export async function PUT(request: NextRequest) {
 
       console.log(fileName + " success");
 
-      query = `UPDATE posts SET title = '${formData.get(
-        "title"
-      )}' AND body = '${formData.get("body")}' AND image_ref = '${fileName}' WHERE id = '${id}'`;
+      query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName}' WHERE post_id = '${id}'`;
     }
+
+    console.log("here????");
 
     const queryResult = (await pool.query(query)).rows;
 
