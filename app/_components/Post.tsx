@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 
 import {
   Description,
@@ -120,7 +121,7 @@ export default function Post({
           className="rounded-md mx-auto"
         />
 
-        <div className="min-h-16 mt-2 line-clamp-3">
+        <div className="min-h-16 mt-2">
           <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20">
             <p className="text-left text-xl max-w-[50%]">{post.title}</p>
             <p className="max-w-[50%] text-right">
@@ -128,7 +129,10 @@ export default function Post({
             </p>
           </div>
 
-          <p className="text-left mt-4 break-words">{post.body}</p>
+          <p className="text-left mt-4 break-words line-clamp-3">{post.body}</p>
+
+          <input type="text" placeholder={" Leave a comment..."} className="bg-slate-100 w-[100%] mt-4 p-1"></input>
+          <FontAwesomeIcon icon={faCheckSquare} />
         </div>
 
         {userIsAdmin(user) && (
