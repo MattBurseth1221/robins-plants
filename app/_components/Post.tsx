@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 import {
   Description,
@@ -34,6 +34,7 @@ export default function Post({
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [selectedPostUUID, setSelectedPostUUID] = useState<UUID | null>(null);
   const [editingPost, setEditingPost] = useState<boolean>(false);
+  const [commentValue, setCommentValue] = useState<string>("");
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
@@ -107,6 +108,16 @@ export default function Post({
     refreshPage();
   }
 
+  function addComment(formData: FormData) {
+    const comment_body = formData.get("comment_body") as string;
+
+    if (!comment_body || comment_body.length === 0) {alert("no comment fag"); return}
+
+    alert(comment_body);
+
+    setCommentValue("");
+  }
+
   return post ? (
     <>
       <div className="border-black border-2 bg-slate-100 mb-8 rounded-md text-center p-8 justify-center w-[100%]">
@@ -131,8 +142,21 @@ export default function Post({
 
           <p className="text-left mt-4 break-words line-clamp-3">{post.body}</p>
 
-          <input type="text" placeholder={" Leave a comment..."} className="bg-slate-100 w-[100%] mt-4 p-1"></input>
-          <FontAwesomeIcon icon={faCheckSquare} />
+          <div>
+            <form id="comment-form" action={addComment} className="flex justify-center items-center mt-4">
+              <textarea
+                placeholder={"Leave a comment..."}
+                rows={1}
+                className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content"
+                name="comment_body"
+                value={ commentValue }
+                onChange={(e) => setCommentValue(e.target.value)}
+              ></textarea>
+              <button className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4" type="submit">
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </button>
+            </form>
+          </div>
         </div>
 
         {userIsAdmin(user) && (
