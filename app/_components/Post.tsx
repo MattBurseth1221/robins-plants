@@ -112,10 +112,12 @@ export default function Post({
     const comment_body = formData.get("comment_body") as string;
 
     if (!comment_body || comment_body.length === 0) {alert("no comment fag"); return}
-
-    alert(comment_body);
-
     setCommentValue("");
+
+    if (!user) return;
+
+    formData.append("user_id", user.id);
+    formData.append("post_id", post.post_id);
   }
 
   return post ? (
@@ -147,7 +149,7 @@ export default function Post({
               <textarea
                 placeholder={"Leave a comment..."}
                 rows={1}
-                className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content"
+                className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none"
                 name="comment_body"
                 value={ commentValue }
                 onChange={(e) => setCommentValue(e.target.value)}
