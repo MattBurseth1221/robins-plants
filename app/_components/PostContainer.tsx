@@ -12,12 +12,23 @@ import {
 import { User } from "lucia";
 import { useRouter } from "next/navigation";
 
+export interface CommentType {
+  comment_id: UUID;
+  body: string;
+  total_likes: number;
+  user_id: UUID;
+  post_id: UUID;
+  create_date: Date;
+  username: string;
+}
+
 export interface PostType {
   post_id: UUID;
   title: string;
   body: string;
   image_ref: string | null;
   create_date: Date;
+  comments: Array<CommentType>
 }
 
 export default function PostContainer() {

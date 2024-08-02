@@ -11,3 +11,11 @@ export function userIsAdmin(user: User | null) {
 
   return false;
 }
+
+export function commentDateConverter(date: Date) {
+  var newDate = date.toLocaleString();
+
+  newDate = newDate.slice(0, -6) + newDate.slice(-3);
+
+  return newDate;
+}

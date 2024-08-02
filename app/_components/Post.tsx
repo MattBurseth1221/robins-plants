@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useContext } from "react";
-import { PostType } from "@/app/_components/PostContainer";
+import { CommentType, PostType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { UserContext } from "../_providers/UserProvider";
-import { userIsAdmin } from "../_utils/helper-functions";
+import { commentDateConverter, userIsAdmin } from "../_utils/helper-functions";
 
 export default function Post({
   postInfo,
@@ -35,6 +35,7 @@ export default function Post({
   const [selectedPostUUID, setSelectedPostUUID] = useState<UUID | null>(null);
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
+  const [showAllComments, setShowAllComments] = useState<boolean>(false);
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
@@ -108,21 +109,41 @@ export default function Post({
     refreshPage();
   }
 
-  function addComment(formData: FormData) {
+  async function addComment(formData: FormData) {
     const comment_body = formData.get("comment_body") as string;
 
-    if (!comment_body || comment_body.length === 0) {alert("no comment fag"); return}
+    if (!comment_body || comment_body.length === 0) {
+      alert("no comment fag");
+      return;
+    }
     setCommentValue("");
 
     if (!user) return;
 
     formData.append("user_id", user.id);
     formData.append("post_id", post.post_id);
+
+    try {
+      const response = await fetch(`/api/comments`, {
+        method: "POST",
+        body: formData,
+      }).then((res) => res.json());
+
+      if (response.success) {
+        alert(response.success);
+      } else {
+        alert(response.error);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    refreshPage();
   }
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-md text-center p-8 justify-center w-[100%]">
+      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center p-8 justify-center w-[100%]">
         <Image
           src={
             `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
@@ -145,19 +166,49 @@ export default function Post({
           <p className="text-left mt-4 break-words line-clamp-3">{post.body}</p>
 
           <div>
-            <form id="comment-form" action={addComment} className="flex justify-center items-center mt-4">
+            <form
+              id="comment-form"
+              action={addComment}
+              className="flex justify-center items-center mt-4"
+            >
               <textarea
                 placeholder={"Leave a comment..."}
                 rows={1}
                 className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none"
                 name="comment_body"
-                value={ commentValue }
+                value={commentValue}
                 onChange={(e) => setCommentValue(e.target.value)}
               ></textarea>
-              <button className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4" type="submit">
+              <button
+                className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
+                type="submit"
+              >
                 <FontAwesomeIcon icon={faPaperPlane} />
               </button>
             </form>
+          </div>
+          <div className="border-t-[1px] border-slate-500 border-opacity-20 py-2">
+            {(post.comments && post.comments.length > 0) ? (
+              post.comments.map((comment: CommentType, index) => {
+                return (
+                  <div className="mt-2" key={index}>
+                    <p className="text-left opacity-50 text-xs">
+                      {comment.username}
+                    </p>
+                    <div className="flex justify-between">
+                      <p className="text-left">{comment.body}</p>
+                      <p className="text-right opacity-50 text-xs min-w-[25%]">
+                        {commentDateConverter(new Date(comment.create_date))}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="opacity-50 text-center">
+                <p>Be the first to comment!</p>
+              </div>
+            )}
           </div>
         </div>
 

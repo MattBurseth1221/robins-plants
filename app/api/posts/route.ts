@@ -3,6 +3,7 @@ import { pool } from "../../_lib/db";
 import { uploadFileToS3 } from "../upload/route";
 import { v4 as uuidv4 } from "uuid";
 import { NextApiRequest } from "next";
+import { UUID } from "crypto";
 
 export async function GET(request: NextRequest) {
   const limitParam = request.nextUrl.searchParams.get("limit");
@@ -30,6 +31,31 @@ export async function GET(request: NextRequest) {
 
   const queryResult = (await pool.query(postQuery)).rows;
 
+  console.log('trying for comments');
+  //Get all comments for each post?
+  for (let i = 0; i < queryResult.length; i++) {
+    // const postComments = await fetch(`/comments`, {
+    //   method: "GET",
+    // })
+    // .then((res) => res.json())
+    // .then((res) => res.data);
+    const post_id = queryResult[i].post_id;
+
+    const commentQuery = `select c.*, u.username
+    from comments c
+    left join auth_user u 
+    on c.user_id = u.id
+    where c.post_id = '${post_id}'
+    order by c.create_date DESC`;
+
+  const postComments = (await pool.query(commentQuery)).rows;
+
+  //console.log(postComments);
+
+    queryResult[i].comments = postComments;
+  }
+
+  console.log("check here");
   console.log(queryResult);
 
   return Response.json({ message: "Hello!", result: queryResult });

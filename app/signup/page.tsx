@@ -7,6 +7,7 @@ import { lucia, validateRequest } from "../_lib/auth";
 import { redirect } from "next/navigation";
 import { Form } from "../_components/Form";
 import { generateId } from "lucia";
+import { v4 as uuidv4 } from "uuid";
 
 import type { ActionResult } from "../_components/Form";
 
@@ -67,7 +68,7 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
   }
 
   const hashedPassword = await sha256(password);
-  const userId = generateId(15);
+  const userId = uuidv4();
 
   const query = {
     text: "INSERT INTO auth_user(id, username, password_hash) VALUES($1, $2, $3)",
