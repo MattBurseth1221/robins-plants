@@ -38,37 +38,31 @@ export default function Post({
   const user = useContext(UserContext);
   const [post, setPost] = useState<PostType>(postInfo);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
-  const [selectedPostUUID, setSelectedPostUUID] = useState<UUID | null>(null);
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
   const [postLiked, setPostLiked] = useState<boolean>(false);
   const usersLikedItems = useRef<Array<UUID>>(likedItems);
 
+  //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post.post_id));
   }, [])
 
+  //Toggles the confirm delete modal and selects the current 
   function handleDeletePost() {
-    if (!confirmDeletePost) {
-      setSelectedPostUUID(post.post_id);
-    } else {
-      setSelectedPostUUID(null);
-    }
-
     setConfirmDeletePost(!confirmDeletePost);
   }
 
+  //Calls the delete post endpoint, toggles confirm delete modal
   async function deletePost() {
-    if (!selectedPostUUID) return;
-
-    const response = await fetch(`/api/posts?id=${selectedPostUUID}`, {
+    const response = await fetch(`/api/posts?id=${post.post_id}`, {
       method: "DELETE",
     }).then((res) => res.json());
 
     if (response.success) {
       console.log(response.success);
-      deletePostFromArray(selectedPostUUID);
+      deletePostFromArray(post.post_id);
     } else {
       console.log(response.error);
       alert("Something went wrong.");
@@ -77,16 +71,12 @@ export default function Post({
     setConfirmDeletePost(false);
   }
 
+  //Toggles the editing post modal - can probably be handled in the onClick
   function handleUpdatePost() {
-    if (!editingPost) {
-      setSelectedPostUUID(post.post_id);
-    } else {
-      setSelectedPostUUID(null);
-    }
-
     setEditingPost(!editingPost);
   }
 
+  //Takes the form data from the edit post modal and send it to post put endpoint
   async function updatePost(formData: FormData) {
     const title = formData.get("title");
     const body = formData.get("body");
@@ -98,13 +88,13 @@ export default function Post({
       (file === null || file.size === 0)
     ) {
       alert("No changes detected.");
+
+      //Do we want to close the modal if no changes were detected?
       return;
     }
 
-    if (!selectedPostUUID) return;
-
     try {
-      const response = await fetch(`/api/posts?id=${selectedPostUUID}`, {
+      const response = await fetch(`/api/posts?id=${post.post_id}`, {
         method: "PUT",
         body: formData,
       }).then((res) => res.json());
@@ -125,6 +115,7 @@ export default function Post({
     refreshPage();
   }
 
+  //Takes form data from comment field and sends it to comments post endpoint
   async function addComment(formData: FormData) {
     const comment_body = formData.get("comment_body") as string;
 
@@ -154,9 +145,12 @@ export default function Post({
       console.log(e);
     }
 
+    //TODO
+    //Look into adding the comment client side, refresh on comment addition is clunky
     refreshPage();
   }
 
+  //Fires when a user likes or dislikes a post - either creates a like entry in DB or deletes
   async function handleLikePost() {
     if (!user) return;
 

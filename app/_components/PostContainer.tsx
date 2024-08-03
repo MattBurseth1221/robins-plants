@@ -162,7 +162,7 @@ export default function PostContainer() {
           />
         </button>
       </div>
-      <div className="w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md">
+      <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
         {posts.map((post: PostType) => {
           return (
             <Post

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/app/_lib/db";
 import { v4 as uuidv4 } from "uuid";
 
+//Creates a like in DB based on passed search parameters (expects a post_id and user_id)
+//Also updates total_likes count for the post in question
 export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const post_id = searchParams.get("post_id");
@@ -30,6 +32,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+//Deletes a like record and decrements total_likes for respective post
 export async function DELETE(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const parent_id = searchParams.get("parent_id");
@@ -54,6 +57,7 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
+//Retrieves all liked posts/comments for a given user, expects search parameter "user_id"
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const user_id = searchParams.get("user_id");
@@ -67,8 +71,6 @@ export async function GET(request: NextRequest) {
     for (let i = 0; i < likedItemsResponse.length; i++) {
       likedItems.push(likedItemsResponse[i].parent_id);
     }
-
-    console.log(likedItems);
 
     return NextResponse.json({
       success: "Retrieved users liked items.",

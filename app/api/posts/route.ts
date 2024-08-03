@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
 import { uploadFileToS3 } from "../upload/route";
 import { v4 as uuidv4 } from "uuid";
-import { NextApiRequest } from "next";
-import { UUID } from "crypto";
 
+//Retrieves all posts given parameters from DB
 export async function GET(request: NextRequest) {
   const limitParam = request.nextUrl.searchParams.get("limit");
   const sortParam = request.nextUrl.searchParams.get("sortType");
@@ -13,6 +12,7 @@ export async function GET(request: NextRequest) {
   let sortQuery = "";
   let whereQuery = "";
 
+  //Parse through search params for query params
   switch (String(sortParam)) {
     case "body":
       sortQuery = "body";
@@ -27,18 +27,10 @@ export async function GET(request: NextRequest) {
 
   const postQuery = `SELECT * FROM posts ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
 
-  console.log(postQuery);
-
   const queryResult = (await pool.query(postQuery)).rows;
 
-  console.log('trying for comments');
-  //Get all comments for each post?
+  //Iterate through each post, get all comments for each
   for (let i = 0; i < queryResult.length; i++) {
-    // const postComments = await fetch(`/comments`, {
-    //   method: "GET",
-    // })
-    // .then((res) => res.json())
-    // .then((res) => res.data);
     const post_id = queryResult[i].post_id;
 
     const commentQuery = `select c.*, u.username
@@ -48,30 +40,22 @@ export async function GET(request: NextRequest) {
     where c.post_id = '${post_id}'
     order by c.create_date DESC`;
 
-  const postComments = (await pool.query(commentQuery)).rows;
-
-  //console.log(postComments);
+    const postComments = (await pool.query(commentQuery)).rows;
 
     queryResult[i].comments = postComments;
   }
 
-  // console.log("check here");
-  // console.log(queryResult);
-
   return Response.json({ message: "Hello!", result: queryResult });
 }
 
+//Creates a post with passed FormData
 export async function POST(request: Request) {
-  console.log("do we get here");
-
   try {
     const formData = await request.formData();
     const postTitle = formData.get("title");
     const postBody = formData.get("body");
 
     const file = formData.get("file") as File;
-
-    console.log("type " + file.type);
 
     //upload image to S3
     const fileName = await uploadFileToS3(file, file.name);
@@ -93,6 +77,7 @@ export async function POST(request: Request) {
   }
 }
 
+//Deletes a post based on passed search parameters (expects post_id)
 export async function DELETE(request: NextRequest) {
   console.log("got to delete");
 
@@ -107,25 +92,14 @@ export async function DELETE(request: NextRequest) {
 
     const queryResult = await pool.query(query);
 
-    console.log("query result");
-    console.log(queryResult);
-
-    //Delete comments
-    // const deleteCommentQuery = {
-    //   text: `DELETE FROM comments WHERE post_id = '${id}'`,
-    // }
-
-    // const deleteCommentsResult = await pool.query(deleteCommentQuery);
-
     return NextResponse.json({ success: "Post was deleted." });
   } catch (e) {
     return NextResponse.json({ error: "Could not delete post." });
   }
 }
 
+//Edits a post based on passed FormData
 export async function PUT(request: NextRequest) {
-  console.log("got to update");
-
   try {
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get("id");
@@ -135,10 +109,9 @@ export async function PUT(request: NextRequest) {
     const body = formData.get("body");
     const file = formData.get("file") as File;
 
-    console.log(title + " " + body);
-
     var query = "";
 
+    //If there was no file changes AKA photo is not changing, then we don't update image_ref
     if (file.size === 0) {
       query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
 
@@ -152,11 +125,7 @@ export async function PUT(request: NextRequest) {
       query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName}' WHERE post_id = '${id}'`;
     }
 
-    console.log("here????");
-
-    const queryResult = (await pool.query(query)).rows;
-
-    console.log(queryResult);
+    await pool.query(query);
 
     return NextResponse.json({ success: "Post updated successfully." });
   } catch (e) {
