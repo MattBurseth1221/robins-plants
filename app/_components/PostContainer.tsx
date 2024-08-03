@@ -1,7 +1,7 @@
 "use client";
 
 import { UUID } from "crypto";
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 
 import Post from "../_components/Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { User } from "lucia";
 import { useRouter } from "next/navigation";
+import { UserContext } from "../_providers/UserProvider";
 
 export interface CommentType {
   comment_id: UUID;
@@ -28,7 +29,8 @@ export interface PostType {
   body: string;
   image_ref: string | null;
   create_date: Date;
-  comments: Array<CommentType>
+  total_likes: number;
+  comments: Array<CommentType>;
 }
 
 export default function PostContainer() {
@@ -39,12 +41,30 @@ export default function PostContainer() {
     order: "DESC",
     limit: "10",
   });
-  const router = useRouter();
+  const [likedItems, setLikedItems] = useState<Array<UUID>>([]);
+  const user = useContext(UserContext);
 
   const PostProps = {
     deletePostFromArray,
     refreshPage,
+    likedItems,
   }
+
+  useEffect(() => {
+    async function getLikedItems() {
+      if (!user) return;
+
+      const likedItemsResult = await fetch(`/api/likes?user_id=${user.id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((res) => res.data);
+
+      setLikedItems(likedItemsResult);
+    }
+
+    getLikedItems();
+  }, [user]);
 
   useEffect(() => {
     const params = new URLSearchParams(filters);

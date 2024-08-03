@@ -55,8 +55,8 @@ export async function GET(request: NextRequest) {
     queryResult[i].comments = postComments;
   }
 
-  console.log("check here");
-  console.log(queryResult);
+  // console.log("check here");
+  // console.log(queryResult);
 
   return Response.json({ message: "Hello!", result: queryResult });
 }
@@ -111,11 +111,11 @@ export async function DELETE(request: NextRequest) {
     console.log(queryResult);
 
     //Delete comments
-    const deleteCommentQuery = {
-      text: `DELETE FROM comments WHERE post_id = '${id}'`,
-    }
+    // const deleteCommentQuery = {
+    //   text: `DELETE FROM comments WHERE post_id = '${id}'`,
+    // }
 
-    const deleteCommentsResult = await pool.query(deleteCommentQuery);
+    // const deleteCommentsResult = await pool.query(deleteCommentQuery);
 
     return NextResponse.json({ success: "Post was deleted." });
   } catch (e) {

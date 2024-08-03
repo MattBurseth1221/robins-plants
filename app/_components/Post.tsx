@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { CommentType, PostType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import Image from "next/image";
@@ -28,10 +28,12 @@ export default function Post({
   postInfo,
   deletePostFromArray,
   refreshPage,
+  likedItems,
 }: {
   postInfo: PostType;
   deletePostFromArray: Function;
   refreshPage: Function;
+  likedItems: Array<UUID>;
 }) {
   const user = useContext(UserContext);
   const [post, setPost] = useState<PostType>(postInfo);
@@ -41,6 +43,11 @@ export default function Post({
   const [commentValue, setCommentValue] = useState<string>("");
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
   const [postLiked, setPostLiked] = useState<boolean>(false);
+  const usersLikedItems = useRef<Array<UUID>>(likedItems);
+
+  useEffect(() => {
+    setPostLiked(usersLikedItems.current.includes(post.post_id));
+  }, [])
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
@@ -162,17 +169,22 @@ export default function Post({
       ).then((res) => res.json());
 
       if (likeResponse.success) {
-        alert(likeResponse.success);
+        console.log(likeResponse.success);
+        post.total_likes++;
       } else {
         alert("Something went wrong.");
       }
     } else {
-      const deleteLikeResponse = await fetch(`/api/likes?parent_id=${postInfo.post_id}&user_id=${user.id}`, {
-        method: "DELETE"
-      }).then((res) => res.json());
+      const deleteLikeResponse = await fetch(
+        `/api/likes?parent_id=${postInfo.post_id}&user_id=${user.id}`,
+        {
+          method: "DELETE",
+        }
+      ).then((res) => res.json());
 
       if (deleteLikeResponse.success) {
-        alert(deleteLikeResponse.success);
+        console.log(deleteLikeResponse.success);
+        post.total_likes--;
       } else {
         alert("Something went wrong.");
       }
@@ -208,6 +220,7 @@ export default function Post({
                   icon={postLiked ? faHeartSolid : faHeartOutline}
                 />
               </button>
+              <p className="text-sm mt-2">{ post.total_likes }</p>
             </div>
           </div>
 
