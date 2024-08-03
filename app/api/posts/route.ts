@@ -93,7 +93,6 @@ export async function POST(request: Request) {
   }
 }
 
-//FIX REQUEST TYPE
 export async function DELETE(request: NextRequest) {
   console.log("got to delete");
 
@@ -101,6 +100,7 @@ export async function DELETE(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get("id");
 
+    //Delete post
     const query = {
       text: `DELETE FROM posts WHERE post_id = '${id}'`,
     };
@@ -109,6 +109,13 @@ export async function DELETE(request: NextRequest) {
 
     console.log("query result");
     console.log(queryResult);
+
+    //Delete comments
+    const deleteCommentQuery = {
+      text: `DELETE FROM comments WHERE post_id = '${id}'`,
+    }
+
+    const deleteCommentsResult = await pool.query(deleteCommentQuery);
 
     return NextResponse.json({ success: "Post was deleted." });
   } catch (e) {

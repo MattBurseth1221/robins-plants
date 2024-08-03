@@ -37,7 +37,7 @@ export default function PostContainer() {
   const [filters, setFilters] = useState({
     sortType: "date",
     order: "DESC",
-    limit: "5",
+    limit: "10",
   });
   const router = useRouter();
 

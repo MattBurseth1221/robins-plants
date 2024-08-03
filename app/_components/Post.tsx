@@ -80,7 +80,7 @@ export default function Post({
     const body = formData.get("body");
     const file = formData.get("file") as File;
 
-    if (title === post.title && body === post.body && file === null) {
+    if (title === post.title && body === post.body && (file === null || file.size === 0)) {
       alert("No changes detected.");
       return;
     }
@@ -174,7 +174,7 @@ export default function Post({
               <textarea
                 placeholder={"Leave a comment..."}
                 rows={1}
-                className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none"
+                className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none max-h-[30vh]"
                 name="comment_body"
                 value={commentValue}
                 onChange={(e) => setCommentValue(e.target.value)}
