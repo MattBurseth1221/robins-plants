@@ -7,9 +7,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashCan,
+  faEdit,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
 import {
   Description,
@@ -36,6 +40,7 @@ export default function Post({
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
+  const [postLiked, setPostLiked] = useState<boolean>(false);
 
   function handleDeletePost() {
     if (!confirmDeletePost) {
@@ -80,7 +85,11 @@ export default function Post({
     const body = formData.get("body");
     const file = formData.get("file") as File;
 
-    if (title === post.title && body === post.body && (file === null || file.size === 0)) {
+    if (
+      title === post.title &&
+      body === post.body &&
+      (file === null || file.size === 0)
+    ) {
       alert("No changes detected.");
       return;
     }
@@ -141,6 +150,37 @@ export default function Post({
     refreshPage();
   }
 
+  async function handleLikePost() {
+    if (!user) return;
+
+    if (!postLiked) {
+      const likeResponse = await fetch(
+        `/api/likes?post_id=${postInfo.post_id}&user_id=${user.id}`,
+        {
+          method: "POST",
+        }
+      ).then((res) => res.json());
+
+      if (likeResponse.success) {
+        alert(likeResponse.success);
+      } else {
+        alert("Something went wrong.");
+      }
+    } else {
+      const deleteLikeResponse = await fetch(`/api/likes?parent_id=${postInfo.post_id}&user_id=${user.id}`, {
+        method: "DELETE"
+      }).then((res) => res.json());
+
+      if (deleteLikeResponse.success) {
+        alert(deleteLikeResponse.success);
+      } else {
+        alert("Something went wrong.");
+      }
+    }
+
+    setPostLiked(!postLiked);
+  }
+
   return post ? (
     <>
       <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center p-8 justify-center w-[100%]">
@@ -158,9 +198,17 @@ export default function Post({
         <div className="min-h-16 mt-2">
           <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20">
             <p className="text-left text-xl max-w-[50%]">{post.title}</p>
-            <p className="max-w-[50%] text-right">
-              {new Date(post.create_date).toLocaleString()}
-            </p>
+
+            <div className="max-w-[50%] flex">
+              <p className="text-right">
+                {new Date(post.create_date).toLocaleString()}
+              </p>
+              <button className="ml-2" onClick={handleLikePost}>
+                <FontAwesomeIcon
+                  icon={postLiked ? faHeartSolid : faHeartOutline}
+                />
+              </button>
+            </div>
           </div>
 
           <p className="text-left mt-4 break-words line-clamp-3">{post.body}</p>
@@ -188,7 +236,7 @@ export default function Post({
             </form>
           </div>
           <div className="border-t-[1px] border-slate-500 border-opacity-20 py-2">
-            {(post.comments && post.comments.length > 0) ? (
+            {post.comments && post.comments.length > 0 ? (
               post.comments.map((comment: CommentType, index) => {
                 return (
                   <div className="mt-2" key={index}>
