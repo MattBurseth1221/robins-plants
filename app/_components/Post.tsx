@@ -15,6 +15,9 @@ import {
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
+import { library } from "@fortawesome/fontawesome-svg-core";
+library.add(faHeartSolid, faHeartOutline, faPaperPlane);
+
 import {
   Description,
   Dialog,
@@ -43,13 +46,15 @@ export default function Post({
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
   const [postLiked, setPostLiked] = useState<boolean>(false);
   const usersLikedItems = useRef<Array<UUID>>(likedItems);
+  const [shouldShake, setShouldShake] = useState<boolean>(false);
+  const [heartBeat, setHeartBeat] = useState<boolean>(false);
 
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post.post_id));
-  }, [])
+  }, []);
 
-  //Toggles the confirm delete modal and selects the current 
+  //Toggles the confirm delete modal and selects the current
   function handleDeletePost() {
     setConfirmDeletePost(!confirmDeletePost);
   }
@@ -120,7 +125,11 @@ export default function Post({
     const comment_body = formData.get("comment_body") as string;
 
     if (!comment_body || comment_body.length === 0) {
-      alert("no comment fag");
+      setShouldShake(true);
+
+      setTimeout(() => {
+        setShouldShake(false);
+      }, 250);
       return;
     }
     setCommentValue("");
@@ -137,17 +146,21 @@ export default function Post({
       }).then((res) => res.json());
 
       if (response.success) {
-        alert(response.success);
+        console.log(response.success);
       } else {
-        alert(response.error);
+        console.log(response.error);
       }
+
+      post.comments.unshift(response.resultingComment[0]);
     } catch (e) {
       console.log(e);
+      return;
     }
 
     //TODO
     //Look into adding the comment client side, refresh on comment addition is clunky
-    refreshPage();
+    //refreshPage();
+    //--Handled?
   }
 
   //Fires when a user likes or dislikes a post - either creates a like entry in DB or deletes
@@ -184,6 +197,12 @@ export default function Post({
       }
     }
 
+    setHeartBeat(true);
+
+    setTimeout(() => {
+      setHeartBeat(false);
+    }, 750);
+
     setPostLiked(!postLiked);
   }
 
@@ -212,9 +231,10 @@ export default function Post({
               <button className="ml-2" onClick={handleLikePost}>
                 <FontAwesomeIcon
                   icon={postLiked ? faHeartSolid : faHeartOutline}
+                  beat={ heartBeat }
                 />
               </button>
-              <p className="text-sm mt-2">{ post.total_likes }</p>
+              <p className="text-sm mt-2">{post.total_likes}</p>
             </div>
           </div>
 
@@ -238,7 +258,7 @@ export default function Post({
                 className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
                 type="submit"
               >
-                <FontAwesomeIcon icon={faPaperPlane} />
+                <FontAwesomeIcon icon="paper-plane" shake={ shouldShake } />
               </button>
             </form>
           </div>

@@ -23,11 +23,15 @@ export async function POST(request: NextRequest) {
       values: values,
     };
 
-    const queryResult = await pool.query(query);
+    await pool.query(query);
 
-    //console.log(queryResult);
+    const resultingComment = (await pool.query(
+      `SELECT * FROM comments WHERE comment_id = '${newUUID}'`
+    )).rows;
 
-    return NextResponse.json({ success: "Comment posted." });
+    console.log(resultingComment);
+
+    return NextResponse.json({ success: "Comment posted.", resultingComment: resultingComment });
   } catch (e) {
     console.log(e);
 
