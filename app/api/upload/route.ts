@@ -68,8 +68,23 @@ export async function uploadFileToS3(file: File, fileName: string) {
     await s3.send(command);
     return actualFileName;
   } catch (e) {
+    console.log(e);
     return e;
   }
 }
 
 //To get objects and check for photos to delete, can we use GetObjectCommand?
+export async function deleteFileFromS3(fileName: string) {
+  try {
+    const deleteParams = {
+      Bucket: process.env.AMPLIFY_BUCKET,
+      Key: fileName,
+    }
+
+    const deleteCommand = new DeleteObjectCommand(deleteParams);
+    await s3.send(deleteCommand);
+  } catch(e) {
+    console.log(e);
+    return e;
+  }
+}

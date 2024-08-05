@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
-import { uploadFileToS3 } from "../upload/route";
+import { deleteFileFromS3, uploadFileToS3 } from "../upload/route";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieves all posts given parameters from DB
@@ -57,10 +57,10 @@ export async function POST(request: Request) {
 
     const file = formData.get("file") as File;
 
-    //upload image to S3
+    //Upload image to S3
     const fileName = await uploadFileToS3(file, file.name);
 
-    //upload post info to database
+    //Upload post info to database
     const newUUID = uuidv4();
     const values = [newUUID, postTitle, postBody, fileName];
 
@@ -84,6 +84,9 @@ export async function DELETE(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get("id");
+    const deletePostFileName = searchParams.get("file_name");
+
+    if (!deletePostFileName) throw new Error("File name not found.");
 
     //Delete post
     const query = {
@@ -91,6 +94,9 @@ export async function DELETE(request: NextRequest) {
     };
 
     const queryResult = await pool.query(query);
+
+    //Delete photo from S3 bucket
+    await deleteFileFromS3(deletePostFileName)
 
     return NextResponse.json({ success: "Post was deleted." });
   } catch (e) {

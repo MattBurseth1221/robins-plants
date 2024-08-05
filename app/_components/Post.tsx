@@ -11,6 +11,8 @@ import {
   faTrashCan,
   faEdit,
   faPaperPlane,
+  faAnglesDown,
+  faAnglesUp
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
@@ -49,6 +51,18 @@ export default function Post({
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
 
+  const showCommentDiv = (
+    <div>
+      <button
+        onClick={() => {
+          setShowAllComments(!showAllComments);
+        }}
+      >
+        {showAllComments ? <FontAwesomeIcon icon={faAnglesUp} /> : <FontAwesomeIcon icon={faAnglesDown} /> }
+      </button>
+    </div>
+  );
+
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post.post_id));
@@ -61,9 +75,12 @@ export default function Post({
 
   //Calls the delete post endpoint, toggles confirm delete modal
   async function deletePost() {
-    const response = await fetch(`/api/posts?id=${post.post_id}`, {
-      method: "DELETE",
-    }).then((res) => res.json());
+    const response = await fetch(
+      `/api/posts?id=${post.post_id}&file_name=${post.image_ref}`,
+      {
+        method: "DELETE",
+      }
+    ).then((res) => res.json());
 
     if (response.success) {
       console.log(response.success);
@@ -140,7 +157,7 @@ export default function Post({
     formData.append("post_id", post.post_id);
 
     try {
-      const response = await fetch(`/api/comments`, {
+      let response = await fetch(`/api/comments`, {
         method: "POST",
         body: formData,
       }).then((res) => res.json());
@@ -150,6 +167,8 @@ export default function Post({
       } else {
         console.log(response.error);
       }
+
+      response.resultingComment[0].username = user.username;
 
       post.comments.unshift(response.resultingComment[0]);
     } catch (e) {
@@ -264,18 +283,16 @@ export default function Post({
           </div>
           <div className="border-t-[1px] border-slate-500 border-opacity-20 py-2">
             {post.comments && post.comments.length > 0 ? (
-              post.comments.map((comment: CommentType, index) => {
+              post.comments.slice(0, (showAllComments ? post.comments.length : 3)).map((comment: CommentType, index) => {
                 return (
                   <div className="mt-2" key={index}>
                     <div className="flex justify-between">
-                      <p className="text-left opacity-50 text-xs">
-                        {comment.username}
-                      </p>
+                      <p className="text-left opacity-50 text-xs">{comment.username}</p>
                       <p className="text-right opacity-50 text-xs min-w-[25%]">
                         {commentDateConverter(new Date(comment.create_date))}
                       </p>
                     </div>
-
+          
                     <p className="text-left">{comment.body}</p>
                   </div>
                 );
@@ -285,6 +302,8 @@ export default function Post({
                 <p>Be the first to comment!</p>
               </div>
             )}
+
+            {post.comments && post.comments.length > 3 && showCommentDiv}
           </div>
         </div>
 
