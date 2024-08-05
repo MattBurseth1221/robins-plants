@@ -231,7 +231,7 @@ export default function Post({
               <button className="ml-2" onClick={handleLikePost}>
                 <FontAwesomeIcon
                   icon={postLiked ? faHeartSolid : faHeartOutline}
-                  beat={ heartBeat }
+                  beat={heartBeat}
                 />
               </button>
               <p className="text-sm mt-2">{post.total_likes}</p>
@@ -258,7 +258,7 @@ export default function Post({
                 className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
                 type="submit"
               >
-                <FontAwesomeIcon icon="paper-plane" shake={ shouldShake } />
+                <FontAwesomeIcon icon="paper-plane" shake={shouldShake} />
               </button>
             </form>
           </div>
@@ -267,15 +267,16 @@ export default function Post({
               post.comments.map((comment: CommentType, index) => {
                 return (
                   <div className="mt-2" key={index}>
-                    <p className="text-left opacity-50 text-xs">
-                      {comment.username}
-                    </p>
                     <div className="flex justify-between">
-                      <p className="text-left">{comment.body}</p>
+                      <p className="text-left opacity-50 text-xs">
+                        {comment.username}
+                      </p>
                       <p className="text-right opacity-50 text-xs min-w-[25%]">
                         {commentDateConverter(new Date(comment.create_date))}
                       </p>
                     </div>
+
+                    <p className="text-left">{comment.body}</p>
                   </div>
                 );
               })
