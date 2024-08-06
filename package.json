@@ -24,6 +24,7 @@
     "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18",
+    "resend": "^3.5.0",
     "robins-plants": "file:",
     "uuid": "^9.0.1"
   },
