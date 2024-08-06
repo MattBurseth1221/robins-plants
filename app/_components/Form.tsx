@@ -16,7 +16,7 @@ export function Form({
     <form className="mb-4 mt-8" action={formAction}>
       {children}
       {state.error && (
-        <p className="bg-red-500 opacity-30 p-2 rounded-md text-black text-opacity-100 text-center">
+        <p className="bg-red-500 opacity-70 p-2 rounded-md text-black text-opacity-100 text-center">
           {state.error}
         </p>
       )}

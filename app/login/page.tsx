@@ -44,10 +44,6 @@ function sha256(data: string): string {
 async function login(_: any, formData: FormData): Promise<ActionResult> {
   "use server";
 
-  //const db = await pool.connect();
-
-  console.log(sha256("asdfasdf"));
-
   const username = formData.get("username");
   if (
     typeof username !== "string" ||
@@ -87,7 +83,6 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
 
   const validPassword = sha256(password) === existingUser.password_hash;
 
-  console.log(sha256(password) + " " + existingUser.password_hash);
   if (!validPassword) {
     return {
       error: "Incorrect username or password",

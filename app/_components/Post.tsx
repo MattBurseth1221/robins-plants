@@ -227,7 +227,8 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center p-8 justify-center w-[100%]">
+      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%]">
+        <p className="float-left my-4 text-xl text-left">{post.title}</p>
         <Image
           src={
             `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
@@ -241,9 +242,8 @@ export default function Post({
 
         <div className="min-h-16 mt-2">
           <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20">
-            <p className="text-left text-xl max-w-[50%]">{post.title}</p>
-
-            <div className="max-w-[50%] flex">
+            <p className="text-left text-xl max-w-[40%]">{user!.username}</p>
+            <div className="ml-auto flex max-w-[35%]">
               <p className="text-right">
                 {new Date(post.create_date).toLocaleString()}
               </p>
@@ -395,7 +395,7 @@ export default function Post({
                   defaultValue={post.title}
                   type="text"
                   name="title"
-                  maxLength={50}
+                  maxLength={200}
                   required
                 />
               </label>

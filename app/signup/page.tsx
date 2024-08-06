@@ -48,7 +48,7 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
   // keep in mind some database (e.g. mysql) are case insensitive
   if (
     typeof username !== "string" ||
-    username.length < 3 ||
+    username.length < 5 ||
     username.length > 31 ||
     !/^[A-Za-z0-9_-]+$/.test(username)
   ) {
