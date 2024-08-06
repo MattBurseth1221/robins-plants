@@ -27,7 +27,7 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { UserContext } from "../_providers/UserProvider";
-import { commentDateConverter, userIsAdmin } from "../_utils/helper-functions";
+import { removeMilliseconds, userIsAdmin } from "../_utils/helper-functions";
 
 export default function Post({
   postInfo,
@@ -228,7 +228,7 @@ export default function Post({
   return post ? (
     <>
       <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%]">
-        <p className="float-left my-4 text-xl text-left">{post.title}</p>
+        <p className="float-left my-4 text-2xl text-left">{post.title}</p>
         <Image
           src={
             `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
@@ -237,15 +237,15 @@ export default function Post({
           width="900"
           height="0"
           alt="Flower?"
-          className="rounded-md mx-auto"
+          className="rounded-md mx-auto border-2 border-black"
         />
 
         <div className="min-h-16 mt-2">
-          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20">
+          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2">
             <p className="text-left text-xl max-w-[40%]">{user!.username}</p>
             <div className="ml-auto flex max-w-[35%]">
               <p className="text-right">
-                {new Date(post.create_date).toLocaleString()}
+                {removeMilliseconds(new Date(post.create_date))}
               </p>
               <button className="ml-2" onClick={handleLikePost}>
                 <FontAwesomeIcon
@@ -289,7 +289,7 @@ export default function Post({
                     <div className="flex justify-between">
                       <p className="text-left opacity-50 text-xs">{comment.username}</p>
                       <p className="text-right opacity-50 text-xs min-w-[25%]">
-                        {commentDateConverter(new Date(comment.create_date))}
+                        {removeMilliseconds(new Date(comment.create_date))}
                       </p>
                     </div>
           
@@ -369,7 +369,7 @@ export default function Post({
         onClose={() => handleUpdatePost()}
         className="relative z-50"
       >
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh] absolute top-">
           <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
             <DialogTitle className="font-bold">Update Post</DialogTitle>
             <Description>This will edit the post.</Description>
