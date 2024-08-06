@@ -24,8 +24,14 @@ export default async function Page() {
           <label htmlFor="username">Username</label>
           <input name="username" id="username" />
           <br />
+          <label htmlFor="email">Email</label>
+          <input type="email" name="email" id="email" />
+          <br />
           <label htmlFor="password">Password</label>
           <input type="password" name="password" id="password" />
+          <br />
+          <label htmlFor="confirm-password">Confirm Password</label>
+          <input type="password" name="confirm-password" id="password" />
           <br />
           <button>Continue</button>
         </Form>
@@ -45,7 +51,6 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
   "use server";
   const username = formData.get("username");
   // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
-  // keep in mind some database (e.g. mysql) are case insensitive
   if (
     typeof username !== "string" ||
     username.length < 5 ||
@@ -57,6 +62,7 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
     };
   }
   const password = formData.get("password");
+  const confirmPassword = formData.get("confirm-password");
   if (
     typeof password !== "string" ||
     password.length < 6 ||
@@ -67,12 +73,15 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
     };
   }
 
+  if (password !== confirmPassword) return { error: "Passwords do not match" };
+
   const hashedPassword = await sha256(password);
   const userId = uuidv4();
+  const emailAddress = formData.get("email");
 
   const query = {
-    text: "INSERT INTO auth_user(id, username, password_hash) VALUES($1, $2, $3)",
-    values: [userId, username, hashedPassword],
+    text: "INSERT INTO auth_user(id, username, password_hash, email) VALUES($1, $2, $3, $4)",
+    values: [userId, username, hashedPassword, emailAddress],
   };
 
   try {
@@ -90,7 +99,7 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
       console.log(e);
 
       return {
-        error: "Username already used",
+        error: "Username/Email already in use",
       };
     }
     return {

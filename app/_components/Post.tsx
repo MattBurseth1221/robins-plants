@@ -369,7 +369,7 @@ export default function Post({
         onClose={() => handleUpdatePost()}
         className="relative z-50"
       >
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh] absolute top-">
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh]">
           <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
             <DialogTitle className="font-bold">Update Post</DialogTitle>
             <Description>This will edit the post.</Description>

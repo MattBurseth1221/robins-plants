@@ -21,7 +21,7 @@ export default async function Page() {
       <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
         <h1 className="text-xl">Sign in</h1>
         <Form action={login}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Email/Username</label>
           <input name="username" id="username" />
           <br />
           <label htmlFor="password">Password</label>
@@ -68,7 +68,7 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
   }
 
   const query = {
-    text: "SELECT * FROM auth_user WHERE username = $1",
+    text: "SELECT * FROM auth_user WHERE username = $1 OR email = $1",
     values: [username],
   };
 
