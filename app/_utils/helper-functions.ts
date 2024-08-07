@@ -1,4 +1,5 @@
 import { User } from "lucia";
+import crypto from "crypto";
 
 export function userIsAdmin(user: User | null) {
   if (user === null) return false;
@@ -18,4 +19,24 @@ export function removeMilliseconds(date: Date) {
   newDate = newDate.slice(0, -6) + newDate.slice(-3);
 
   return newDate;
+}
+
+export async function createTempPassword() {
+  let tempPassword = "";
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 15; i++) {
+    const randomInd = Math.floor(Math.random() * characters.length);
+    tempPassword += characters.charAt(randomInd);
+  }
+
+  const hashedTempPassword = await sha256(tempPassword);
+
+  return {tempPassword: tempPassword, hashedTempPassword: hashedTempPassword};
+}
+
+export function sha256(data: string): string {
+  const hash = crypto.createHash("sha256");
+  hash.update(data);
+  return hash.digest("hex");
 }

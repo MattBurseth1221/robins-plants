@@ -10,6 +10,7 @@ import { generateId } from "lucia";
 import { v4 as uuidv4 } from "uuid";
 
 import type { ActionResult } from "../_components/Form";
+import { sha256 } from "../_utils/helper-functions";
 
 export default async function Page() {
   const { user } = await validateRequest();
@@ -39,12 +40,6 @@ export default async function Page() {
       </div>
     </main>
   );
-}
-
-function sha256(data: string): string {
-  const hash = crypto.createHash("sha256");
-  hash.update(data);
-  return hash.digest("hex");
 }
 
 async function signup(_: any, formData: FormData): Promise<ActionResult> {
