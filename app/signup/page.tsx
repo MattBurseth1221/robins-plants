@@ -10,7 +10,7 @@ import { generateId } from "lucia";
 import { v4 as uuidv4 } from "uuid";
 
 import type { ActionResult } from "../_components/Form";
-import { sha256 } from "../_utils/helper-functions";
+import { sha256, testPassword } from "../_utils/helper-functions";
 
 export default async function Page() {
   const { user } = await validateRequest();
@@ -56,19 +56,12 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
       error: "Invalid username",
     };
   }
-  const password = formData.get("password");
-  const confirmPassword = formData.get("confirm-password");
-  if (
-    typeof password !== "string" ||
-    password.length < 6 ||
-    password.length > 255
-  ) {
-    return {
-      error: "Invalid password",
-    };
-  }
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirm-password") as string;
+  
+  const passwordValid = testPassword(password, confirmPassword);
 
-  if (password !== confirmPassword) return { error: "Passwords do not match" };
+  if (passwordValid.error) return passwordValid;
 
   const hashedPassword = await sha256(password);
   const userId = uuidv4();

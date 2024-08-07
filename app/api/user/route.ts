@@ -7,30 +7,55 @@ import { v4 as uuidv4 } from "uuid";
 export async function PUT(request: NextRequest) {
   const searchParams = await request.nextUrl.searchParams;
   const action = searchParams.get("action");
-  const usernameValue = (await request.json()).usernameValue;
+  const body = await request.json();
+  const usernameValue = body.usernameValue;
 
   console.log(usernameValue);
 
+  if (action === "reset-password-email") {
+    return resetPasswordEmail(usernameValue);
+  }
+
   if (action === "reset-password") {
-    return resetPassword(usernameValue);
+    const user_id = body.user_id;
+    const newPasswordHash = body.newPasswordHash;
+    return resetPassword(user_id, newPasswordHash);
   }
 
   return NextResponse.json({ success: "worked?" });
 }
 
-async function resetPassword(usernameValue: string) {
-  const usernameQuery = `SELECT id FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
-  const queryResult = (await pool.query(usernameQuery)).rows;
+async function resetPassword(user_id: UUID, newPasswordHash: string) {
+  try {
+    await pool.query("BEGIN;");
 
-  console.log(queryResult);
+    //Update password to new hash value
+    const passwordChangeQuery = `UPDATE auth_user SET password_hash = '${newPasswordHash}' WHERE id = '${user_id}'`;
+    await pool.query(passwordChangeQuery);
+
+    //Remove password request from DB
+    const deleteRequestQuery = `DELETE FROM password_change_requests WHERE user_id = '${user_id}'`;
+    await pool.query(deleteRequestQuery);
+
+    await pool.query("COMMIT;");
+
+    return NextResponse.json({ success: "Password changed successfully" });
+  } catch (e) {
+    await pool.query("ROLLBACK;");
+    console.log(e);
+    return NextResponse.json({ error: e });
+  }
+}
+
+async function resetPasswordEmail(usernameValue: string) {
+  const usernameQuery = `SELECT id, email FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
+  const queryResult = (await pool.query(usernameQuery)).rows;
 
   if (queryResult.length === 0) {
     return NextResponse.json({ error: "No user found" });
   }
 
   const tempPassword = await createTempPassword();
-
-  console.log(tempPassword);
 
   //Make entry in password_change_request table
   try {
@@ -47,7 +72,6 @@ async function resetPassword(usernameValue: string) {
     await pool.query(insertQuery);
 
     await pool.query("COMMIT;");
-
   } catch (e) {
     await pool.query("ROLLBACK;");
     console.log(e);
@@ -57,5 +81,7 @@ async function resetPassword(usernameValue: string) {
   return NextResponse.json({
     success: "User found",
     user_id: queryResult[0].id,
+    email: queryResult[0].email,
+    tempPasswordID: tempPassword.tempPassword,
   });
 }

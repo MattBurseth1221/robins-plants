@@ -1,17 +1,21 @@
 interface EmailTemplateProps {
   firstName: string;
-  tempPassword: string
+  tempPasswordID: string
 }
 
-export default function ResetPasswordEmail({ firstName, tempPassword }: EmailTemplateProps) {
+export default function ResetPasswordEmail({ firstName, tempPasswordID }: EmailTemplateProps) {
   return (
     <div>
       <h1>Hi, {firstName + "!"}</h1>
 
       <h3>
-        We've temporarily changed your password. Use this new one to log back in
-        and change your password in the app.
+        Click the link below to change your password. If you are having issues, please restart the process.
       </h3>
+
+      <p>{process.env.URL}/reset-password?id={tempPasswordID}</p>
+      <p>{process.env.URL}</p>
+
+      <a href={`${process.env.URL}/reset-password?id=${tempPasswordID}`}></a>
     </div>
   );
 }

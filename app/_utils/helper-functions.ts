@@ -40,3 +40,19 @@ export function sha256(data: string): string {
   hash.update(data);
   return hash.digest("hex");
 }
+
+export function testPassword(password: string, confirmPassword: string) {
+  if (
+    typeof password !== "string" ||
+    password.length < 6 ||
+    password.length > 255
+  ) {
+    return {
+      error: "Invalid password",
+    };
+  }
+
+  if (password !== confirmPassword) return { error: "Passwords do not match" };
+
+  return { success: "Password is valid" };
+}
