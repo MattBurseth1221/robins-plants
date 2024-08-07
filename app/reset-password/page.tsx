@@ -9,16 +9,6 @@ export default function Page() {
   async function sendPasswordResetEmail() {
     if (!usernameValue || typeof usernameValue !== "string") return;
 
-    //TODO
-    //Don't know if I can do this here, might have to break this out to a server component and lookup user.
-
-    // const usernameQuery = `SELECT id FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
-    // const queryResult = (await pool.query(usernameQuery)).rows;
-
-    // console.log(queryResult);
-
-    // if (queryResult.length === 0) alert("No user found.");
-
     const passwordChangeResponse = await fetch(
       "/api/user?action=reset-password",
       {
@@ -27,10 +17,14 @@ export default function Page() {
           usernameValue: usernameValue,
         }),
       }
-    );
+    ).then((res) => res.json());
 
-    console.log("pass change response");
-    console.log(passwordChangeResponse);
+    if (passwordChangeResponse.error) {
+      alert(passwordChangeResponse.error)
+      return;
+    }
+
+    alert(passwordChangeResponse.user_id);
 
     // const emailResponse = await fetch("/api/send", {
     //   method: "POST",
