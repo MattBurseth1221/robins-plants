@@ -30,6 +30,7 @@ export default async function Page() {
           <button className="mb-8 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-400 transition">Continue</button>
         </Form>
         <Link href="/signup">Create an account</Link>
+        <Link href="/reset-password">Forgot password?</Link>
       </div>
     </main>
   );

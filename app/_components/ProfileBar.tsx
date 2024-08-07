@@ -1,15 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "../_lib/hooks/SessionContext";
+import { useContext } from "react";
+import { UserContext } from "../_providers/UserProvider";
 
 export default function ProfileBar() {
-  const { user } = useSession();
+  const user = useContext(UserContext);
   const router = useRouter();
-
-  if (!user) {
-    router.push("/login");
-  }
 
   async function logout() {
     const result = await fetch(process.env.URL + "/api/auth");
