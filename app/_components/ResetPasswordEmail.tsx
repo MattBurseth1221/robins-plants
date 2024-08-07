@@ -13,9 +13,8 @@ export default function ResetPasswordEmail({ firstName, tempPasswordID }: EmailT
       </h3>
 
       <p>{process.env.URL}/reset-password?id={tempPasswordID}</p>
-      <p>{process.env.URL}</p>
 
-      <a href={`${process.env.URL}/reset-password?id=${tempPasswordID}`}></a>
+      <h3>Thank you for your continued support on the site. If you have any issues or find any bugs, email me at <code>mattburseth2@gmail.com.</code>.</h3>
     </div>
   );
 }
