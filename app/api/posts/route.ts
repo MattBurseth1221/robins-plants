@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       break;
   }
 
-  const postQuery = `SELECT * FROM posts ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
+  const postQuery = `SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
 
   const queryResult = (await pool.query(postQuery)).rows;
 
@@ -54,6 +54,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const postTitle = formData.get("title");
     const postBody = formData.get("body");
+    const user_id = formData.get("user_id");
 
     const file = formData.get("file") as File;
 
@@ -62,10 +63,10 @@ export async function POST(request: Request) {
 
     //Upload post info to database
     const newUUID = uuidv4();
-    const values = [newUUID, postTitle, postBody, fileName];
+    const values = [newUUID, postTitle, postBody, fileName, user_id];
 
     const query = {
-      text: "INSERT INTO posts(post_id, title, body, image_ref) VALUES($1, $2, $3, $4)",
+      text: "INSERT INTO posts(post_id, title, body, image_ref, user_id) VALUES($1, $2, $3, $4, $5)",
       values: values,
     };
 

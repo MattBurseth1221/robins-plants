@@ -1,11 +1,18 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
+import { UserContext } from '../_providers/UserProvider';
 
 export default function UploadForm() {
   const router = useRouter();
+  const user = useContext(UserContext);
 
   const handleFileSelect = async (formData: FormData) => {
+    if (!user) router.push("/login");
+
+    formData.append("user_id", user!.id)
+
     const response = await fetch('/api/posts', {
       method: 'POST',
       body: formData,

@@ -1,6 +1,7 @@
 import MainNav from "../_components/MainNav";
 import PageTitle from "../_components/PageTitle";
 import ProfileBar from "../_components/ProfileBar";
+import UserProvider from "../_providers/UserProvider";
 
 export default function Page() {
   return (

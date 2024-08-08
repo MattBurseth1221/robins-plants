@@ -31,6 +31,7 @@ export interface PostType {
   create_date: Date;
   total_likes: number;
   comments: Array<CommentType>;
+  username: string;
 }
 
 export default function PostContainer() {
@@ -108,36 +109,6 @@ export default function PostContainer() {
       console.log("refreshed.");
     }, 100);
   }
-
-  // function editPostInArray(id: UUID, formData: FormData) {
-
-
-  //   if (!id) return;
-  //   if (!formData) return;
-
-  //   const newTitle = formData.get('title') as string;
-  //   const newBody = formData.get('body') as string;
-  //   const newFile = formData.get('file') as File;
-
-  //   const newPosts = [...posts];
-  //   var postIndex = -1;
-
-  //   for (let i = 0; i < newPosts.length; i++) {
-  //     if (newPosts[i].post_id === id) {
-  //       postIndex = i;
-  //       break;
-  //     }
-  //   }
-
-  //   if (postIndex === -1) return;
-
-  //   newPosts[postIndex].title = newTitle;
-  //   newPosts[postIndex].body = newBody;
-
-  //   if (newFile.size === 0) {
-      
-  //   }
-  // }
 
   return posts ? (
     <>

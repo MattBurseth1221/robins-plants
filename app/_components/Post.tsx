@@ -242,7 +242,7 @@ export default function Post({
 
         <div className="min-h-16 mt-2">
           <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2">
-            <p className="text-left text-xl max-w-[40%]">{user!.username}</p>
+            <p className="text-left text-xl max-w-[40%]">{post.username}</p>
             <div className="ml-auto flex max-w-[35%]">
               <p className="text-right">
                 {removeMilliseconds(new Date(post.create_date))}
