@@ -12,8 +12,12 @@ import {
   faEdit,
   faPaperPlane,
   faAnglesDown,
-  faAnglesUp
+  faAnglesUp,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSquareCaretLeft,
+  faSquareCaretRight,
+} from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
@@ -59,7 +63,11 @@ export default function Post({
           setShowAllComments(!showAllComments);
         }}
       >
-        {showAllComments ? <FontAwesomeIcon icon={faAnglesUp} /> : <FontAwesomeIcon icon={faAnglesDown} /> }
+        {showAllComments ? (
+          <FontAwesomeIcon icon={faAnglesUp} />
+        ) : (
+          <FontAwesomeIcon icon={faAnglesDown} />
+        )}
       </button>
     </div>
   );
@@ -76,13 +84,10 @@ export default function Post({
 
   //Calls the delete post endpoint, toggles confirm delete modal
   async function deletePost() {
-    const response = await fetch(
-      `/api/posts?id=${post.post_id}`,
-      {
-        method: "DELETE",
-        body: JSON.stringify({ "files": post.image_refs }),
-      }
-    ).then((res) => res.json());
+    const response = await fetch(`/api/posts?id=${post.post_id}`, {
+      method: "DELETE",
+      body: JSON.stringify({ files: post.image_refs }),
+    }).then((res) => res.json());
 
     if (response.success) {
       console.log(response.success);
@@ -104,12 +109,12 @@ export default function Post({
   async function updatePost(formData: FormData) {
     const title = formData.get("title");
     const body = formData.get("body");
-    const file = formData.get("file") as File;
+    const files = formData.getAll("files") as File[];
 
     if (
       title === post.title &&
       body === post.body &&
-      (file === null || file.size === 0)
+      (files === null || files.length === 0)
     ) {
       alert("No changes detected.");
 
@@ -228,24 +233,31 @@ export default function Post({
   }
 
   function handleImageIndexChange() {
-    setCurrentImageIndex((currentImageIndex + 1) % post.image_refs!.length); 
+    setCurrentImageIndex((currentImageIndex + 1) % post.image_refs!.length);
   }
 
   return post ? (
     <>
       <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%]">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
-        {post.image_refs!.length !== 1 && <button onClick={handleImageIndexChange}>Change</button>}
-        <Image
-          src={
-            `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_refs![currentImageIndex]}` ||
-            ""
-          }
-          width="900"
-          height="0"
-          alt="Flower?"
-          className="rounded-md mx-auto border-2 border-black"
-        />
+        <div className="relative">
+          <Image
+            src={
+              `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
+                post.image_refs![currentImageIndex]
+              }` || ""
+            }
+            width="900"
+            height="0"
+            alt="Flower?"
+            className="rounded-md mx-auto border-2 border-black"
+          />
+          {post.image_refs!.length !== 1 && (
+            <button onClick={handleImageIndexChange} className="absolute bottom-0 right-[50%]">
+              <FontAwesomeIcon icon={faSquareCaretRight} className="size-8 opacity-50" />
+            </button>
+          )}
+        </div>
 
         <div className="min-h-16 mt-2">
           <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2">
@@ -290,20 +302,24 @@ export default function Post({
           </div>
           <div className="border-t-[1px] border-slate-500 border-opacity-20 py-2">
             {post.comments && post.comments.length > 0 ? (
-              post.comments.slice(0, (showAllComments ? post.comments.length : 3)).map((comment: CommentType, index) => {
-                return (
-                  <div className="mt-2" key={index}>
-                    <div className="flex justify-between">
-                      <p className="text-left opacity-50 text-xs">{comment.username}</p>
-                      <p className="text-right opacity-50 text-xs min-w-[25%]">
-                        {removeMilliseconds(new Date(comment.create_date))}
-                      </p>
+              post.comments
+                .slice(0, showAllComments ? post.comments.length : 3)
+                .map((comment: CommentType, index) => {
+                  return (
+                    <div className="mt-2" key={index}>
+                      <div className="flex justify-between">
+                        <p className="text-left opacity-50 text-xs">
+                          {comment.username}
+                        </p>
+                        <p className="text-right opacity-50 text-xs min-w-[25%]">
+                          {removeMilliseconds(new Date(comment.create_date))}
+                        </p>
+                      </div>
+
+                      <p className="text-left">{comment.body}</p>
                     </div>
-          
-                    <p className="text-left">{comment.body}</p>
-                  </div>
-                );
-              })
+                  );
+                })
             ) : (
               <div className="opacity-50 text-center">
                 <p>Be the first to comment!</p>
@@ -376,16 +392,20 @@ export default function Post({
         onClose={() => handleUpdatePost()}
         className="relative z-50"
       >
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh]">
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh] my-auto">
           <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
             <DialogTitle className="font-bold">Update Post</DialogTitle>
             <Description>This will edit the post.</Description>
 
+            {post.image_refs!.length !== 1 && (
+              <button onClick={handleImageIndexChange}>Change</button>
+            )}
             <form action={updatePost} id="edit-form">
               <Image
                 src={
-                  `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
-                  ""
+                  `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
+                    post.image_refs![currentImageIndex]
+                  }` || ""
                 }
                 width="400"
                 height="0"
@@ -394,7 +414,7 @@ export default function Post({
               />
               <label>
                 <span>Upload a Photo (JPG only I think)</span>
-                <input type="file" name="file" accept="image/*" />
+                <input type="file" name="files" accept="image/*" multiple />
               </label>
               <label>
                 <span>Title</span>
