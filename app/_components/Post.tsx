@@ -50,6 +50,7 @@ export default function Post({
   const usersLikedItems = useRef<Array<UUID>>(likedItems);
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   const showCommentDiv = (
     <div>
@@ -76,9 +77,10 @@ export default function Post({
   //Calls the delete post endpoint, toggles confirm delete modal
   async function deletePost() {
     const response = await fetch(
-      `/api/posts?id=${post.post_id}&file_name=${post.image_ref}`,
+      `/api/posts?id=${post.post_id}`,
       {
         method: "DELETE",
+        body: JSON.stringify({ "files": post.image_refs }),
       }
     ).then((res) => res.json());
 
@@ -225,13 +227,18 @@ export default function Post({
     setPostLiked(!postLiked);
   }
 
+  function handleImageIndexChange() {
+    setCurrentImageIndex((currentImageIndex + 1) % post.image_refs!.length); 
+  }
+
   return post ? (
     <>
       <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%]">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
+        {post.image_refs!.length !== 1 && <button onClick={handleImageIndexChange}>Change</button>}
         <Image
           src={
-            `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_ref}` ||
+            `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${post.image_refs![currentImageIndex]}` ||
             ""
           }
           width="900"

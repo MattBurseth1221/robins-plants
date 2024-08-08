@@ -35,7 +35,7 @@ export default function UploadForm() {
     <form action={handleFileSelect} className="flex flex-col gap-4">
       <label>
         <span>Upload a Photo (JPG only I think)</span>
-        <input type="file" name="file" accept="image/*" required/>
+        <input type="file" name="files" accept="image/*" multiple required/>
       </label>
       <label>
         <span>Title</span>
