@@ -11,7 +11,7 @@ export default function UploadForm() {
   const handleFileSelect = async (formData: FormData) => {
     if (!user) router.push("/login");
 
-    formData.append("user_id", user!.id)
+    formData.append("user_id", user!.id);
 
     const response = await fetch('/api/posts', {
       method: 'POST',
