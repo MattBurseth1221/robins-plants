@@ -28,7 +28,7 @@ export interface PostType {
   title: string;
   body: string;
   image_ref: string | null;
-  image_refs: string[] | null;
+  image_refs: string[];
   create_date: Date;
   total_likes: number;
   comments: Array<CommentType>;

@@ -232,37 +232,61 @@ export default function Post({
     setPostLiked(!postLiked);
   }
 
-  function handleImageIndexChange() {
-    setCurrentImageIndex((currentImageIndex + 1) % post.image_refs!.length);
+  function handleImageIndexChange(addition: number) {
+    let newIndex = currentImageIndex + addition;
+    if (newIndex === post.image_refs.length)
+      newIndex = newIndex % post.image_refs.length;
+    else if (newIndex === -1) newIndex = post.image_refs.length - 1;
+
+    setCurrentImageIndex(newIndex);
   }
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%]">
+      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] flex flex-col">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
-        <div className="relative">
+        <div className={`relative ${post.image_refs.length > 1 ? "h-[600px]" : ""} overflow-auto flex items-center justify-center rounded-md`}>
           <Image
             src={
               `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
                 post.image_refs![currentImageIndex]
               }` || ""
             }
-            width="900"
-            height="0"
+            height="600"
+            width="600"
             alt="Flower?"
-            className="rounded-md mx-auto border-2 border-black"
+            className="rounded-md mx-auto border-2 border-black "
           />
-          {post.image_refs!.length !== 1 && (
-            <button onClick={handleImageIndexChange} className="absolute bottom-0 right-[50%]">
-              <FontAwesomeIcon icon={faSquareCaretRight} className="size-8 opacity-50" />
-            </button>
-          )}
         </div>
 
         <div className="min-h-16 mt-2">
-          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2">
-            <p className="text-left text-xl max-w-[40%]">{post.username}</p>
-            <div className="ml-auto flex max-w-[35%]">
+          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2 pb-2">
+            <p className="text-left text-xl max-w-[33%]">{post.username}</p>
+            {post.image_refs!.length !== 1 && (
+              <div className="flex justify-center w-[33%] absolute h-8">
+                <button
+                  onClick={() => {
+                    handleImageIndexChange(-1);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faSquareCaretLeft}
+                    className="size-8 opacity-50"
+                  />
+                </button>
+                <button
+                  onClick={() => {
+                    handleImageIndexChange(1);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faSquareCaretRight}
+                    className="size-8 opacity-50"
+                  />
+                </button>
+              </div>
+            )}
+            <div className="ml-auto flex max-w-[33%]">
               <p className="text-right">
                 {removeMilliseconds(new Date(post.create_date))}
               </p>
