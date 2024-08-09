@@ -107,6 +107,11 @@ export default function Post({
 
   //Takes the form data from the edit post modal and send it to post put endpoint
   async function updatePost(formData: FormData) {
+    if (formData.getAll("files").length > 10) {
+      alert("Maximum of 10 images allowed.");
+      return;
+    }
+
     const title = formData.get("title");
     const body = formData.get("body");
     const files = formData.getAll("files") as File[];

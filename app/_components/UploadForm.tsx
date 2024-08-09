@@ -10,6 +10,10 @@ export default function UploadForm() {
 
   const handleFileSelect = async (formData: FormData) => {
     if (!user) router.push("/login");
+    if (formData.getAll("files").length > 10) {
+      alert("Maximum of 10 images allowed.");
+      return;
+    }
 
     formData.append("user_id", user!.id);
 
