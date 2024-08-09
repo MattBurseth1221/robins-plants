@@ -422,7 +422,7 @@ export default function Post({
             <Description>This will edit the post.</Description>
 
             {post.image_refs!.length !== 1 && (
-              <button onClick={handleImageIndexChange}>Change</button>
+              <button onClick={() => {handleImageIndexChange(1)}}>Change</button>
             )}
             <form action={updatePost} id="edit-form">
               <Image
