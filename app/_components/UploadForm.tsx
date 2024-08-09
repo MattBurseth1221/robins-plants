@@ -10,6 +10,10 @@ export default function UploadForm() {
 
   const handleFileSelect = async (formData: FormData) => {
     if (!user) router.push("/login");
+    if (formData.getAll("files").length > 10) {
+      alert("Maximum of 10 images allowed.");
+      return;
+    }
 
     formData.append("user_id", user!.id);
 
@@ -35,7 +39,7 @@ export default function UploadForm() {
     <form action={handleFileSelect} className="flex flex-col gap-4">
       <label>
         <span>Upload a Photo (JPG only I think)</span>
-        <input type="file" name="file" accept="image/*" required/>
+        <input type="file" name="files" accept="image/*" multiple required/>
       </label>
       <label>
         <span>Title</span>

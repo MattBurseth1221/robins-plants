@@ -28,6 +28,7 @@ export interface PostType {
   title: string;
   body: string;
   image_ref: string | null;
+  image_refs: string[];
   create_date: Date;
   total_likes: number;
   comments: Array<CommentType>;
@@ -84,6 +85,10 @@ export default function PostContainer() {
         .catch((e) => {
           console.log(e);
         });
+
+      for (let i = 0; i < postArray.length; i++) {
+        postArray[i].image_refs = postArray[i].image_ref.split(';');
+      }
 
       setPosts(postArray);
     }

@@ -56,14 +56,26 @@ export async function POST(request: Request) {
     const postBody = formData.get("body");
     const user_id = formData.get("user_id");
 
-    const file = formData.get("file") as File;
+    const files = formData.getAll("files") as File[];
 
-    //Upload image to S3
-    const fileName = await uploadFileToS3(file, file.name);
+    let fileName = "";
+
+    //Upload images to S3
+    for (let i = 0; i < files.length; i++) {
+      fileName += (await uploadFileToS3(files[i], files[i].name)) + ";";
+    }
+
+    if (fileName === "") throw new Error();
 
     //Upload post info to database
     const newUUID = uuidv4();
-    const values = [newUUID, postTitle, postBody, fileName, user_id];
+    const values = [
+      newUUID,
+      postTitle,
+      postBody,
+      fileName.slice(0, -1),
+      user_id,
+    ];
 
     const query = {
       text: "INSERT INTO posts(post_id, title, body, image_ref, user_id) VALUES($1, $2, $3, $4, $5)",
@@ -80,14 +92,14 @@ export async function POST(request: Request) {
 
 //Deletes a post based on passed search parameters (expects post_id)
 export async function DELETE(request: NextRequest) {
-  console.log("got to delete");
-
   try {
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get("id");
-    const deletePostFileName = searchParams.get("file_name");
+    //const deletePostFileName = searchParams.get("file_name");
 
-    if (!deletePostFileName) throw new Error("File name not found.");
+    const files = (await request.json()).files;
+
+    //if (!deletePostFileName) throw new Error("File name not found.");
 
     //Delete post
     const query = {
@@ -97,7 +109,9 @@ export async function DELETE(request: NextRequest) {
     const queryResult = await pool.query(query);
 
     //Delete photo from S3 bucket
-    await deleteFileFromS3(deletePostFileName)
+    for (let i = 0; i < files.length; i++) {
+      await deleteFileFromS3(files[i]);
+    }
 
     return NextResponse.json({ success: "Post was deleted." });
   } catch (e) {
@@ -114,28 +128,39 @@ export async function PUT(request: NextRequest) {
     const formData = await request.formData();
     const title = formData.get("title");
     const body = formData.get("body");
-    const file = formData.get("file") as File;
+    const files = formData.getAll("files") as File[];
 
     var query = "";
 
+    await pool.query("BEGIN;");
+
     //If there was no file changes AKA photo is not changing, then we don't update image_ref
-    if (file.size === 0) {
+    if (files.length === 0) {
       query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
 
       console.log(query);
     } else {
-      //upload image to S3
-      const fileName = await uploadFileToS3(file, file.name);
+      //Upload images to S3
+      let fileName = "";
+
+      for (let i = 0; i < files.length; i++) {
+        fileName += (await uploadFileToS3(files[i], files[i].name)) + ";";
+      }
+
+      if (fileName === "") throw new Error();
 
       console.log(fileName + " success");
 
-      query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName}' WHERE post_id = '${id}'`;
+      query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName.slice(0, -1)}' WHERE post_id = '${id}'`;
     }
 
     await pool.query(query);
 
+    await pool.query("COMMIT;");
+
     return NextResponse.json({ success: "Post updated successfully." });
   } catch (e) {
+    await pool.query("ROLLBACK;");
     return NextResponse.json({ error: "Could not update post." });
   }
 }
