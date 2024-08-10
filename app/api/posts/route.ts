@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
-import { deleteFileFromS3, uploadFileToS3 } from "../upload/route";
+import { deleteFileFromS3, getFileFromS3, uploadFileToS3 } from "../upload/route";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieves all posts given parameters from DB
@@ -128,11 +128,12 @@ export async function PUT(request: NextRequest) {
     const formData = await request.formData();
     const title = formData.get("title");
     const body = formData.get("body");
-    const oldImageRefs = formData.get("image_refs")!.split(',');
+
+    const oldImageRefsString = formData.get("image_refs") as string;
+    const oldImageRefs = oldImageRefsString!.split(',');
+    
+    //Get files from formData and filter out weird ghost file 
     let files = formData.getAll("files") as File[];
-
-    console.log(oldImageRefs);
-
     files = files.filter((file) => file.type !== 'application/octet-stream');
 
     var query = "";
@@ -146,9 +147,11 @@ export async function PUT(request: NextRequest) {
 
       console.log(query);
     } else {
-      console.log("this is bad...");
-      console.log(files.length);
-      console.log(files[0]);
+      //Go through all previous images in post and delete from S3
+      oldImageRefs.forEach(async (ref) => {
+        await deleteFileFromS3(ref);
+      })
+
       //Upload images to S3
       let fileName = "";
 

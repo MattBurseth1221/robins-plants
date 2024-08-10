@@ -6,6 +6,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
+  ChecksumAlgorithm,
 } from "@aws-sdk/client-s3";
 
 const Bucket = process.env.AMPLIFY_BUCKET;
