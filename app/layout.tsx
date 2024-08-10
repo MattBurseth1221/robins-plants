@@ -28,7 +28,7 @@ export default async function RootLayout({
       </head>
 
       <UserProvider user={user}>
-        <body className="bg-gradient-to-b from-lg via-dg to-lb bg-no-repeat bg-contain">
+        <body className="bg-gradient-to-b from-lg via-dg to-db bg-no-repeat bg-contain">
           <SessionProvider value={session}>{children}</SessionProvider>
         </body>
       </UserProvider>

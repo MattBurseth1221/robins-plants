@@ -14,8 +14,6 @@ export default function ThemeProvider({
 }) {
   const router = useRouter();
   useEffect(() => {
-    
-
     if (!user) router.push("/login");
   }, [])
 

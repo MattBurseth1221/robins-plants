@@ -12,6 +12,7 @@ import {
 import { User } from "lucia";
 import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
+import PostProvider from "../_providers/PostProvider";
 
 export interface CommentType {
   comment_id: UUID;
@@ -50,7 +51,7 @@ export default function PostContainer() {
     deletePostFromArray,
     refreshPage,
     likedItems,
-  }
+  };
 
   useEffect(() => {
     async function getLikedItems() {
@@ -87,7 +88,7 @@ export default function PostContainer() {
         });
 
       for (let i = 0; i < postArray.length; i++) {
-        postArray[i].image_refs = postArray[i].image_ref.split(';');
+        postArray[i].image_refs = postArray[i].image_ref.split(";");
       }
 
       setPosts(postArray);
@@ -141,11 +142,9 @@ export default function PostContainer() {
       <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
         {posts.map((post: PostType) => {
           return (
-            <Post
-              key={post.post_id}
-              postInfo={post}
-              {...PostProps}
-            />
+            <PostProvider post={ post }>
+              <Post key={post.post_id} {...PostProps} />
+            </PostProvider>
           );
         })}
       </div>

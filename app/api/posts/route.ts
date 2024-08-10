@@ -128,7 +128,12 @@ export async function PUT(request: NextRequest) {
     const formData = await request.formData();
     const title = formData.get("title");
     const body = formData.get("body");
-    const files = formData.getAll("files") as File[];
+    const oldImageRefs = formData.get("image_refs")!.split(',');
+    let files = formData.getAll("files") as File[];
+
+    console.log(oldImageRefs);
+
+    files = files.filter((file) => file.type !== 'application/octet-stream');
 
     var query = "";
 
@@ -136,10 +141,14 @@ export async function PUT(request: NextRequest) {
 
     //If there was no file changes AKA photo is not changing, then we don't update image_ref
     if (files.length === 0) {
+      console.log("got here?");
       query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
 
       console.log(query);
     } else {
+      console.log("this is bad...");
+      console.log(files.length);
+      console.log(files[0]);
       //Upload images to S3
       let fileName = "";
 
