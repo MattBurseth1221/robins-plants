@@ -144,11 +144,6 @@ export default function Post({
       console.log(e);
       return;
     }
-
-    //TODO
-    //Look into adding the comment client side, refresh on comment addition is clunky
-    //refreshPage();
-    //--Handled?
   }
 
   //Fires when a user likes or dislikes a post - either creates a like entry in DB or deletes
