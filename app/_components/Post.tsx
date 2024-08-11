@@ -4,7 +4,6 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { CommentType, PostType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -195,6 +194,7 @@ export default function Post({
     setPostLiked(!postLiked);
   }
 
+  //Adjusts the current image index if post contains multiple photos
   function handleImageIndexChange(addition: number) {
     let newIndex = currentImageIndex + addition;
     if (newIndex === post!.image_refs.length)
@@ -303,7 +303,7 @@ export default function Post({
                         </p>
                       </div>
 
-                      <p className="text-left">{comment.body}</p>
+                      <p className="text-left break-words line-clamp-3">{comment.body}</p>
                     </div>
                   );
                 })

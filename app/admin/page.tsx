@@ -5,24 +5,27 @@ import ProfileBar from "../_components/ProfileBar";
 import { validateRequest } from "../_lib/auth";
 import UploadForm from "../_components/UploadForm";
 import { userIsAdmin } from "../_utils/helper-functions";
+import UserProvider from "../_providers/UserProvider";
 
 export default async function Page() {
-  const { user } = await validateRequest();
+  const { user }: any = await validateRequest();
   if (!userIsAdmin(user)) {
     return redirect("/");
   }
 
   return (
-    <main className="flex min-h-screen">
-      <MainNav active={"Home"} />
+    <UserProvider user={user}>
+      <main className="flex min-h-screen">
+        <MainNav active={"Home"} />
 
-      <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-        <PageTitle title="- Robin's Admin Page -" />
+        <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
+          <PageTitle title="- Robin's Admin Page -" />
 
-        <UploadForm />
-      </div>
+          <UploadForm />
+        </div>
 
-      <ProfileBar />
-    </main>
+        <ProfileBar />
+      </main>
+    </UserProvider>
   );
 }

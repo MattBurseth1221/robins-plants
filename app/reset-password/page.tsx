@@ -31,11 +31,13 @@ export default function Page() {
       }
 
       const user_id = validIDCheck.user_id;
+      console.log(user_id);
       if (!user_id) return;
 
       setChangingUserID(user_id);
 
       if (resetID && resetID !== "" && validIDCheck.isIDValid) {
+        console.log("in here");
         setIsChangingPassword(true);
       }
     }

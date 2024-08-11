@@ -51,9 +51,14 @@ async function resetPasswordEmail(usernameValue: string) {
   const usernameQuery = `SELECT id, email FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
   const queryResult = (await pool.query(usernameQuery)).rows;
 
-  if (queryResult.length === 0) {
+  if (!queryResult || queryResult.length === 0) {
     return NextResponse.json({ error: "No user found" });
   }
+
+  const emailAlreadySentQuery = `SELECT COUNT(*) FROM password_change_requests WHERE user_id = '${queryResult[0].id}'`;
+  const emailAlreadySentResult = await pool.query(emailAlreadySentQuery);
+  console.log(emailAlreadySentResult);
+  if (emailAlreadySentResult.rows[0].count >= 1) return NextResponse.json({ error: "Email already sent" });
 
   const tempPassword = await createTempPassword();
 
