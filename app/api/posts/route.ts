@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
-import { deleteFileFromS3, uploadFileToS3 } from "../upload/route";
+import { deleteFileFromS3, getFileFromS3, uploadFileToS3 } from "../upload/route";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieves all posts given parameters from DB
@@ -128,7 +128,13 @@ export async function PUT(request: NextRequest) {
     const formData = await request.formData();
     const title = formData.get("title");
     const body = formData.get("body");
-    const files = formData.getAll("files") as File[];
+
+    const oldImageRefsString = formData.get("image_refs") as string;
+    const oldImageRefs = oldImageRefsString!.split(',');
+    
+    //Get files from formData and filter out weird ghost file 
+    let files = formData.getAll("files") as File[];
+    files = files.filter((file) => file.type !== 'application/octet-stream');
 
     var query = "";
 
@@ -136,10 +142,16 @@ export async function PUT(request: NextRequest) {
 
     //If there was no file changes AKA photo is not changing, then we don't update image_ref
     if (files.length === 0) {
+      console.log("got here?");
       query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
 
       console.log(query);
     } else {
+      //Go through all previous images in post and delete from S3
+      oldImageRefs.forEach(async (ref) => {
+        await deleteFileFromS3(ref);
+      })
+
       //Upload images to S3
       let fileName = "";
 

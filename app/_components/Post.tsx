@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useContext, useEffect, useRef } from "react";
-import { CommentType, PostType } from "@/app/_components/PostContainer";
+import { CommentType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,31 +20,21 @@ import {
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
-import { library } from "@fortawesome/fontawesome-svg-core";
-library.add(faHeartSolid, faHeartOutline, faPaperPlane);
-
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
 import { UserContext } from "../_providers/UserProvider";
 import { removeMilliseconds, userIsAdmin } from "../_utils/helper-functions";
+import { PostContext } from "../_providers/PostProvider";
+import UpdateDialog from "./UpdateDialog";
+import DeleteDialog from "./DeleteDialog";
 
 export default function Post({
-  postInfo,
   deletePostFromArray,
-  refreshPage,
   likedItems,
 }: {
-  postInfo: PostType;
   deletePostFromArray: Function;
-  refreshPage: Function;
   likedItems: Array<UUID>;
 }) {
   const user = useContext(UserContext);
-  const [post, setPost] = useState<PostType>(postInfo);
+  const post = useContext(PostContext);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
@@ -55,6 +44,19 @@ export default function Post({
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
+  const UpdateDialogProps = {
+    editingPost,
+    setEditingPost,
+    currentImageIndex,
+    handleImageIndexChange,
+  }
+
+  const DeleteDialogProps = {
+    deletePostFromArray,
+    confirmDeletePost, 
+    setConfirmDeletePost,
+  }
 
   const showCommentDiv = (
     <div>
@@ -74,79 +76,25 @@ export default function Post({
 
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
-    setPostLiked(usersLikedItems.current.includes(post.post_id));
+    setPostLiked(usersLikedItems.current.includes(post!.post_id));
   }, []);
-
-  //Toggles the confirm delete modal and selects the current
-  function handleDeletePost() {
-    setConfirmDeletePost(!confirmDeletePost);
-  }
 
   //Calls the delete post endpoint, toggles confirm delete modal
   async function deletePost() {
-    const response = await fetch(`/api/posts?id=${post.post_id}`, {
+    const response = await fetch(`/api/posts?id=${post!.post_id}`, {
       method: "DELETE",
-      body: JSON.stringify({ files: post.image_refs }),
+      body: JSON.stringify({ files: post!.image_refs }),
     }).then((res) => res.json());
 
     if (response.success) {
       console.log(response.success);
-      deletePostFromArray(post.post_id);
+      deletePostFromArray(post!.post_id);
     } else {
       console.log(response.error);
       alert("Something went wrong.");
     }
 
     setConfirmDeletePost(false);
-  }
-
-  //Toggles the editing post modal - can probably be handled in the onClick
-  function handleUpdatePost() {
-    setEditingPost(!editingPost);
-  }
-
-  //Takes the form data from the edit post modal and send it to post put endpoint
-  async function updatePost(formData: FormData) {
-    if (formData.getAll("files").length > 10) {
-      alert("Maximum of 10 images allowed.");
-      return;
-    }
-
-    const title = formData.get("title");
-    const body = formData.get("body");
-    const files = formData.getAll("files") as File[];
-
-    if (
-      title === post.title &&
-      body === post.body &&
-      (files === null || files.length === 0)
-    ) {
-      alert("No changes detected.");
-
-      //Do we want to close the modal if no changes were detected?
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/posts?id=${post.post_id}`, {
-        method: "PUT",
-        body: formData,
-      }).then((res) => res.json());
-
-      if (response.success) {
-        console.log(response.success);
-      } else {
-        console.log(response.error);
-        alert("Something went wrong.");
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setEditingPost(false);
-    }
-
-    console.log("refreshing page...");
-    refreshPage();
   }
 
   //Takes form data from comment field and sends it to comments post endpoint
@@ -166,7 +114,7 @@ export default function Post({
     if (!user) return;
 
     formData.append("user_id", user.id);
-    formData.append("post_id", post.post_id);
+    formData.append("post_id", post!.post_id);
 
     try {
       let response = await fetch(`/api/comments`, {
@@ -182,16 +130,11 @@ export default function Post({
 
       response.resultingComment[0].username = user.username;
 
-      post.comments.unshift(response.resultingComment[0]);
+      post!.comments.unshift(response.resultingComment[0]);
     } catch (e) {
       console.log(e);
       return;
     }
-
-    //TODO
-    //Look into adding the comment client side, refresh on comment addition is clunky
-    //refreshPage();
-    //--Handled?
   }
 
   //Fires when a user likes or dislikes a post - either creates a like entry in DB or deletes
@@ -200,7 +143,7 @@ export default function Post({
 
     if (!postLiked) {
       const likeResponse = await fetch(
-        `/api/likes?post_id=${postInfo.post_id}&user_id=${user.id}`,
+        `/api/likes?post_id=${post!.post_id}&user_id=${user.id}`,
         {
           method: "POST",
         }
@@ -208,13 +151,13 @@ export default function Post({
 
       if (likeResponse.success) {
         console.log(likeResponse.success);
-        post.total_likes++;
+        post!.total_likes++;
       } else {
         alert("Something went wrong.");
       }
     } else {
       const deleteLikeResponse = await fetch(
-        `/api/likes?parent_id=${postInfo.post_id}&user_id=${user.id}`,
+        `/api/likes?parent_id=${post!.post_id}&user_id=${user.id}`,
         {
           method: "DELETE",
         }
@@ -222,7 +165,7 @@ export default function Post({
 
       if (deleteLikeResponse.success) {
         console.log(deleteLikeResponse.success);
-        post.total_likes--;
+        post!.total_likes--;
       } else {
         alert("Something went wrong.");
       }
@@ -237,11 +180,12 @@ export default function Post({
     setPostLiked(!postLiked);
   }
 
+  //Adjusts the current image index if post contains multiple photos
   function handleImageIndexChange(addition: number) {
     let newIndex = currentImageIndex + addition;
-    if (newIndex === post.image_refs.length)
-      newIndex = newIndex % post.image_refs.length;
-    else if (newIndex === -1) newIndex = post.image_refs.length - 1;
+    if (newIndex === post!.image_refs.length)
+      newIndex = newIndex % post!.image_refs.length;
+    else if (newIndex === -1) newIndex = post!.image_refs.length - 1;
 
     setCurrentImageIndex(newIndex);
   }
@@ -325,7 +269,7 @@ export default function Post({
                 className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
                 type="submit"
               >
-                <FontAwesomeIcon icon="paper-plane" shake={shouldShake} />
+                <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
               </button>
             </form>
           </div>
@@ -345,7 +289,7 @@ export default function Post({
                         </p>
                       </div>
 
-                      <p className="text-left">{comment.body}</p>
+                      <p className="text-left break-words line-clamp-3">{comment.body}</p>
                     </div>
                   );
                 })
@@ -364,7 +308,7 @@ export default function Post({
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"
               onClick={() => {
-                handleUpdatePost();
+                setEditingPost(!editingPost);
               }}
             >
               <FontAwesomeIcon icon={faEdit} />
@@ -373,7 +317,7 @@ export default function Post({
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"
               onClick={() => {
-                handleDeletePost();
+                setConfirmDeletePost(!confirmDeletePost);
               }}
             >
               <FontAwesomeIcon icon={faTrashCan} />
@@ -381,110 +325,9 @@ export default function Post({
           </div>
         )}
       </div>
-      <Dialog
-        open={confirmDeletePost}
-        onClose={() => handleDeletePost()}
-        className="relative z-50"
-      >
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
-            <DialogTitle className="font-bold">Delete post?</DialogTitle>
-            <Description>
-              This will (semi) permanently delete the post.
-            </Description>
-            <p>
-              Are you sure you want to delete this post? It will be a pain in
-              the ass to put it back up again...
-            </p>
-            <div className="flex gap-4">
-              <button
-                className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
-                onClick={() => handleDeletePost()}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
-                onClick={() => {
-                  deletePost();
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </DialogPanel>
-        </div>
-      </Dialog>
 
-      <Dialog
-        open={editingPost}
-        onClose={() => handleUpdatePost()}
-        className="relative z-50"
-      >
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh] my-auto">
-          <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
-            <DialogTitle className="font-bold">Update Post</DialogTitle>
-            <Description>This will edit the post.</Description>
-
-            {post.image_refs!.length !== 1 && (
-              <button onClick={() => {handleImageIndexChange(1)}}>Change</button>
-            )}
-            <form action={updatePost} id="edit-form">
-              <Image
-                src={
-                  `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
-                    post.image_refs![currentImageIndex]
-                  }` || ""
-                }
-                width="400"
-                height="0"
-                alt="Flower?"
-                className="rounded-md mx-auto mb-4"
-              />
-              <label>
-                <span>Upload a Photo (JPG only I think)</span>
-                <input type="file" name="files" accept="image/*" multiple />
-              </label>
-              <label>
-                <span>Title</span>
-                <input
-                  defaultValue={post.title}
-                  type="text"
-                  name="title"
-                  maxLength={200}
-                  required
-                />
-              </label>
-              <label>
-                <span>Body</span>
-                <textarea
-                  defaultValue={post.body}
-                  name="body"
-                  rows={5}
-                  className="w-[100%]"
-                  required
-                />
-              </label>
-            </form>
-
-            <div className="flex gap-4">
-              <button
-                className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
-                onClick={() => handleUpdatePost()}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
-                type="submit"
-                form="edit-form"
-              >
-                Update
-              </button>
-            </div>
-          </DialogPanel>
-        </div>
-      </Dialog>
+      <DeleteDialog {...DeleteDialogProps} />
+      <UpdateDialog {...UpdateDialogProps} />
     </>
   ) : (
     <div>Loading post...</div>

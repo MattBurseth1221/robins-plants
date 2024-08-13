@@ -14,7 +14,7 @@ export default function UploadForm() {
       alert("Maximum of 10 images allowed.");
       return;
     }
-
+ 
     formData.append("user_id", user!.id);
 
     const response = await fetch('/api/posts', {

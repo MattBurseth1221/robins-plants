@@ -20,6 +20,8 @@ export async function GET(request: NextRequest) {
       )
     ).rows;
 
+    console.log(idQueryResult);
+
     if (!idQueryResult || idQueryResult.length === 0) isIDValid = false;
 
     user_id = idQueryResult[0].user_id;

@@ -5,6 +5,8 @@ import {
   ListObjectsCommand,
   PutObjectCommand,
   DeleteObjectCommand,
+  GetObjectCommand,
+  ChecksumAlgorithm,
 } from "@aws-sdk/client-s3";
 
 const Bucket = process.env.AMPLIFY_BUCKET;
@@ -86,5 +88,22 @@ export async function deleteFileFromS3(fileName: string) {
   } catch(e) {
     console.log(e);
     return e;
+  }
+}
+
+export async function getFileFromS3(fileName: string) {
+  try {
+    const getParams = {
+    Bucket: process.env.AMPLIFY_BUCKET,
+    Key: fileName,
+  }
+
+  const getFileCommand = new GetObjectCommand(getParams);
+  const fileResponse = await s3.send(getFileCommand);
+
+  return fileResponse;
+  } catch(e) {
+    console.log(e);
+    return;
   }
 }

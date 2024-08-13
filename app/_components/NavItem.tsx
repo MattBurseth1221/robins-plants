@@ -1,10 +1,10 @@
-type Props = {
+type NavProps = {
     itemName: string;
     linkRedirect: string;
     active: Boolean;
   };
   
-  export default function NavItem({ itemName, linkRedirect, active }: Props) {
+  export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
     return (
       <li
         className={`mb-5 text-center hover:bg-green-800
