@@ -1,4 +1,3 @@
-import { User } from "lucia";
 import NavItem from "./NavItem";
 import { validateRequest } from "../_lib/auth";
 import { userIsAdmin } from "../_utils/helper-functions";

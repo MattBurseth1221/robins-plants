@@ -1,4 +1,4 @@
-import { Lucia, TimeSpan } from "lucia";
+import { Lucia } from "lucia";
 import { NodePostgresAdapter } from '@lucia-auth/adapter-postgresql';
 import { pool } from "../_lib/db";
 import { cookies } from "next/headers";

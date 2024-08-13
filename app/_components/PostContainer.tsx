@@ -1,7 +1,7 @@
 "use client";
 
 import { UUID } from "crypto";
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import Post from "../_components/Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,8 +9,7 @@ import {
   faLongArrowDown,
   faLongArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { User } from "lucia";
-import { useRouter } from "next/navigation";
+
 import { UserContext } from "../_providers/UserProvider";
 import PostProvider from "../_providers/PostProvider";
 
