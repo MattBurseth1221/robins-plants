@@ -25,6 +25,7 @@ import { removeMilliseconds, userIsAdmin } from "../_utils/helper-functions";
 import { PostContext } from "../_providers/PostProvider";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
+import Comment from "./Comment";
 
 export default function Post({
   deletePostFromArray,
@@ -277,20 +278,9 @@ export default function Post({
             {post.comments && post.comments.length > 0 ? (
               post.comments
                 .slice(0, showAllComments ? post.comments.length : 3)
-                .map((comment: CommentType, index) => {
+                .map((comment: CommentType, index: number) => {
                   return (
-                    <div className="mt-2" key={index}>
-                      <div className="flex justify-between">
-                        <p className="text-left opacity-50 text-xs">
-                          {comment.username}
-                        </p>
-                        <p className="text-right opacity-50 text-xs min-w-[25%]">
-                          {removeMilliseconds(new Date(comment.create_date))}
-                        </p>
-                      </div>
-
-                      <p className="text-left break-words line-clamp-3">{comment.body}</p>
-                    </div>
+                    <Comment key={index} {...comment} />
                   );
                 })
             ) : (
