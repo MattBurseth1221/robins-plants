@@ -141,8 +141,8 @@ export default function PostContainer() {
       <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
         {posts.map((post: PostType) => {
           return (
-            <PostProvider post={ post }>
-              <Post key={post.post_id} {...PostProps} />
+            <PostProvider key={post.post_id} post={ post }>
+              <Post {...PostProps} />
             </PostProvider>
           );
         })}

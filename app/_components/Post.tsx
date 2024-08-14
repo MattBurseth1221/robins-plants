@@ -240,7 +240,7 @@ export default function Post({
               <p className="text-right">
                 {removeMilliseconds(new Date(post.create_date))}
               </p>
-              <button className="ml-2" onClick={handleLikePost}>
+              <button className="hover:bg-gray-300 transition rounded-md p-1 ml-2" onClick={handleLikePost}>
                 <FontAwesomeIcon
                   icon={postLiked ? faHeartSolid : faHeartOutline}
                   beat={heartBeat}
