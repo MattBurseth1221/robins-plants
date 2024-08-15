@@ -175,7 +175,7 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] flex flex-col">
+      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
         <div className={`relative ${post.image_refs.length > 1 ? "h-[600px]" : ""} overflow-auto flex items-center justify-center rounded-md`}>
           <Image
@@ -277,7 +277,7 @@ export default function Post({
           </div>
         </div>
 
-        {userIsAdmin(user) && (
+        {(userIsAdmin(user) || (post.username === user!.username)) && (
           <div className="w-[20%] mx-auto mt-4 flex justify-between">
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"

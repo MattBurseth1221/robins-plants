@@ -57,6 +57,26 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const commentId = searchParams.get("id");
+    const body = await request.formData();
+    const newCommentBody = body.get("comment-body");
+
+    await pool.query("BEGIN;");
+
+    const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}' WHERE comment_id = '${commentId}'`;
+    await pool.query(editCommentQuery);
+
+    await pool.query("COMMIT;");
+
+    return NextResponse.json({ success: "Comment edited successfully" });
+  } catch(e) {
+    return NextResponse.json({ error: e });
+  }
+}
+
 export async function GET(request: NextRequest) {
   console.log("Fetching comments");
 

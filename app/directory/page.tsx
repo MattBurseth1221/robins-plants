@@ -14,6 +14,8 @@ export default async function Directory() {
 
       <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
         <PageTitle title="- Plant Directory -" />
+
+        <p>I haven't written this part of the app yet </p>
       </div>
 
       <ProfileBar />
