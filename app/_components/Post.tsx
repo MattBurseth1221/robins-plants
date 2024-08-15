@@ -25,6 +25,7 @@ import { removeMilliseconds, userIsAdmin } from "../_utils/helper-functions";
 import { PostContext } from "../_providers/PostProvider";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
+import Comment from "./Comment";
 
 export default function Post({
   deletePostFromArray,
@@ -59,7 +60,7 @@ export default function Post({
   }
 
   const showCommentDiv = (
-    <div>
+    <div className="mt-2">
       <button
         onClick={() => {
           setShowAllComments(!showAllComments);
@@ -78,24 +79,6 @@ export default function Post({
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post!.post_id));
   }, []);
-
-  //Calls the delete post endpoint, toggles confirm delete modal
-  async function deletePost() {
-    const response = await fetch(`/api/posts?id=${post!.post_id}`, {
-      method: "DELETE",
-      body: JSON.stringify({ files: post!.image_refs }),
-    }).then((res) => res.json());
-
-    if (response.success) {
-      console.log(response.success);
-      deletePostFromArray(post!.post_id);
-    } else {
-      console.log(response.error);
-      alert("Something went wrong.");
-    }
-
-    setConfirmDeletePost(false);
-  }
 
   //Takes form data from comment field and sends it to comments post endpoint
   async function addComment(formData: FormData) {
@@ -192,7 +175,7 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] flex flex-col">
+      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
         <div className={`relative ${post.image_refs.length > 1 ? "h-[600px]" : ""} overflow-auto flex items-center justify-center rounded-md`}>
           <Image
@@ -209,10 +192,11 @@ export default function Post({
         </div>
 
         <div className="min-h-16 mt-2">
-          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2 pb-2">
-            <p className="text-left text-xl max-w-[33%]">{post.username}</p>
+          <div className="grid grid-cols-3 border-b-[1px] border-slate-500 border-opacity-20 pb-2">
+            <p className="text-left text-xl">{post.username}</p>
+
             {post.image_refs!.length !== 1 && (
-              <div className="flex justify-center w-[33%] absolute h-8">
+              <div className="flex justify-center h-8">
                 <button
                   onClick={() => {
                     handleImageIndexChange(-1);
@@ -235,7 +219,8 @@ export default function Post({
                 </button>
               </div>
             )}
-            <div className="ml-auto flex max-w-[33%]">
+            
+            <div className={`${post.image_refs!.length === 1 ? "col-span-2" : ""} flex mr-0 ml-auto`}>
               <p className="text-right">
                 {removeMilliseconds(new Date(post.create_date))}
               </p>
@@ -277,20 +262,9 @@ export default function Post({
             {post.comments && post.comments.length > 0 ? (
               post.comments
                 .slice(0, showAllComments ? post.comments.length : 3)
-                .map((comment: CommentType, index) => {
+                .map((comment: CommentType, index: number) => {
                   return (
-                    <div className="mt-2" key={index}>
-                      <div className="flex justify-between">
-                        <p className="text-left opacity-50 text-xs">
-                          {comment.username}
-                        </p>
-                        <p className="text-right opacity-50 text-xs min-w-[25%]">
-                          {removeMilliseconds(new Date(comment.create_date))}
-                        </p>
-                      </div>
-
-                      <p className="text-left break-words line-clamp-3">{comment.body}</p>
-                    </div>
+                    <Comment key={index} {...comment} />
                   );
                 })
             ) : (
@@ -303,7 +277,7 @@ export default function Post({
           </div>
         </div>
 
-        {userIsAdmin(user) && (
+        {(userIsAdmin(user) || (post.username === user!.username)) && (
           <div className="w-[20%] mx-auto mt-4 flex justify-between">
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"

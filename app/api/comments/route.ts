@@ -39,6 +39,44 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function DELETE(request: NextRequest) {
+  try {
+    await pool.query("BEGIN;");
+    const searchParams = request.nextUrl.searchParams;
+    const commendId = searchParams.get("id");
+    
+    const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = '${commendId}'`;
+    await pool.query(deleteCommentQuery);
+
+    await pool.query("COMMIT;");
+
+    return NextResponse.json({ success: "Comment successfully deleted" });
+  } catch(e) {
+    await pool.query("ROLLBACK;");
+    return NextResponse.json({ error: e });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const commentId = searchParams.get("id");
+    const body = await request.formData();
+    const newCommentBody = body.get("comment-body");
+
+    await pool.query("BEGIN;");
+
+    const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}' WHERE comment_id = '${commentId}'`;
+    await pool.query(editCommentQuery);
+
+    await pool.query("COMMIT;");
+
+    return NextResponse.json({ success: "Comment edited successfully" });
+  } catch(e) {
+    return NextResponse.json({ error: e });
+  }
+}
+
 export async function GET(request: NextRequest) {
   console.log("Fetching comments");
 

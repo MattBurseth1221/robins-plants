@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { UserContext } from "../_providers/UserProvider";
 
 export default function ProfileBar() {
@@ -15,13 +15,7 @@ export default function ProfileBar() {
       router.push(result.url);
       return;
     }
-
-    console.log(result);
   }
-
-  useEffect(() => {
-    console.log(user);
-  }, [])
 
   return (
     <nav className="w-40 p-5 h-64">
