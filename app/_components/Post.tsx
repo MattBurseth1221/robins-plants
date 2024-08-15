@@ -60,7 +60,7 @@ export default function Post({
   }
 
   const showCommentDiv = (
-    <div>
+    <div className="mt-2">
       <button
         onClick={() => {
           setShowAllComments(!showAllComments);
@@ -79,24 +79,6 @@ export default function Post({
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post!.post_id));
   }, []);
-
-  //Calls the delete post endpoint, toggles confirm delete modal
-  async function deletePost() {
-    const response = await fetch(`/api/posts?id=${post!.post_id}`, {
-      method: "DELETE",
-      body: JSON.stringify({ files: post!.image_refs }),
-    }).then((res) => res.json());
-
-    if (response.success) {
-      console.log(response.success);
-      deletePostFromArray(post!.post_id);
-    } else {
-      console.log(response.error);
-      alert("Something went wrong.");
-    }
-
-    setConfirmDeletePost(false);
-  }
 
   //Takes form data from comment field and sends it to comments post endpoint
   async function addComment(formData: FormData) {
@@ -210,10 +192,11 @@ export default function Post({
         </div>
 
         <div className="min-h-16 mt-2">
-          <div className="flex flex-row justify-between items-center border-b-[1px] border-slate-500 border-opacity-20 px-2 pb-2">
-            <p className="text-left text-xl max-w-[33%]">{post.username}</p>
+          <div className="grid grid-cols-3 border-b-[1px] border-slate-500 border-opacity-20 pb-2">
+            <p className="text-left text-xl">{post.username}</p>
+
             {post.image_refs!.length !== 1 && (
-              <div className="flex justify-center w-[33%] absolute h-8">
+              <div className="flex justify-center h-8">
                 <button
                   onClick={() => {
                     handleImageIndexChange(-1);
@@ -236,11 +219,12 @@ export default function Post({
                 </button>
               </div>
             )}
-            <div className="ml-auto flex max-w-[33%]">
+            
+            <div className={`${post.image_refs!.length === 1 ? "col-span-2" : ""} flex mr-0 ml-auto`}>
               <p className="text-right">
                 {removeMilliseconds(new Date(post.create_date))}
               </p>
-              <button className="hover:bg-gray-300 transition rounded-md p-1 ml-2" onClick={handleLikePost}>
+              <button className="ml-2" onClick={handleLikePost}>
                 <FontAwesomeIcon
                   icon={postLiked ? faHeartSolid : faHeartOutline}
                   beat={heartBeat}

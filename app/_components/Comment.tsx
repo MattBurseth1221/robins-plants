@@ -4,7 +4,6 @@ import CommentMenu from "./CommentMenu";
 import { CommentType } from "./PostContainer";
 import { UserContext } from "../_providers/UserProvider";
 
-
 export default function Comment(comment: CommentType) {
   const user = useContext(UserContext);
 
@@ -13,7 +12,7 @@ export default function Comment(comment: CommentType) {
       <div className="flex justify-between">
         <div className="flex items-center">
           <p className="text-left opacity-50 text-xs mr-2">{comment.username}</p>
-          {user!.username === comment.username && <CommentMenu />}
+          {user!.username === comment.username && <CommentMenu {...comment} />}
         </div>
         
         <p className="text-right opacity-50 text-xs min-w-[25%]">

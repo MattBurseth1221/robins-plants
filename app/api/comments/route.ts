@@ -39,6 +39,24 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function DELETE(request: NextRequest) {
+  try {
+    await pool.query("BEGIN;");
+    const searchParams = request.nextUrl.searchParams;
+    const commendId = searchParams.get("id");
+    
+    const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = '${commendId}'`;
+    await pool.query(deleteCommentQuery);
+
+    await pool.query("COMMIT;");
+
+    return NextResponse.json({ success: "Comment successfully deleted" });
+  } catch(e) {
+    await pool.query("ROLLBACK;");
+    return NextResponse.json({ error: e });
+  }
+}
+
 export async function GET(request: NextRequest) {
   console.log("Fetching comments");
 
