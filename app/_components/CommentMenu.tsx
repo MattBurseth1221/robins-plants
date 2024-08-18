@@ -30,7 +30,7 @@ export default function CommentMenu(comment: CommentType) {
     "block p-2 rounded-md hover:bg-slate-500 hover:text-white transition";
 
   return (
-    <div className="">
+    <div className="ml-2">
       <Menu>
         <MenuButton>
           <FontAwesomeIcon className="opacity-80" icon={faEllipsis} />

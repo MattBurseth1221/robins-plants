@@ -21,6 +21,7 @@ export interface CommentType {
   post_id: UUID;
   create_date: Date;
   username: string;
+  been_edited: boolean;
 }
 
 export interface PostType {

@@ -13,10 +13,17 @@ export function userIsAdmin(user: User | null) {
   return false;
 }
 
-export function removeMilliseconds(date: Date) {
-  var newDate = date.toLocaleString();
+export function formatDate(date: Date) {
+  let newDate = date.toLocaleString();
 
+  //Remove milliseconds from date string
   newDate = newDate.slice(0, -6) + newDate.slice(-3);
+
+  //Check and remove date if comment was made today
+  if (date.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)) {
+    let newDateArr = newDate.split(' ');
+    newDate = newDateArr[1] + " " +  newDateArr[2];
+  }
 
   return newDate;
 }

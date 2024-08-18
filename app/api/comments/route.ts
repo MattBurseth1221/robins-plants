@@ -66,7 +66,7 @@ export async function PUT(request: NextRequest) {
 
     await pool.query("BEGIN;");
 
-    const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}' WHERE comment_id = '${commentId}'`;
+    const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}', been_edited = 'true' WHERE comment_id = '${commentId}'`;
     await pool.query(editCommentQuery);
 
     await pool.query("COMMIT;");

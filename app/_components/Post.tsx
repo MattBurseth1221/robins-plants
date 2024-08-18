@@ -21,7 +21,7 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
 import { UserContext } from "../_providers/UserProvider";
-import { removeMilliseconds, userIsAdmin } from "../_utils/helper-functions";
+import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 import { PostContext } from "../_providers/PostProvider";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
@@ -222,7 +222,7 @@ export default function Post({
             
             <div className={`${post.image_refs!.length === 1 ? "col-span-2" : ""} flex mr-0 ml-auto`}>
               <p className="text-right">
-                {removeMilliseconds(new Date(post.create_date))}
+                {formatDate(new Date(post.create_date))}
               </p>
               <button className="ml-2" onClick={handleLikePost}>
                 <FontAwesomeIcon
