@@ -78,7 +78,7 @@ export default function Post({
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post!.post_id));
-  }, []);
+  }, [post]);
 
   //Takes form data from comment field and sends it to comments post endpoint
   async function addComment(formData: FormData) {

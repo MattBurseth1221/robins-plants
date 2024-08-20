@@ -95,7 +95,7 @@ export default function PostContainer() {
     }
 
     getPosts();
-  }, [filters]);
+  }, [filters, sortOrder]);
 
   function toggleSortOrder() {
     setSortOrder(sortOrder === "DESC" ? "ASC" : "DESC");
