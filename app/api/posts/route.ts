@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
-import { deleteFileFromS3, getFileFromS3, uploadFileToS3 } from "../upload/route";
+import { deleteFileFromS3, uploadFileToS3 } from "../../_lib/s3";
 import { v4 as uuidv4 } from "uuid";
 
 //Retrieves all posts given parameters from DB
