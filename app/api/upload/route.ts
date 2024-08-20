@@ -10,6 +10,8 @@ import {
 
 import { Bucket, s3 } from "../../_lib/s3"
 
+export const runtime = "edge";
+
 // endpoint to get the list of files in the bucket
 export async function GET() {
   try {

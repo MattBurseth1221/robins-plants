@@ -7,6 +7,8 @@ import UserProvider from "../_providers/UserProvider";
 import Image from "next/image";
 import TJB from "@/public/tjb.jpg"
 
+export const runtime = "edge";
+
 export default async function Page() {
   const { user }: any = await validateRequest();
 

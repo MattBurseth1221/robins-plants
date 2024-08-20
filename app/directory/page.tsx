@@ -4,6 +4,8 @@ import { validateRequest } from "../_lib/auth";
 import ProfileBar from "../_components/ProfileBar";
 import UserProvider from "../_providers/UserProvider";
 
+export const runtime = "edge";
+
 export default async function Directory() {
   const { user }: any = await validateRequest();
 

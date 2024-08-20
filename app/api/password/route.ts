@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
 import { sha256 } from "../../_utils/helper-functions";
 
+export const runtime = "edge";
+
 export async function GET(request: NextRequest) {
   let isIDValid = true;
   let user_id;

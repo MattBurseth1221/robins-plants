@@ -3,6 +3,8 @@ import { UUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
+export const runtime = "edge";
+
 export async function POST(request: NextRequest) {
   console.log("got to comment post");
 

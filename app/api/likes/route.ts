@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/app/_lib/db";
 import { v4 as uuidv4 } from "uuid";
 
+export const runtime = "edge";
+
 //Creates a like in DB based on passed search parameters (expects a post_id and user_id)
 //Also updates total_likes count for the post in question
 export async function POST(request: NextRequest) {

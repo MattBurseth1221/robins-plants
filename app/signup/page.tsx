@@ -12,6 +12,8 @@ import { v4 as uuidv4 } from "uuid";
 import type { ActionResult } from "../_components/Form";
 import { sha256, testPassword } from "../_utils/helper-functions";
 
+export const runtime = "edge";
+
 export default async function Page() {
   const { user } = await validateRequest();
   if (user) {
