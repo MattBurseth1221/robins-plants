@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { sha256, testPassword } from "../_utils/helper-functions";
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 
 export const runtime = "edge";
 

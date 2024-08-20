@@ -1,5 +1,4 @@
 import { User } from "lucia";
-import crypto from "crypto";
 
 export function userIsAdmin(user: User | null) {
   if (user === null) return false;
@@ -43,9 +42,19 @@ export async function createTempPassword() {
 }
 
 export function sha256(data: string): string {
-  const hash = crypto.createHash("sha256");
-  hash.update(data);
-  return hash.digest("hex");
+  let seed = 0;
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for(let i = 0, ch; i < data.length; i++) {
+        ch = data.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1  = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+    h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2  = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+    h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString();
 }
 
 export function testPassword(password: string, confirmPassword: string) {
