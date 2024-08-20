@@ -25,9 +25,11 @@ export default async function RootLayout({
         ></meta>
       </head>
 
-      <body className="bg-gradient-to-b from-lg via-dg to-db bg-no-repeat bg-contain">
+      <body className="bg-gradient-to-b bg-slate-200 from-slate-100 to-slate-400">
         <SessionProvider value={session}>{children}</SessionProvider>
       </body>
     </html>
   );
 }
+
+

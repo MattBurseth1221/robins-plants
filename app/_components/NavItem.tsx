@@ -7,8 +7,8 @@ type NavProps = {
   export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
     return (
       <li
-        className={`mb-5 text-center hover:bg-green-800
-        hover:text-white cursor-pointer py-2 rounded-2xl transition ease-in duration-150 ${
+        className={`mb-5 text-center hover:bg-slate-500
+        hover:text-white cursor-pointer py-2 transition ease-in duration-150 border-x-gray-500 border-opacity-50 border-x-[1px] ${
           active ? "underline text-black" : ""
         }`}
       >

@@ -23,7 +23,7 @@ export default function ProfileBar() {
         {user && <p>{user.username}</p>}
         {user ? (
           <button
-            className="bg-green-800 text-white p-2 px-4 w-auto rounded-xl hover:bg-green-700 hover:text-black transition"
+            className="bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2"
             onClick={() => {
               logout();
             }}

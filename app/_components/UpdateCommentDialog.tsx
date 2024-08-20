@@ -14,21 +14,15 @@ type UpdateDialogProps = {
   comment: CommentType;
   showUpdateCommentModal: boolean;
   setShowUpdateCommentModal: Function;
+  setComment: Function;
 };
 
 export default function UpdateCommentDialog({
   comment,
   showUpdateCommentModal,
   setShowUpdateCommentModal,
+  setComment,
 }: UpdateDialogProps) {
-  const post = useContext(PostContext);
-
-  function refreshPage() {
-    setTimeout(() => {
-      window.location.reload();
-      console.log("refreshed.");
-    }, 100);
-  }
 
   //Takes the form data from the edit comment modal and send it to comment put endpoint
   async function updateComment(formData: FormData) {
@@ -52,7 +46,11 @@ export default function UpdateCommentDialog({
 
       if (response.success) {
         console.log(response.success);
-        comment.body = body;
+        
+        let newComment = {...comment};
+        newComment.body = body;
+
+        setComment(newComment);
       } else {
         console.log(response.error);
         alert("Something went wrong.");
@@ -63,11 +61,6 @@ export default function UpdateCommentDialog({
     } finally {
       setShowUpdateCommentModal(false);
     }
-
-    // console.log("refreshing page...");
-
-    // Figure this out later
-    // refreshPage();
   }
 
   return (

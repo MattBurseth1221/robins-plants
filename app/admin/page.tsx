@@ -16,10 +16,10 @@ export default async function Page() {
   return (
     <UserProvider user={user}>
       <main className="flex min-h-screen">
-        <MainNav active={"Home"} />
+        <MainNav active={"Admin"} />
 
         <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-          <PageTitle title="- Robin's Admin Page -" />
+          <PageTitle title="- Create Post -" />
 
           <UploadForm />
         </div>

@@ -1,11 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 import CommentMenu from "./CommentMenu";
 import { CommentType } from "./PostContainer";
 import { UserContext } from "../_providers/UserProvider";
 
-export default function Comment(comment: CommentType) {
+export default function Comment(passedComment: CommentType) {
   const user = useContext(UserContext);
+  const [comment, setComment] = useState<CommentType>(passedComment);
 
   return (
     <div className="mt-2">
@@ -13,7 +14,7 @@ export default function Comment(comment: CommentType) {
         <div className="flex items-center">
           <p className="text-left opacity-50 text-xs mr-1">{comment.username}</p>
           {comment.been_edited && <p className="opacity-50 text-xs">● Edited</p>}
-          {(user!.username === comment.username || userIsAdmin(user)) && <CommentMenu {...comment} />}
+          {(user!.username === comment.username || userIsAdmin(user)) && <CommentMenu {...{comment, setComment}} />}
         </div>
         
         <p className="text-right opacity-50 text-xs min-w-[25%]">
