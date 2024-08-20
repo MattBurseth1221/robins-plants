@@ -20,7 +20,8 @@ const nextConfig = {
     },
     env: {
         URL: process.env.URL
-    }
+    },
+    future: { webpack5: true }
 };
 
 export default nextConfig;
