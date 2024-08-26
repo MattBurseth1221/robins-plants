@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { pool } from "../../_lib/db";
+import { sql } from "../../_lib/db";
 import { sha256 } from "../../_utils/helper-functions";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   let isIDValid = true;
@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     console.log("finding user...");
 
     const idQueryResult = (
-      await pool.query(
+      await sql(
         `SELECT * FROM password_change_requests WHERE id = '${hashedID}' ORDER BY create_date DESC LIMIT 1`
       )
-    ).rows;
+    );
 
     console.log(idQueryResult);
 

@@ -21,12 +21,12 @@ const nextConfig = {
     env: {
         URL: process.env.URL
     },
-    webpack5: true,
-    webpack: (config) => {
-      config.resolve.fallback = {fs: false, path: false}
+    // webpack5: true,
+    // webpack: (config) => {
+    //   config.resolve.fallback = {fs: false, path: false}
 
-      return config;
-    }
+    //   return config;
+    // }
 };
 
 export default nextConfig;

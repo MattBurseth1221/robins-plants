@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { pool } from "@/app/_lib/db";
+import { sql } from "@/app/_lib/db";
 import { v4 as uuidv4 } from "uuid";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 //Creates a like in DB based on passed search parameters (expects a post_id and user_id)
 //Also updates total_likes count for the post in question
@@ -12,23 +12,23 @@ export async function POST(request: NextRequest) {
   const user_id = searchParams.get("user_id");
 
   try {
-    await pool.query('BEGIN');
-    const values = [post_id, user_id, uuidv4()];
-    const query = {
-      text: `INSERT INTO likes(parent_id, user_id, like_id) VALUES($1, $2, $3);`,
-      values: values,
-    };
+    await sql('BEGIN');
+    // const values = [post_id, user_id, uuidv4()];
+    // const query = {
+    //   text: `INSERT INTO likes(parent_id, user_id, like_id) VALUES($1, $2, $3);`,
+    //   values: values,
+    // };
 
-    await pool.query(query);
+    await sql(`INSERT INTO likes(parent_id, user_id, like_id) VALUES($1, $2, $3);`, [post_id, user_id, uuidv4()]);
 
     const updateQuery = `UPDATE posts SET total_likes = total_likes + 1 WHERE post_id = '${post_id}'`;
 
-    await pool.query(updateQuery);
-    await pool.query('COMMIT');
+    await sql(updateQuery);
+    await sql('COMMIT');
 
     return NextResponse.json({ success: "Like received." });
   } catch (e) {
-    await pool.query('ROLLBACK');
+    await sql('ROLLBACK');
 
     return NextResponse.json({ error: e });
   }
@@ -41,19 +41,19 @@ export async function DELETE(request: NextRequest) {
   const user_id = searchParams.get("user_id");
 
   try {
-    await pool.query('BEGIN');
+    await sql('BEGIN');
 
     const query = `DELETE FROM likes WHERE parent_id = '${parent_id}' AND user_id = '${user_id}'`;
-    await pool.query(query);
+    await sql(query);
 
     const updateQuery = `UPDATE posts SET total_likes = total_likes - 1 WHERE post_id = '${parent_id}'`;
-    await pool.query(updateQuery);
+    await sql(updateQuery);
 
-    await pool.query('COMMIT');
+    await sql('COMMIT');
 
     return NextResponse.json({ success: "Deleted like." });
   } catch (e) {
-    await pool.query('ROLLBACK');
+    await sql('ROLLBACK');
 
     return NextResponse.json({ error: e });
   }
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
   try {
     const query = `SELECT parent_id FROM likes WHERE user_id = '${user_id}'`;
 
-    const likedItemsResponse = (await pool.query(query)).rows;
+    const likedItemsResponse = (await sql(query));
     let likedItems = [];
 
     for (let i = 0; i < likedItemsResponse.length; i++) {

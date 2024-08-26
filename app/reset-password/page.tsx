@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { sha256, testPassword } from "../_utils/helper-functions";
 import { UUID } from "node:crypto";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 export default function Page() {
   const [usernameValue, setUsernameValue] = useState<string>("");

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import "@/app/globals.css";
 
-import { pool } from "../_lib/db";
+import { sql } from "../_lib/db";
 import { cookies } from "next/headers";
 import { lucia, validateRequest } from "../_lib/auth";
 import { redirect } from "next/navigation";
@@ -11,7 +11,7 @@ import crypto from "node:crypto";
 import type { DatabaseUser } from "../_lib/db";
 import type { ActionResult } from "../_components/Form";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 export default async function Page() {
   const { user } = await validateRequest();
@@ -70,12 +70,12 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
     };
   }
 
-  const query = {
-    text: "SELECT * FROM auth_user WHERE username = $1 OR email = $1",
-    values: [username],
-  };
+  // const query = {
+  //   text: "SELECT * FROM auth_user WHERE username = $1 OR email = $1",
+  //   values: [username],
+  // };
 
-  const existingUser = (await pool.query(query)).rows[0] as
+  const existingUser = (await sql("SELECT * FROM auth_user WHERE username = $1 OR email = $1", [username]))[0] as
     | DatabaseUser
     | undefined;
   if (!existingUser) {
