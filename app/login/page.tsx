@@ -75,7 +75,7 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
   //   values: [username],
   // };
 
-  const existingUser = (await sql("SELECT * FROM auth_user WHERE username = $1 OR email = $1", [username]))[0] as
+  const existingUser = (await sql`SELECT * FROM auth_user WHERE username = ${username} OR email = ${username}`)[0] as
     | DatabaseUser
     | undefined;
   if (!existingUser) {

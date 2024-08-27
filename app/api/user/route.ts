@@ -29,36 +29,32 @@ export async function PUT(request: NextRequest) {
 
 async function resetPassword(user_id: UUID, newPasswordHash: string) {
   try {
-    await sql("BEGIN;");
+    await sql`BEGIN;`;
 
     //Update password to new hash value
-    const passwordChangeQuery = `UPDATE auth_user SET password_hash = '${newPasswordHash}' WHERE id = '${user_id}'`;
-    await sql(passwordChangeQuery);
+    await sql`UPDATE auth_user SET password_hash = '${newPasswordHash}' WHERE id = '${user_id}'`;
 
     //Remove password request from DB
-    const deleteRequestQuery = `DELETE FROM password_change_requests WHERE user_id = '${user_id}'`;
-    await sql(deleteRequestQuery);
+    await sql`DELETE FROM password_change_requests WHERE user_id = '${user_id}'`;
 
-    await sql("COMMIT;");
+    await sql`COMMIT;`;
 
     return NextResponse.json({ success: "Password changed successfully" });
   } catch (e) {
-    await sql("ROLLBACK;");
+    await sql`ROLLBACK;`;
     console.log(e);
     return NextResponse.json({ error: e });
   }
 }
 
 async function resetPasswordEmail(usernameValue: string) {
-  const usernameQuery = `SELECT id, email FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
-  const queryResult = (await sql(usernameQuery));
+  const queryResult = (await sql`SELECT id, email FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`);
 
   if (!queryResult || queryResult.length === 0) {
     return NextResponse.json({ error: "No user found" });
   }
 
-  const emailAlreadySentQuery = `SELECT COUNT(*) FROM password_change_requests WHERE user_id = '${queryResult[0].id}'`;
-  const emailAlreadySentResult = await sql(emailAlreadySentQuery);
+  const emailAlreadySentResult = await sql`SELECT COUNT(*) FROM password_change_requests WHERE user_id = '${queryResult[0].id}'`;
   console.log(emailAlreadySentResult);
   if (emailAlreadySentResult[0].count >= 1) return NextResponse.json({ error: "Email already sent" });
 
@@ -67,21 +63,21 @@ async function resetPasswordEmail(usernameValue: string) {
   //Make entry in password_change_request table
   //FIX --- id column in password_change_request table is hashed password value, not a unique identifier for record!
   try {
-    await sql("BEGIN;");
+    await sql`BEGIN;`;
 
     const newUUID = uuidv4();
 
-    const values = [tempPassword.hashedTempPassword, queryResult[0].id];
+    const newPasswordChangeRequest = {id: tempPassword.hashedTempPassword, user_id: queryResult[0].id};
     // const insertQuery = {
     //   text: `INSERT INTO password_change_requests(id, user_id) VALUES($1, $2)`,
     //   values: values,
     // };
 
-    await sql(`INSERT INTO password_change_requests(id, user_id) VALUES($1, $2)`, values);
+    await sql`INSERT INTO password_change_requests ${sql(newPasswordChangeRequest)}`;
 
-    await sql("COMMIT;");
+    await sql`COMMIT;`;
   } catch (e) {
-    await sql("ROLLBACK;");
+    await sql`ROLLBACK;`;
     console.log(e);
     return NextResponse.json({ error: "something went wrong" });
   }

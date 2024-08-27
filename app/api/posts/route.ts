@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sql } from "../../_lib/db";
 import { deleteFileFromS3, uploadFileToS3 } from "../../_lib/s3";
 import { v4 as uuidv4 } from "uuid";
+import { UUID } from "crypto";
 
 //export const runtime = "edge";
 
@@ -27,22 +28,20 @@ export async function GET(request: NextRequest) {
       break;
   }
 
-  const postQuery = `SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
-
-  const queryResult = (await sql(postQuery));
+  const placeholder = `SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
+  const queryResult = (await sql`SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id`);
+  console.log(queryResult);
 
   //Iterate through each post, get all comments for each
   for (let i = 0; i < queryResult.length; i++) {
     const post_id = queryResult[i].post_id;
 
-    const commentQuery = `select c.*, u.username
+    const postComments = (await sql`select c.*, u.username
     from comments c
     left join auth_user u 
     on c.user_id = u.id
-    where c.post_id = '${post_id}'
-    order by c.create_date DESC`;
-
-    const postComments = (await sql(commentQuery));
+    where c.post_id = ${post_id}
+    order by c.create_date DESC`);
 
     queryResult[i].comments = postComments;
   }
@@ -54,9 +53,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    const postTitle = formData.get("title");
-    const postBody = formData.get("body");
-    const user_id = formData.get("user_id");
+    const postTitle = formData.get("title") as string;
+    const postBody = formData.get("body") as string;
+    const user_id = formData.get("user_id")as UUID;
 
     const files = formData.getAll("files") as File[];
 
@@ -71,20 +70,20 @@ export async function POST(request: Request) {
 
     //Upload post info to database
     const newUUID = uuidv4();
-    const values = [
-      newUUID,
-      postTitle,
-      postBody,
-      fileName.slice(0, -1),
-      user_id,
-    ];
+    const newPost = {
+      post_id: newUUID,
+      title: postTitle,
+      body: postBody,
+      image_ref: fileName.slice(0, -1),
+      user_id: user_id,
+    };
 
     // const query = {
     //   text: "INSERT INTO posts(post_id, title, body, image_ref, user_id) VALUES($1, $2, $3, $4, $5)",
     //   values: values,
     // };
 
-    const queryResult = await sql("INSERT INTO posts(post_id, title, body, image_ref, user_id) VALUES($1, $2, $3, $4, $5)", values);
+    const queryResult = await sql`INSERT INTO posts ${sql(newPost)}`;
 
     return NextResponse.json({ success: "Post created.", fileName: fileName });
   } catch (e) {
@@ -104,7 +103,7 @@ export async function DELETE(request: NextRequest) {
     //if (!deletePostFileName) throw new Error("File name not found.");
 
     //Delete post
-    const queryResult = await sql(`DELETE FROM posts WHERE post_id = '${id}'`);
+    const queryResult = await sql`DELETE FROM posts WHERE post_id = ${id}`;
 
     //Delete photo from S3 bucket
     for (let i = 0; i < files.length; i++) {
@@ -136,12 +135,12 @@ export async function PUT(request: NextRequest) {
 
     var query = "";
 
-    await sql("BEGIN;");
+    await sql`BEGIN;`;
 
     //If there was no file changes AKA photo is not changing, then we don't update image_ref
     if (files.length === 0) {
       console.log("got here?");
-      query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
+      query = `UPDATE posts SET title = ${title}, body = ${body} WHERE post_id = ${id}`;
 
       console.log(query);
     } else {
@@ -161,16 +160,16 @@ export async function PUT(request: NextRequest) {
 
       console.log(fileName + " success");
 
-      query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName.slice(0, -1)}' WHERE post_id = '${id}'`;
+      query = `UPDATE posts SET title = ${title}, body = ${body}, image_ref = ${fileName.slice(0, -1)} WHERE post_id = ${id}`;
     }
 
-    await sql(query);
+    await sql`${query}`;
 
-    await sql("COMMIT;");
+    await sql`COMMIT;`;
 
     return NextResponse.json({ success: "Post updated successfully." });
   } catch (e) {
-    await sql("ROLLBACK;");
+    await sql`ROLLBACK;`;
     return NextResponse.json({ error: "Could not update post." });
   }
 }

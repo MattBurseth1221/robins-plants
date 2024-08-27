@@ -66,15 +66,12 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
 
   const hashedPassword = await sha256(password);
   const userId = uuidv4();
-  const emailAddress = formData.get("email");
+  const emailAddress = formData.get("email") as string;
 
-  // const query = {
-  //   text: "INSERT INTO auth_user(id, username, password_hash, email) VALUES($1, $2, $3, $4)",
-  //   values: [userId, username, hashedPassword, emailAddress],
-  // };
+  const newUser = {id: userId, username: username, password_hash: hashedPassword, email: emailAddress};
 
   try {
-    await sql("INSERT INTO auth_user(id, username, password_hash, email) VALUES($1, $2, $3, $4)", [userId, username, hashedPassword, emailAddress]);
+    await sql`INSERT INTO auth_user ${sql(newUser)}`;
 
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);

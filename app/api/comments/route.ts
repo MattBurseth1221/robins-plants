@@ -25,11 +25,11 @@ export async function POST(request: NextRequest) {
       values: values,
     };
 
-    await sql("INSERT INTO comments(comment_id, body, user_id, post_id) VALUES($1, $2, $3, $4)", values);
+    await sql`INSERT INTO comments(comment_id, body, user_id, post_id) VALUES($1, $2, $3, $4)`, values;
 
-    const resultingComment = (await sql(
+    const resultingComment = (await sql
       `SELECT * FROM comments WHERE comment_id = '${newUUID}'`
-    ));
+    );
 
     console.log(resultingComment);
 
@@ -43,18 +43,17 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    await sql("BEGIN;");
+    await sql`BEGIN;`;
     const searchParams = request.nextUrl.searchParams;
     const commendId = searchParams.get("id");
     
-    const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = '${commendId}'`;
-    await sql(deleteCommentQuery);
+    await sql`DELETE FROM comments WHERE comment_id = '${commendId}'`;
 
-    await sql("COMMIT;");
+    await sql`COMMIT;`;
 
     return NextResponse.json({ success: "Comment successfully deleted" });
   } catch(e) {
-    await sql("ROLLBACK;");
+    await sql`ROLLBACK;`;
     return NextResponse.json({ error: e });
   }
 }
@@ -64,14 +63,18 @@ export async function PUT(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const commentId = searchParams.get("id");
     const body = await request.formData();
-    const newCommentBody = body.get("comment-body");
+    const newCommentBody = body.get("comment-body") as string;
 
-    await sql("BEGIN;");
+    const newComment = {
+      body: newCommentBody,
+      been_edited: true,
+    }
 
-    const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}', been_edited = 'true' WHERE comment_id = '${commentId}'`;
-    await sql(editCommentQuery);
+    await sql`BEGIN;`;
 
-    await sql("COMMIT;");
+    await sql`UPDATE comments SET ${sql(newComment, 'body', 'been_edited')} WHERE comment_id = '${commentId}'`;
+
+    await sql`COMMIT;`;
 
     return NextResponse.json({ success: "Comment edited successfully" });
   } catch(e) {
@@ -88,12 +91,10 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const post_id = searchParams.get("id");
 
-    const commentQuery = `select c.*
+    const postComments = await sql`select c.*
       from comments c
       where c.post_id = '${post_id}'
       order by c.create_date DESC`;
-
-    const postComments = (await sql(commentQuery));
 
     //console.log(postComments);
 

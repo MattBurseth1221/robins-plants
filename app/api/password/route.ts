@@ -17,9 +17,9 @@ export async function GET(request: NextRequest) {
     console.log("finding user...");
 
     const idQueryResult = (
-      await sql(
+      await sql
         `SELECT * FROM password_change_requests WHERE id = '${hashedID}' ORDER BY create_date DESC LIMIT 1`
-      )
+      
     );
 
     console.log(idQueryResult);
