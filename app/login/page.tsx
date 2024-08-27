@@ -1,12 +1,12 @@
 import Link from "next/link";
 import "@/app/globals.css";
 
-import { pool } from "../_lib/db";
+import { client } from "../_lib/db";
 import { cookies } from "next/headers";
 import { lucia, validateRequest } from "../_lib/auth";
 import { redirect } from "next/navigation";
 import { Form } from "../_components/Form";
-import crypto from "node:crypto";
+import { sha256 } from "../_utils/helper-functions"
 
 import type { DatabaseUser } from "../_lib/db";
 import type { ActionResult } from "../_components/Form";
@@ -14,7 +14,8 @@ import type { ActionResult } from "../_components/Form";
 export const runtime = "edge";
 
 export default async function Page() {
-  const { user } = await validateRequest();
+  //const { user } = await validateRequest();
+  const user = null;
   if (user) {
     return redirect("/");
   }
@@ -36,12 +37,6 @@ export default async function Page() {
       </div>
     </main>
   );
-}
-
-function sha256(data: string): string {
-  const hash = crypto.createHash("sha256");
-  hash.update(data);
-  return hash.digest("hex");
 }
 
 async function login(_: any, formData: FormData): Promise<ActionResult> {
@@ -75,7 +70,7 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
     values: [username],
   };
 
-  const existingUser = (await pool.query(query)).rows[0] as
+  const existingUser = (await client.$queryRaw`SELECT * FROM auth_user WHERE username = ${username} OR email = ${username}` as any)[0] as
     | DatabaseUser
     | undefined;
   if (!existingUser) {
