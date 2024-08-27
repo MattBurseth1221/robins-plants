@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Robin's Plant website",
 };
 
+export const runtime = "edge";
+
 export default async function RootLayout({
   children,
 }: Readonly<{

@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     await sql`INSERT INTO comments(comment_id, body, user_id, post_id) VALUES($1, $2, $3, $4)`, values;
 
     const resultingComment = (await sql
-      `SELECT * FROM comments WHERE comment_id = '${newUUID}'`
+      `SELECT * FROM comments WHERE comment_id = ${newUUID}`
     );
 
     console.log(resultingComment);
