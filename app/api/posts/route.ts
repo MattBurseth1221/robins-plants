@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { pool } from "../../_lib/db";
+import { client } from "../../_lib/db";
 import { deleteFileFromS3, uploadFileToS3 } from "../../_lib/s3";
 import { v4 as uuidv4 } from "uuid";
+import { UUID } from "crypto";
 
 export const runtime = "edge";
 
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
 
   const postQuery = `SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
 
-  const queryResult = (await pool.query(postQuery)).rows;
+  const queryResult = (await client.$queryRaw`SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`) as any;
 
   //Iterate through each post, get all comments for each
   for (let i = 0; i < queryResult.length; i++) {
@@ -42,7 +43,12 @@ export async function GET(request: NextRequest) {
     where c.post_id = '${post_id}'
     order by c.create_date DESC`;
 
-    const postComments = (await pool.query(commentQuery)).rows;
+    const postComments = (await client.$queryRaw`select c.*, u.username
+      from comments c
+      left join auth_user u 
+      on c.user_id = u.id
+      where c.post_id = ${post_id}
+      order by c.create_date DESC`);
 
     queryResult[i].comments = postComments;
   }
@@ -54,9 +60,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    const postTitle = formData.get("title");
-    const postBody = formData.get("body");
-    const user_id = formData.get("user_id");
+    const postTitle = formData.get("title") as string;
+    const postBody = formData.get("body") as string;
+    const user_id = formData.get("user_id") as UUID;
 
     const files = formData.getAll("files") as File[];
 
@@ -84,7 +90,15 @@ export async function POST(request: Request) {
       values: values,
     };
 
-    const queryResult = await pool.query(query);
+    const queryResult = await client.posts.create({
+      data: {
+        post_id: newUUID,
+        title: postTitle,
+        body: postBody,
+        image_ref: fileName.slice(0, -1),
+        user_id: user_id
+      }
+    });
 
     return NextResponse.json({ success: "Post created.", fileName: fileName });
   } catch (e) {
@@ -108,7 +122,7 @@ export async function DELETE(request: NextRequest) {
       text: `DELETE FROM posts WHERE post_id = '${id}'`,
     };
 
-    const queryResult = await pool.query(query);
+    const queryResult = await client.$queryRaw`DELETE FROM posts WHERE post_id = ${id}`;
 
     //Delete photo from S3 bucket
     for (let i = 0; i < files.length; i++) {
@@ -140,7 +154,7 @@ export async function PUT(request: NextRequest) {
 
     var query = "";
 
-    await pool.query("BEGIN;");
+    await client.$queryRaw`BEGIN;`;
 
     //If there was no file changes AKA photo is not changing, then we don't update image_ref
     if (files.length === 0) {
@@ -168,13 +182,13 @@ export async function PUT(request: NextRequest) {
       query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName.slice(0, -1)}' WHERE post_id = '${id}'`;
     }
 
-    await pool.query(query);
+    await client.$queryRaw`${query}`;
 
-    await pool.query("COMMIT;");
+    await client.$queryRaw`COMMIT;`;
 
     return NextResponse.json({ success: "Post updated successfully." });
   } catch (e) {
-    await pool.query("ROLLBACK;");
+    await client.$queryRaw`ROLLBACK;`;
     return NextResponse.json({ error: "Could not update post." });
   }
 }

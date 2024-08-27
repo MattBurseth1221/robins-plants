@@ -1,11 +1,6 @@
-import pg from 'pg';
-const { Pool } = pg;
+import { PrismaClient } from "@prisma/client";
 
-// const DB_HOST = process.env.DB_HOST;
-// const DB_USER = process.env.DB_USER;
-// const DB_PASSWORD = process.env.DB_PASSWORD;
-
-export const pool = new Pool();
+export const client = new PrismaClient();
 
 export interface DatabaseUser {
 	id: string;

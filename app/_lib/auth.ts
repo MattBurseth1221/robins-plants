@@ -1,16 +1,13 @@
 import { Lucia } from "lucia";
-import { NodePostgresAdapter } from '@lucia-auth/adapter-postgresql';
-import { pool } from "../_lib/db";
+import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+import { client } from "../_lib/db";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
 import type { Session, User } from "lucia";
 import type { DatabaseUser } from "../_lib/db";
 
-const adapter = new NodePostgresAdapter(pool, {
-    user: "auth_user",
-    session: "user_session"
-})
+const adapter = new PrismaAdapter(client.user_session, client.auth_user);
 
 export const lucia = new Lucia(adapter, {
 	// sessionExpiresIn: new TimeSpan(20, 's'),
@@ -26,7 +23,14 @@ export const lucia = new Lucia(adapter, {
 	}
 });
 
+declare module "lucia" {
+	interface Register {
+		Lucia: typeof lucia;
+	}
+}
+
 export const validateRequest = cache(
+
 	async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {
 		const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
 		if (!sessionId) {

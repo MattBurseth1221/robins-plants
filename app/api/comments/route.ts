@@ -1,4 +1,4 @@
-import { pool } from "@/app/_lib/db";
+import { client } from "@/app/_lib/db";
 import { UUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
-    const comment_body = formData.get("comment_body");
+    const comment_body = formData.get("comment_body") as string;
     const user_id = formData.get("user_id") as UUID;
     const post_id = formData.get("post_id") as UUID;
 
@@ -25,11 +25,18 @@ export async function POST(request: NextRequest) {
       values: values,
     };
 
-    await pool.query(query);
+    const resultingComment = await client.comments.create({
+      data: {
+        comment_id: newUUID,
+        body: comment_body,
+        user_id: user_id,
+        post_id: post_id,
+      }
+    })
 
-    const resultingComment = (await pool.query(
-      `SELECT * FROM comments WHERE comment_id = '${newUUID}'`
-    )).rows;
+    // const resultingComment = (await pool.query(
+    //   `SELECT * FROM comments WHERE comment_id = '${newUUID}'`
+    // )).rows;
 
     console.log(resultingComment);
 
@@ -43,18 +50,17 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    await pool.query("BEGIN;");
+    await client.$queryRaw`BEGIN;`
     const searchParams = request.nextUrl.searchParams;
-    const commendId = searchParams.get("id");
+    const commentId = searchParams.get("id");
     
-    const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = '${commendId}'`;
-    await pool.query(deleteCommentQuery);
+    await client.$queryRaw`DELETE FROM comments WHERE comment_id = ${commentId}`;
 
-    await pool.query("COMMIT;");
+    await client.$queryRaw`COMMIT;`;
 
     return NextResponse.json({ success: "Comment successfully deleted" });
   } catch(e) {
-    await pool.query("ROLLBACK;");
+    await client.$queryRaw`ROLLBACK;`;
     return NextResponse.json({ error: e });
   }
 }
@@ -66,12 +72,12 @@ export async function PUT(request: NextRequest) {
     const body = await request.formData();
     const newCommentBody = body.get("comment-body");
 
-    await pool.query("BEGIN;");
+    await client.$queryRaw`BEGIN;`;
 
     const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}', been_edited = 'true' WHERE comment_id = '${commentId}'`;
-    await pool.query(editCommentQuery);
+    await client.$queryRaw`UPDATE comments SET body = ${newCommentBody}, been_edited = true WHERE comment_id = ${commentId}`;
 
-    await pool.query("COMMIT;");
+    await client.$queryRaw`COMMIT;`;
 
     return NextResponse.json({ success: "Comment edited successfully" });
   } catch(e) {
@@ -93,7 +99,10 @@ export async function GET(request: NextRequest) {
       where c.post_id = '${post_id}'
       order by c.create_date DESC`;
 
-    const postComments = (await pool.query(commentQuery)).rows;
+    const postComments = (await client.$queryRaw`select c.*
+      from comments c
+      where c.post_id = '${post_id}'
+      order by c.create_date DESC`);
 
     //console.log(postComments);
 
