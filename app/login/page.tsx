@@ -11,7 +11,7 @@ import crypto from "node:crypto";
 import type { DatabaseUser } from "../_lib/db";
 import type { ActionResult } from "../_components/Form";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 export default async function Page() {
   const { user } = await validateRequest();

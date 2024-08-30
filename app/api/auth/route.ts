@@ -1,7 +1,7 @@
 import { lucia, validateRequest } from "@/app/_lib/auth";
 import { cookies } from "next/headers";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 export async function GET(request: Request, response: Response) {
   const { user, session } = await validateRequest();

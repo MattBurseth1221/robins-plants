@@ -4,7 +4,7 @@ import { pool } from "@/app/_lib/db";
 import { createTempPassword } from "@/app/_utils/helper-functions";
 import { v4 as uuidv4 } from "uuid";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 export async function PUT(request: NextRequest) {
   const searchParams = await request.nextUrl.searchParams;

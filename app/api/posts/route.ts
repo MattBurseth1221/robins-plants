@@ -3,7 +3,7 @@ import { pool } from "../../_lib/db";
 import { deleteFileFromS3, uploadFileToS3 } from "../../_lib/s3";
 import { v4 as uuidv4 } from "uuid";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 
 //Retrieves all posts given parameters from DB
 export async function GET(request: NextRequest) {
