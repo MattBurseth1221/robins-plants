@@ -18,14 +18,21 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
+    
     const resetID = searchParams.get("id");
+    console.log("searching for params...");
 
     console.log("reset id: " + resetID);
 
     async function isResetIDValid(resetID: string) {
+      console.log("calling the api");
+
       const validIDCheck = await fetch(`/api/password?id=${resetID}`, {
         method: "GET",
       }).then((res) => res.json());
+
+      console.log("back from the api, here's the response:");
+      console.log(validIDCheck);
 
       if (validIDCheck.error) {
         console.log(validIDCheck.error);
@@ -45,7 +52,7 @@ export default function Page() {
     }
 
     isResetIDValid(resetID!);
-  }, [searchParams]);
+  }, []);
 
   async function sendPasswordResetEmail() {
     if (!usernameValue || typeof usernameValue !== "string") return;
