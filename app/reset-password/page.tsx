@@ -83,6 +83,7 @@ export default function Page() {
       body: JSON.stringify({
         tempPasswordID: passwordChangeResponse.tempPasswordID,
         email: passwordChangeResponse.email,
+        usernameValue: passwordChangeResponse.username,
       }),
     }).then((res) => res.json());
 

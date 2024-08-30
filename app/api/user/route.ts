@@ -53,7 +53,7 @@ async function resetPasswordEmail(usernameValue: string) {
   console.log("username value");
   console.log(usernameValue);
 
-  const usernameQuery = `SELECT id, email FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
+  const usernameQuery = `SELECT id, email, username FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
   const queryResult = (await pool.query(usernameQuery)).rows;
 
   if (!queryResult || queryResult.length === 0) {
@@ -92,6 +92,7 @@ async function resetPasswordEmail(usernameValue: string) {
     success: "User found",
     user_id: queryResult[0].id,
     email: queryResult[0].email,
+    username: queryResult[0].username,
     tempPasswordID: tempPassword.tempPassword,
   });
 }

@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const tempPasswordID = body.tempPasswordID;
     const email = body.email;
+    const usernameValue = body.usernameValue;
 
     console.log("email");
     console.log(email);
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
       from: "Robins-Plants <donotreply@mattburseth.com>",
       to: [email],
       subject: "Password Reset",
-      react: ResetPasswordEmail({ firstName: "Matt", tempPasswordID: tempPasswordID }),
+      react: ResetPasswordEmail({ firstName: usernameValue, tempPasswordID: tempPasswordID }),
     });
 
     if (error) {
