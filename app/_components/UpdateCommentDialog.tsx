@@ -6,8 +6,6 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { PostContext } from "../_providers/PostProvider";
-import { useContext } from "react";
 import { CommentType } from "./PostContainer";
 
 type UpdateDialogProps = {

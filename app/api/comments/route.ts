@@ -79,10 +79,25 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+
+//ATTENTION
+//THIS IS WHERE YOU NEED TO GET COMMENTS BY POST ID 
+//THE RETURNED COMMENTS ARRAY WILL BE STORED IN STATE PER POST 
+//AND PASSED DOWN VIA PROPS TO POST COMPONENT
+//THEN YOU CAN PASS SETCOMMENT DOWN AS WELL TO EDIT AND DELETE COMMENTS WITHOUT REFRESH
 export async function GET(request: NextRequest) {
   console.log("Fetching comments");
 
   return NextResponse.json({ data: ['test comment'] });
+
+  //USE THIS QUERY
+
+  // const commentQuery = `select c.*, u.username
+  //   from comments c
+  //   left join auth_user u 
+  //   on c.user_id = u.id
+  //   where c.post_id = '${post_id}'
+  //   order by c.create_date DESC`;
 
   try {
     const searchParams = request.nextUrl.searchParams;

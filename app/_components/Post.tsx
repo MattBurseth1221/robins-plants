@@ -29,9 +29,11 @@ import Comment from "./Comment";
 
 export default function Post({
   deletePostFromArray,
+  refreshPage,
   likedItems,
 }: {
   deletePostFromArray: Function;
+  refreshPage: Function;
   likedItems: Array<UUID>;
 }) {
   const user = useContext(UserContext);
@@ -112,15 +114,8 @@ export default function Post({
         return;
       }
 
-      response.resultingComment[0].username = user.username;
-
-      console.log("here is where the comment is added to comment array.");
-
-      post!.comments.unshift(response.resultingComment[0]);
-
-      for (let i = 0; i < post!.comments.length; i++) {
-        console.log(post!.comments[i]);
-      }
+      refreshPage();
+      
     } catch (e) {
       console.log(e);
       return;

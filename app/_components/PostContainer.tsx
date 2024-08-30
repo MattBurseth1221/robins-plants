@@ -151,7 +151,7 @@ export default function PostContainer() {
     </>
   ) : (
     <div className="w-[50%] ">
-      <div>No posts found. Try again later.</div>
+      <div>No posts found.</div>
     </div>
   );
 }
