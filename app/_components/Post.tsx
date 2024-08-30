@@ -29,9 +29,11 @@ import Comment from "./Comment";
 
 export default function Post({
   deletePostFromArray,
+  refreshPage,
   likedItems,
 }: {
   deletePostFromArray: Function;
+  refreshPage: Function;
   likedItems: Array<UUID>;
 }) {
   const user = useContext(UserContext);
@@ -111,9 +113,11 @@ export default function Post({
         console.log(response.error);
       }
 
-      response.resultingComment[0].username = user.username;
+      refreshPage();
 
-      post!.comments.unshift(response.resultingComment[0]);
+      // response.resultingComment[0].username = user.username;
+
+      // post!.comments.unshift(response.resultingComment[0]);
     } catch (e) {
       console.log(e);
       return;

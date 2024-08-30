@@ -1,7 +1,7 @@
 'use client'
  
 import { PostType } from '../_components/PostContainer'
-import { createContext, useEffect } from 'react'
+import { createContext } from 'react'
  
 export const PostContext = createContext<PostType | null>(null)
 

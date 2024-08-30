@@ -116,7 +116,7 @@ export default function PostContainer() {
     }, 100);
   }
 
-  return posts ? (
+  return posts.length > 0 ? (
     <>
       <div className="">
         <select
@@ -150,8 +150,8 @@ export default function PostContainer() {
       </div>
     </>
   ) : (
-    <div className="w-[50%] bg-gray-300">
-      <div>No posts found. Try again later.</div>
+    <div className="w-[50%] ">
+      <div>No posts found.</div>
     </div>
   );
 }
