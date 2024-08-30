@@ -109,11 +109,18 @@ export default function Post({
         console.log(response.success);
       } else {
         console.log(response.error);
+        return;
       }
 
       response.resultingComment[0].username = user.username;
 
+      console.log("here is where the comment is added to comment array.");
+
       post!.comments.unshift(response.resultingComment[0]);
+
+      for (let i = 0; i < post!.comments.length; i++) {
+        console.log(post!.comments[i]);
+      }
     } catch (e) {
       console.log(e);
       return;

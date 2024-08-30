@@ -13,7 +13,7 @@ export function Form({
     error: null,
   });
   return (
-    <form className="mb-4 mt-8" action={formAction}>
+    <form className="mb-2 mt-4" action={formAction}>
       {children}
       {state.error && (
         <p className="bg-red-500 opacity-70 p-2 rounded-md text-black text-opacity-100 text-center">

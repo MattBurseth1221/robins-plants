@@ -10,6 +10,7 @@ import crypto from "node:crypto";
 
 import type { DatabaseUser } from "../_lib/db";
 import type { ActionResult } from "../_components/Form";
+import { generateSHA256 } from "../_utils/helper-functions";
 
 //export const runtime = "edge";
 
@@ -29,19 +30,17 @@ export default async function Page() {
           <label htmlFor="password">Password</label>
           <input type="password" name="password" id="password" />
           <br />
-          <button className="mb-8 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-400 transition">Continue</button>
+          <button className="mb-4 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
+            Continue
+          </button>
         </Form>
-        <Link href="/signup">Create an account</Link>
-        <Link href="/reset-password">Forgot password?</Link>
+        <div className="w-[100%] flex flex-row justify-center gap-8">
+          <Link href="/signup" className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Create an account</Link>
+          <Link href="/reset-password" className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Forgot password?</Link>
+        </div>
       </div>
     </main>
   );
-}
-
-function sha256(data: string): string {
-  const hash = crypto.createHash("sha256");
-  hash.update(data);
-  return hash.digest("hex");
 }
 
 async function login(_: any, formData: FormData): Promise<ActionResult> {
@@ -84,7 +83,7 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
     };
   }
 
-  const validPassword = sha256(password) === existingUser.password_hash;
+  const validPassword = generateSHA256(password) === existingUser.password_hash;
 
   if (!validPassword) {
     return {
