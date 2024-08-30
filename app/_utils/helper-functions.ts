@@ -38,6 +38,10 @@ export async function createTempPassword() {
 
   const hashedTempPassword = await sha256(tempPassword);
 
+  console.log("password info: ");
+  console.log(tempPassword);
+  console.log(hashedTempPassword);
+
   return {tempPassword: tempPassword, hashedTempPassword: hashedTempPassword};
 }
 

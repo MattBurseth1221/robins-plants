@@ -12,7 +12,9 @@ export async function GET(request: NextRequest) {
     const searchParams = await request.nextUrl.searchParams;
     const id = searchParams.get("id");
 
-    const hashedID = await sha256(!id ? "" : id);
+    if (!id) return;
+
+    const hashedID = await sha256(id);
 
     console.log("finding user...");
 
@@ -22,9 +24,12 @@ export async function GET(request: NextRequest) {
       )
     ).rows;
 
+    console.log("id result:");
     console.log(idQueryResult);
 
     if (!idQueryResult || idQueryResult.length === 0) isIDValid = false;
+
+    console.log(idQueryResult);
 
     user_id = idQueryResult[0].user_id;
     const goodDate =

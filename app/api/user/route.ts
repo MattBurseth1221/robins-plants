@@ -50,6 +50,9 @@ async function resetPassword(user_id: UUID, newPasswordHash: string) {
 }
 
 async function resetPasswordEmail(usernameValue: string) {
+  console.log("username value");
+  console.log(usernameValue);
+
   const usernameQuery = `SELECT id, email FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
   const queryResult = (await pool.query(usernameQuery)).rows;
 
