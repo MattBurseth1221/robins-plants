@@ -18,7 +18,6 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    
     const resetID = searchParams.get("id");
     console.log("searching for params...");
 
@@ -33,6 +32,7 @@ export default function Page() {
 
       console.log("back from the api, here's the response:");
       console.log(validIDCheck);
+      console.log(validIDCheck.result);
 
       if (validIDCheck.error) {
         console.log(validIDCheck.error);
@@ -211,7 +211,7 @@ export default function Page() {
             Reset
           </button>
         </div>
-        {/* {displayMessage} */}
+        {displayMessage}
         <div className="mt-4 flex justify-between">
           <p className="w-64">Remembered your password?</p>
           <button
