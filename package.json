@@ -33,6 +33,7 @@
     "react-dom": "^18",
     "resend": "^3.5.0",
     "robins-plants": "file:",
+    "sharp": "^0.33.5",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
