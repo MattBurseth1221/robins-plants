@@ -1,4 +1,5 @@
 import { User } from "lucia";
+import { createHash } from "crypto";
 
 export function userIsAdmin(user: User | null) {
   if (user === null) return false;
@@ -36,12 +37,16 @@ export async function createTempPassword() {
     tempPassword += characters.charAt(randomInd);
   }
 
-  const hashedTempPassword = await sha256(tempPassword);
+  const hashedTempPassword = generateRandomIdFromString(tempPassword);
+
+  console.log("password info: ");
+  console.log(tempPassword);
+  console.log(hashedTempPassword);
 
   return {tempPassword: tempPassword, hashedTempPassword: hashedTempPassword};
 }
 
-export function sha256(data: string): string {
+export function generateRandomIdFromString(data: string): string {
   let seed = 0;
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
     for(let i = 0, ch; i < data.length; i++) {
@@ -71,4 +76,9 @@ export function testPassword(password: string, confirmPassword: string) {
   if (password !== confirmPassword) return { error: "Passwords do not match" };
 
   return { success: "Password is valid" };
+}
+
+export function generateSHA256(data: string): string {
+  const hash = createHash('sha256');
+  return hash.update(data).digest('hex') as string;
 }

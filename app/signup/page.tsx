@@ -1,16 +1,15 @@
 import Link from "next/link";
 
 import { pool } from "../_lib/db";
-import crypto from "node:crypto";
+import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 import { lucia, validateRequest } from "../_lib/auth";
 import { redirect } from "next/navigation";
 import { Form } from "../_components/Form";
-import { generateId } from "lucia";
 import { v4 as uuidv4 } from "uuid";
 
 import type { ActionResult } from "../_components/Form";
-import { sha256, testPassword } from "../_utils/helper-functions";
+import { testPassword, generateSHA256 } from "../_utils/helper-functions";
 
 //export const runtime = "edge";
 
@@ -65,7 +64,11 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
 
   if (passwordValid.error) return passwordValid;
 
-  const hashedPassword = await sha256(password);
+  const hashedPassword = generateSHA256(password);
+
+  console.log('hash test: ');
+  console.log(hashedPassword);
+
   const userId = uuidv4();
   const emailAddress = formData.get("email");
 

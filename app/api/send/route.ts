@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     console.log("email");
     console.log(email);
-    console.log("pasword");
+    console.log("password");
     console.log(tempPasswordID);
 
     if (!tempPasswordID || !email) return NextResponse.json({ error: "Missing data" });

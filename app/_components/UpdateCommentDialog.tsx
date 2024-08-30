@@ -47,6 +47,7 @@ export default function UpdateCommentDialog({
         
         let newComment = {...comment};
         newComment.body = body;
+        newComment.been_edited = true;
 
         setComment(newComment);
       } else {

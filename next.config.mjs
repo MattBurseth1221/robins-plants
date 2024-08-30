@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // reactStrictMode: false,
+  reactStrictMode: false,
+  output: 'standalone',
     async rewrites() {
         return [
           {
@@ -15,6 +16,11 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: '*',
                 port: '',
+            },
+            {
+              protocol: 'http',
+              hostname: 'http://localhost',
+              port: '3000'
             }
         ]
     },

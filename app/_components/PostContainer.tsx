@@ -42,7 +42,7 @@ export default function PostContainer() {
   const [filters, setFilters] = useState({
     sortType: "date",
     order: "DESC",
-    limit: "10",
+    limit: "30",
   });
   const [likedItems, setLikedItems] = useState<Array<UUID>>([]);
   const user = useContext(UserContext);

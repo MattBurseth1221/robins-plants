@@ -111,13 +111,11 @@ export default function Post({
         console.log(response.success);
       } else {
         console.log(response.error);
+        return;
       }
 
       refreshPage();
-
-      // response.resultingComment[0].username = user.username;
-
-      // post!.comments.unshift(response.resultingComment[0]);
+      
     } catch (e) {
       console.log(e);
       return;
