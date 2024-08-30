@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { sha256, testPassword } from "../_utils/helper-functions";
+import { generateSHA256, testPassword } from "../_utils/helper-functions";
 import { UUID } from "node:crypto";
 
 //export const runtime = "edge";
@@ -113,7 +113,7 @@ export default function Page() {
     console.log("changing user id " + changingUserID);
     console.log("using password " + passwordValue);
 
-    const newPasswordHash = sha256(passwordValue);
+    const newPasswordHash = generateSHA256(passwordValue);
     console.log(newPasswordHash);
 
     const passwordChangeResponse = await fetch(

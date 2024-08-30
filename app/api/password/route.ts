@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "../../_lib/db";
-import { sha256 } from "../../_utils/helper-functions";
+import { generateRandomIdFromString } from "../../_utils/helper-functions";
 
 //export const runtime = "edge";
 
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   try {
     if (!id) return;
 
-    const hashedID = sha256(id);
+    const hashedID = generateRandomIdFromString(id);
 
     console.log("finding user...");
 
