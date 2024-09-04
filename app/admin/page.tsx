@@ -11,9 +11,9 @@ import UserProvider from "../_providers/UserProvider";
 
 export default async function Page() {
   const { user }: any = await validateRequest();
-  if (!userIsAdmin(user)) {
-    return redirect("/");
-  }
+  // if (!userIsAdmin(user)) {
+  //   return redirect("/");
+  // }
 
   return (
     <UserProvider user={user}>
