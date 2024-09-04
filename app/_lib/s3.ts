@@ -4,7 +4,7 @@ export const Bucket = process.env.AMPLIFY_BUCKET;
 export const s3 = new S3Client({
   region: process.env.AWS_REGION_PHOTO,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID_PHOTO as string,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
   },
 });
