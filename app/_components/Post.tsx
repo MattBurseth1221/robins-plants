@@ -197,10 +197,10 @@ export default function Post({
                   post.image_refs![currentImageIndex]
                 }` || ""
               }
-              height="600"
-              width="600"
+              height="0"
+              width="1000"
               alt="Flower?"
-              className="rounded-md mx-auto border-2 border-black "
+              className="rounded-md mx-auto border-2 border-black block"
             />
           )}
         </div>

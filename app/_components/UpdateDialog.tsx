@@ -128,7 +128,7 @@ export default function UpdateDialog({
                 }` || ""
               }
               height="600"
-              width="600"
+              width="200"
               alt="Flower?"
               className="rounded-md mx-auto border-2 border-black "
             />
