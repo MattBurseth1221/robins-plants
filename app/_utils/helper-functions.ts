@@ -4,7 +4,7 @@ import { createHash } from "crypto";
 export function userIsAdmin(user: User | null) {
   if (user === null) return false;
   if (
-    user.username === "Admin" ||
+    user.username === "mattb" ||
     user.username === "Robin" ||
     user.username === "admin"
   )
