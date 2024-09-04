@@ -87,8 +87,8 @@ export default function UpdateDialog({
       onClose={() => setEditingPost(!editingPost)}
       className="relative z-50"
     >
-      <div className="fixed inset-0 flex w-screen items-center justify-center p-4 max-h-[50vh] my-auto">
-        <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
+      <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+        <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md absolute">
           <DialogTitle className="font-bold">Update Post</DialogTitle>
           <Description>This will edit the post.</Description>
 
@@ -97,6 +97,7 @@ export default function UpdateDialog({
               onClick={() => {
                 handleImageIndexChange(1);
               }}
+              className="rounded-md border-2 hover:bg-slate-200 border-slate-300 transition p-2"
             >
               Change
             </button>
@@ -108,8 +109,8 @@ export default function UpdateDialog({
                   post!.image_refs![currentImageIndex]
                 }` || ""
               }
-              width="400"
-              height="0"
+              height="300"
+              width="150"
               alt="Flower?"
               className="rounded-md mx-auto mb-4"
             />
