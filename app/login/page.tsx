@@ -98,5 +98,5 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
     sessionCookie.value,
     sessionCookie.attributes
   );
-  return redirect(process.env.URL as string);
+  return redirect(process.env.HOME_URL as string);
 }

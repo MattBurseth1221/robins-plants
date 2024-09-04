@@ -76,7 +76,7 @@ export default function PostContainer() {
 
     async function getPosts() {
       const postArray = await fetch(
-        process.env.URL + `/api/posts?${paramsString}`,
+        process.env.HOME_URL + `/api/posts?${paramsString}`,
         {
           method: "GET",
         }
