@@ -10,10 +10,22 @@ export default function UploadForm() {
 
   const handleFileSelect = async (formData: FormData) => {
     if (!user) router.push("/login");
-    if (formData.getAll("files").length > 10) {
-      alert("Maximum of 10 images allowed.");
+
+    const files = formData.getAll("files");
+
+    if (files.length > 10) {
+      alert("Maximum of 10 images/videos allowed.");
       return;
     }
+
+    const maxUploadSize = 500 * 1024 * 1024;
+    for (let file of files) {
+      file = file as File;
+      if (file.size > maxUploadSize) {
+        alert("File size of 500MB exceeded.");
+        return;
+      }
+    } 
  
     formData.append("user_id", user!.id);
 
@@ -23,7 +35,7 @@ export default function UploadForm() {
     }).then((res) => res.json());
 
     if (response.success) {
-      alert("Photo uploaded successfully. (Maybe idk)");
+      alert("Photo uploaded successfully.");
 
       router.push('/');
     }
@@ -39,7 +51,7 @@ export default function UploadForm() {
     <form action={handleFileSelect} className="flex flex-col gap-4">
       <label>
         <span>Upload a Photo (JPG only I think)</span>
-        <input type="file" name="files" accept="image/*" multiple required/>
+        <input type="file" name="files" accept="image/*,video/*" multiple required/>
       </label>
       <label>
         <span>Title</span>

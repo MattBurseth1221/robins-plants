@@ -14,13 +14,17 @@ export async function uploadFileToS3(file: File, fileName: string) {
       const fileBuffer = Buffer.from(await file.arrayBuffer());
   
       //const fileBuffer = file;
-      const actualFileName = `${fileName}-${Date.now()}`;
+      let actualFileName = `${fileName}-${Date.now()}`;
+
+      if (file.type.startsWith('video/')) {
+        actualFileName += '-video';
+      }
   
       const params = {
         Bucket: process.env.AMPLIFY_BUCKET,
         Key: actualFileName,
         Body: fileBuffer,
-        ContentType: "image/jpg",
+        ContentType: file.type,
       };
   
       const command = new PutObjectCommand(params);

@@ -53,13 +53,13 @@ export default function Post({
     setEditingPost,
     currentImageIndex,
     handleImageIndexChange,
-  }
+  };
 
   const DeleteDialogProps = {
     deletePostFromArray,
-    confirmDeletePost, 
+    confirmDeletePost,
     setConfirmDeletePost,
-  }
+  };
 
   const showCommentDiv = (
     <div className="mt-2">
@@ -115,7 +115,6 @@ export default function Post({
       }
 
       refreshPage();
-      
     } catch (e) {
       console.log(e);
       return;
@@ -179,18 +178,31 @@ export default function Post({
     <>
       <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
-        <div className={`relative ${post.image_refs.length > 1 ? "h-[600px]" : ""} overflow-auto flex items-center justify-center rounded-md`}>
-          <Image
-            src={
+        <div
+          className={`relative ${
+            post.image_refs.length > 1 ? "h-[600px]" : ""
+          } overflow-auto flex items-center justify-center rounded-md`}
+        >
+          {post.image_refs![currentImageIndex].endsWith("-video") ? (
+            <video width="600" className="rounded-md mx-auto border-2 border-black" controls><source src={
               `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
                 post.image_refs![currentImageIndex]
-              }` || ""
-            }
-            height="600"
-            width="600"
-            alt="Flower?"
-            className="rounded-md mx-auto border-2 border-black "
-          />
+              }` || ""} />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <Image
+              src={
+                `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
+                  post.image_refs![currentImageIndex]
+                }` || ""
+              }
+              height="0"
+              width="1000"
+              alt="Flower?"
+              className="rounded-md mx-auto border-2 border-black block"
+            />
+          )}
         </div>
 
         <div className="min-h-16 mt-2">
@@ -221,8 +233,12 @@ export default function Post({
                 </button>
               </div>
             )}
-            
-            <div className={`${post.image_refs!.length === 1 ? "col-span-2" : ""} flex mr-0 ml-auto`}>
+
+            <div
+              className={`${
+                post.image_refs!.length === 1 ? "col-span-2" : ""
+              } flex mr-0 ml-auto`}
+            >
               <p className="text-right">
                 {formatDate(new Date(post.create_date))}
               </p>
@@ -265,9 +281,7 @@ export default function Post({
               post.comments
                 .slice(0, showAllComments ? post.comments.length : 3)
                 .map((comment: CommentType, index: number) => {
-                  return (
-                    <Comment key={index} {...comment} />
-                  );
+                  return <Comment key={index} {...comment} />;
                 })
             ) : (
               <div className="opacity-50 text-center">
@@ -279,7 +293,7 @@ export default function Post({
           </div>
         </div>
 
-        {(userIsAdmin(user) || (post.username === user!.username)) && (
+        {(userIsAdmin(user) || post.username === user!.username) && (
           <div className="w-[20%] mx-auto mt-4 flex justify-between">
             <button
               className="hover:bg-slate-300 transition rounded-md p-1"
