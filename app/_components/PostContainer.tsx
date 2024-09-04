@@ -45,6 +45,7 @@ export default function PostContainer() {
     limit: "30",
   });
   const [likedItems, setLikedItems] = useState<Array<UUID>>([]);
+  const [loadingPosts, setLoadingPosts] = useState<Boolean>(false);
   const user = useContext(UserContext);
 
   const PostProps = {
@@ -70,6 +71,8 @@ export default function PostContainer() {
   }, [user]);
 
   useEffect(() => {
+    setLoadingPosts(true);
+
     const params = new URLSearchParams(filters);
     params.set("order", sortOrder);
     const paramsString = params.toString();
@@ -95,6 +98,8 @@ export default function PostContainer() {
     }
 
     getPosts();
+
+    setLoadingPosts(false);
   }, [filters, sortOrder]);
 
   function toggleSortOrder() {
@@ -116,7 +121,9 @@ export default function PostContainer() {
     }, 100);
   }
 
-  return posts.length > 0 ? (
+  return loadingPosts ? (<div className="w-[50%] ">
+    <div>No posts found.</div>
+  </div>) : posts.length > 0 ? (
     <>
       <div className="">
         <select
@@ -150,8 +157,8 @@ export default function PostContainer() {
       </div>
     </>
   ) : (
-    <div className="w-[50%] ">
-      <div>No posts found.</div>
+    <div className="w-[50%]">
+      <div>Loading posts...</div>
     </div>
   );
 }
