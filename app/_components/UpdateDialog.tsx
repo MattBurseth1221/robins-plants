@@ -34,14 +34,24 @@ export default function UpdateDialog({
 
   //Takes the form data from the edit post modal and send it to post put endpoint
   async function updatePost(formData: FormData) {
+    const files = formData.getAll("files") as File[];
+
     if (formData.getAll("files").length > 10) {
       alert("Maximum of 10 images allowed.");
       return;
     }
 
+    const maxUploadSize = 500 * 1024 * 1024;
+    for (let file of files) {
+      file = file as File;
+      if (file.size > maxUploadSize) {
+        alert("File size of 500MB exceeded.");
+        return;
+      }
+    } 
+
     const title = formData.get("title");
     const body = formData.get("body");
-    const files = formData.getAll("files") as File[];
 
     if (
       title === post!.title &&
@@ -103,20 +113,29 @@ export default function UpdateDialog({
             </button>
           )}
           <form action={updatePost} id="edit-form">
+          {post!.image_refs![currentImageIndex].endsWith("-video") ? (
+            <video width="200" className="rounded-md mx-auto border-2 border-black" controls><source src={
+              `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
+                post!.image_refs![currentImageIndex]
+              }` || ""} />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
             <Image
               src={
                 `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
                   post!.image_refs![currentImageIndex]
                 }` || ""
               }
-              height="300"
-              width="150"
+              height="600"
+              width="600"
               alt="Flower?"
-              className="rounded-md mx-auto mb-4"
+              className="rounded-md mx-auto border-2 border-black "
             />
+          )}
             <label>
               <span>Upload a Photo (JPG only I think)</span>
-              <input type="file" name="files" accept="image/*" multiple />
+              <input type="file" name="files" accept="image/*,video/*" multiple />
             </label>
             <label>
               <span>Title</span>
