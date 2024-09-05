@@ -32,7 +32,6 @@ export interface PostType {
   image_refs: string[];
   create_date: Date;
   total_likes: number;
-  comments: Array<CommentType>;
   username: string;
 }
 

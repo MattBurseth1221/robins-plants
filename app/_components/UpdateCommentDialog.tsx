@@ -7,20 +7,22 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { CommentType } from "./PostContainer";
+import { useContext } from "react";
+import { CommentContext } from "../_providers/CommentProvider";
+import { CommentContextType } from "../_providers/CommentProvider";
 
 type UpdateDialogProps = {
   comment: CommentType;
   showUpdateCommentModal: boolean;
   setShowUpdateCommentModal: Function;
-  setComment: Function;
 };
 
 export default function UpdateCommentDialog({
   comment,
   showUpdateCommentModal,
   setShowUpdateCommentModal,
-  setComment,
 }: UpdateDialogProps) {
+  const {comments, setComments}: CommentContextType = useContext(CommentContext);
 
   //Takes the form data from the edit comment modal and send it to comment put endpoint
   async function updateComment(formData: FormData) {
@@ -44,12 +46,23 @@ export default function UpdateCommentDialog({
 
       if (response.success) {
         console.log(response.success);
-        
-        let newComment = {...comment};
-        newComment.body = body;
-        newComment.been_edited = true;
 
-        setComment(newComment);
+        console.log(comments);
+        let oldComments = {...comments} as CommentType[];
+        
+        console.log(oldComments);
+        console.log(oldComments.length);
+
+        for (let i = 0; i < oldComments.length; i++) {
+          if (oldComments[i].comment_id == comment.comment_id) {
+            oldComments[i].body = body;
+            oldComments[i].been_edited = true;
+            return;
+          }
+        }
+
+        console.log("setting new comments");
+        setComments(oldComments);
       } else {
         console.log(response.error);
         alert("Something went wrong.");
