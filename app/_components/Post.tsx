@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext, useEffect, useRef, createContext } from "react";
+import { useState, useContext, useEffect, useRef, createContext, useMemo } from "react";
 import { CommentType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import { formatDate, userIsAdmin } from "../_utils/helper-functions";
@@ -28,10 +28,12 @@ import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
 
-type CommentContextType = {
+export type CommentContextType = {
   comments: CommentType[];
   setComments: Function;
 }
+
+export const CommentContext = createContext<CommentContextType>({comments: [], setComments: () => {}});
 
 export default function Post({
   deletePostFromArray,
@@ -42,11 +44,11 @@ export default function Post({
   refreshPage: Function;
   likedItems: Array<UUID>;
 }) {
-  const CommentContext = createContext<CommentContextType>({comments: [], setComments: () => {}});
-
   const user = useContext(UserContext);
   const post = useContext(PostContext);
   const [comments, setComments] = useState<CommentType[]>([]);
+  const value = useMemo(() => ({comments, setComments}), [comments])
+
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
@@ -141,13 +143,16 @@ export default function Post({
       }).then((res) => res.json());
 
       if (response.success) {
+        let resultingComment = response.resultingComment;
+        resultingComment.username = user.username;
+
+        setComments([resultingComment, ...comments]);
+
         console.log(response.success);
       } else {
         console.log(response.error);
         return;
       }
-
-      refreshPage();
     } catch (e) {
       console.log(e);
       return;
@@ -323,7 +328,7 @@ export default function Post({
                 .slice(0, showAllComments ? comments.length : 3)
                 .map((comment: CommentType, index: number) => {
                   return (
-                    <CommentContext.Provider key={index} value={{ comments, setComments }}>
+                    <CommentContext.Provider key={index} value={value}>
                       <Comment {...comment} />
                     </CommentContext.Provider>
                   )

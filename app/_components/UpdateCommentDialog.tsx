@@ -8,8 +8,7 @@ import {
 } from "@headlessui/react";
 import { CommentType } from "./PostContainer";
 import { useContext } from "react";
-import { CommentContext } from "../_providers/CommentProvider";
-import { CommentContextType } from "../_providers/CommentProvider";
+import { CommentContext, CommentContextType } from "./Post";
 
 type UpdateDialogProps = {
   comment: CommentType;
@@ -45,24 +44,17 @@ export default function UpdateCommentDialog({
       }).then((res) => res.json());
 
       if (response.success) {
-        console.log(response.success);
-
-        console.log(comments);
-        let oldComments = {...comments} as CommentType[];
-        
-        console.log(oldComments);
-        console.log(oldComments.length);
+        let oldComments = comments as CommentType[];
 
         for (let i = 0; i < oldComments.length; i++) {
           if (oldComments[i].comment_id == comment.comment_id) {
             oldComments[i].body = body;
             oldComments[i].been_edited = true;
-            return;
+            break;
           }
         }
-
-        console.log("setting new comments");
-        setComments(oldComments);
+        
+        setComments([...oldComments]);
       } else {
         console.log(response.error);
         alert("Something went wrong.");

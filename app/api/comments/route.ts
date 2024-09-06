@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     console.log(resultingComment);
 
-    return NextResponse.json({ success: "Comment posted.", resultingComment: resultingComment });
+    return NextResponse.json({ success: "Comment posted.", resultingComment: resultingComment[0] });
   } catch (e) {
     console.log(e);
 
