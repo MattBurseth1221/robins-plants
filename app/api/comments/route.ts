@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     console.log(resultingComment);
 
-    return NextResponse.json({ success: "Comment posted.", resultingComment: resultingComment });
+    return NextResponse.json({ success: "Comment posted.", resultingComment: resultingComment[0] });
   } catch (e) {
     console.log(e);
 
@@ -88,29 +88,20 @@ export async function PUT(request: NextRequest) {
 export async function GET(request: NextRequest) {
   console.log("Fetching comments");
 
-  return NextResponse.json({ data: ['test comment'] });
-
-  //USE THIS QUERY
-
-  // const commentQuery = `select c.*, u.username
-  //   from comments c
-  //   left join auth_user u 
-  //   on c.user_id = u.id
-  //   where c.post_id = '${post_id}'
-  //   order by c.create_date DESC`;
+  const searchParams = request.nextUrl.searchParams;
+  const post_id = searchParams.get("id");
 
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const post_id = searchParams.get("id");
-
-    const commentQuery = `select c.*
+    const commentQuery = `select c.*, u.username
       from comments c
+      left join auth_user u 
+      on c.user_id = u.id
       where c.post_id = '${post_id}'
       order by c.create_date DESC`;
 
     const postComments = (await pool.query(commentQuery)).rows;
 
-    //console.log(postComments);
+    console.log(postComments);
 
     return NextResponse.json({
       success: "Comments retrieved.",

@@ -6,9 +6,9 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { PostContext } from "../_providers/PostProvider";
 import { useContext } from "react";
 import { CommentType } from "./PostContainer";
+import { CommentContext, CommentContextType } from "./Post";
 
 type DeleteDialogProps = {
   comment: CommentType;
@@ -21,11 +21,11 @@ export default function DeleteDialog({
   showDeleteCommentModal,
   setShowDeleteCommentModal,
 }: DeleteDialogProps) {
-  const post = useContext(PostContext);
+  const {comments, setComments}: CommentContextType = useContext(CommentContext);
 
   //Filters the current posts' comments array and removes the one that matches the current comment UUID
   function deleteCommentFromArray() {
-    post!.comments = post?.comments.filter((tempComment) => comment.comment_id !== tempComment.comment_id)!;
+    setComments(comments.filter((tempComment) => comment.comment_id !== tempComment.comment_id));
   }
 
   //Calls the delete post endpoint, toggles confirm delete modal

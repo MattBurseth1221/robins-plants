@@ -31,21 +31,22 @@ export async function GET(request: NextRequest) {
 
   const queryResult = (await pool.query(postQuery)).rows;
 
+  //OLD COMMENT HANDLER
   //Iterate through each post, get all comments for each
-  for (let i = 0; i < queryResult.length; i++) {
-    const post_id = queryResult[i].post_id;
+  // for (let i = 0; i < queryResult.length; i++) {
+  //   const post_id = queryResult[i].post_id;
 
-    const commentQuery = `select c.*, u.username
-    from comments c
-    left join auth_user u 
-    on c.user_id = u.id
-    where c.post_id = '${post_id}'
-    order by c.create_date DESC`;
+  //   const commentQuery = `select c.*, u.username
+  //   from comments c
+  //   left join auth_user u 
+  //   on c.user_id = u.id
+  //   where c.post_id = '${post_id}'
+  //   order by c.create_date DESC`;
 
-    const postComments = (await pool.query(commentQuery)).rows;
+  //   const postComments = (await pool.query(commentQuery)).rows;
 
-    queryResult[i].comments = postComments;
-  }
+  //   queryResult[i].comments = postComments;
+  // }
 
   return Response.json({ message: "Hello!", result: queryResult });
 }

@@ -18,7 +18,7 @@ export default function UploadForm() {
       return;
     }
 
-    const maxUploadSize = 500 * 1024 * 1024;
+    const maxUploadSize = 2000 * 1024 * 1024;
     for (let file of files) {
       file = file as File;
       if (file.size > maxUploadSize) {

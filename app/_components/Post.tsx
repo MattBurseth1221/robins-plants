@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect, useRef, createContext, useMemo } from "react";
 import { CommentType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
-import Image from "next/image";
+import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,11 +21,19 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
 import { UserContext } from "../_providers/UserProvider";
-import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 import { PostContext } from "../_providers/PostProvider";
+
+import Image from "next/image";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
+
+export type CommentContextType = {
+  comments: CommentType[];
+  setComments: Function;
+}
+
+export const CommentContext = createContext<CommentContextType>({comments: [], setComments: () => {}});
 
 export default function Post({
   deletePostFromArray,
@@ -38,12 +46,15 @@ export default function Post({
 }) {
   const user = useContext(UserContext);
   const post = useContext(PostContext);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const value = useMemo(() => ({comments, setComments}), [comments])
+
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
   const [postLiked, setPostLiked] = useState<boolean>(false);
-  const usersLikedItems = useRef<Array<UUID>>(likedItems);
+  const usersLikedItems = useRef<UUID[]>(likedItems);
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -77,6 +88,30 @@ export default function Post({
     </div>
   );
 
+  useEffect(() => {
+    async function getComments() {
+      try {
+        const commentResult = await fetch(`/api/comments?id=${post?.post_id}`, {
+          method: "GET",
+        }).then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            console.log(data.error);
+            return;
+          }
+
+          setComments(data.data);
+        })
+      } catch (e) {
+        console.log("Unknown error occurred when fetching comments.");
+        alert("Error fetching comments.");
+        return;
+      }
+    }
+
+    getComments();
+  }, []);
+
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
     setPostLiked(usersLikedItems.current.includes(post!.post_id));
@@ -108,13 +143,16 @@ export default function Post({
       }).then((res) => res.json());
 
       if (response.success) {
+        let resultingComment = response.resultingComment;
+        resultingComment.username = user.username;
+
+        setComments([resultingComment, ...comments]);
+
         console.log(response.success);
       } else {
         console.log(response.error);
         return;
       }
-
-      refreshPage();
     } catch (e) {
       console.log(e);
       return;
@@ -184,10 +222,18 @@ export default function Post({
           } overflow-auto flex items-center justify-center rounded-md`}
         >
           {post.image_refs![currentImageIndex].endsWith("-video") ? (
-            <video width="600" className="rounded-md mx-auto border-2 border-black" controls><source src={
-              `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
-                post.image_refs![currentImageIndex]
-              }` || ""} />
+            <video
+              width="600"
+              className="rounded-md mx-auto border-2 border-black"
+              controls
+            >
+              <source
+                src={
+                  `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
+                    post.image_refs![currentImageIndex]
+                  }` || ""
+                }
+              />
               Your browser does not support the video tag.
             </video>
           ) : (
@@ -277,11 +323,15 @@ export default function Post({
             </form>
           </div>
           <div className="border-t-[1px] border-slate-500 border-opacity-20 py-2">
-            {post.comments && post.comments.length > 0 ? (
-              post.comments
-                .slice(0, showAllComments ? post.comments.length : 3)
+            {comments && comments.length > 0 ? (
+              comments
+                .slice(0, showAllComments ? comments.length : 3)
                 .map((comment: CommentType, index: number) => {
-                  return <Comment key={index} {...comment} />;
+                  return (
+                    <CommentContext.Provider key={index} value={value}>
+                      <Comment {...comment} />
+                    </CommentContext.Provider>
+                  )
                 })
             ) : (
               <div className="opacity-50 text-center">
@@ -289,7 +339,7 @@ export default function Post({
               </div>
             )}
 
-            {post.comments && post.comments.length > 3 && showCommentDiv}
+            {comments && comments.length > 3 && showCommentDiv}
           </div>
         </div>
 

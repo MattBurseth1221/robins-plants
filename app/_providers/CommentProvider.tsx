@@ -1,22 +1,22 @@
-'use client'
- 
+//NOT USED ANYMORE
+
 import { CommentType } from '../_components/PostContainer'
 import { createContext } from 'react'
 
-type CommentContextType = {
-    comment: CommentType;
-    setComment: Function;
+export type CommentContextType = {
+    comments: CommentType[];
+    setComments: Function;
 }
  
-export const CommentContext = createContext<CommentContextType | null>(null)
+export const CommentContext = createContext<CommentContextType>({comments: [], setComments: () => {}});
 
 export default function ThemeProvider({
-  children, comment, setComment 
+  children, comments, setComments
 }: {
   children: React.ReactNode, 
-  comment: CommentType,
-  setComment: Function,
+  comments: CommentType[],
+  setComments: Function,
 }) {
 
-  return <CommentContext.Provider value={{ comment, setComment }}>{children}</CommentContext.Provider>
+  return <CommentContext.Provider value={{ comments, setComments }}>{children}</CommentContext.Provider>
 }

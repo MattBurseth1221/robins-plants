@@ -9,7 +9,7 @@ import DeleteCommentDialog from "./DeleteCommentDialog";
 import { CommentType } from "./PostContainer";
 import UpdateCommentDialog from "./UpdateCommentDialog";
 
-export default function CommentMenu({comment, setComment}: {comment: CommentType; setComment: Function}) {
+export default function CommentMenu({comment}: {comment: CommentType}) {
   const [showDeleteCommentModal, setShowDeleteCommentModal] =
     useState<boolean>(false);
   const [showUpdateCommentModal, setShowUpdateCommentModal] = useState<boolean>(false);
@@ -18,14 +18,12 @@ export default function CommentMenu({comment, setComment}: {comment: CommentType
     comment,
     showDeleteCommentModal,
     setShowDeleteCommentModal,
-    setComment,
   };
 
   const UpdateCommentDialogProps = {
     comment,
     showUpdateCommentModal,
     setShowUpdateCommentModal,
-    setComment,
   };
 
   const menuItemStyle =
