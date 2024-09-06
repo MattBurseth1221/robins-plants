@@ -19,5 +19,5 @@ export async function GET(request: Request, response: Response) {
     sessionCookie.attributes
   );
 
-  return Response.redirect(process.env.URL + "/login");
+  return Response.redirect(process.env.HOME_URL + "/login");
 }
