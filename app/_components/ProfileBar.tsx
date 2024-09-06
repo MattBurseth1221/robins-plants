@@ -9,7 +9,7 @@ export default function ProfileBar() {
   const router = useRouter();
 
   async function logout() {
-    const result = await fetch(process.env.HOME_URL + "/api/auth");
+    const result = await fetch(`/api/auth`);
 
     if (result.ok) {
       router.push(result.url);
