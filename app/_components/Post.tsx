@@ -37,11 +37,9 @@ export const CommentContext = createContext<CommentContextType>({comments: [], s
 
 export default function Post({
   deletePostFromArray,
-  refreshPage,
   likedItems,
 }: {
   deletePostFromArray: Function;
-  refreshPage: Function;
   likedItems: Array<UUID>;
 }) {
   const user = useContext(UserContext);
@@ -224,8 +222,9 @@ export default function Post({
           {post.image_refs![currentImageIndex].endsWith("-video") ? (
             <video
               width="600"
-              className="rounded-md mx-auto border-2 border-black"
+              className="rounded-md mx-auto border-2 border-black overflow-hidden max-h-full"
               controls
+              key={post.image_refs[currentImageIndex]}
             >
               <source
                 src={
@@ -233,6 +232,7 @@ export default function Post({
                     post.image_refs![currentImageIndex]
                   }` || ""
                 }
+                type="video/mp4"
               />
               Your browser does not support the video tag.
             </video>

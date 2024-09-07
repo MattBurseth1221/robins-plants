@@ -25,6 +25,7 @@ export async function uploadFileToS3(file: File, fileName: string) {
         Key: actualFileName,
         Body: fileBuffer,
         ContentType: file.type,
+        ContentDisposition: 'inline',
       };
   
       const command = new PutObjectCommand(params);
