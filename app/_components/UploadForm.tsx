@@ -34,13 +34,16 @@ export default function UploadForm() {
       body: formData,
     }).then((res) => res.json());
 
+    console.log("response here");
+    console.log(response);
+
     if (response.success) {
       alert("Photo uploaded successfully.");
 
       router.push('/');
     }
 
-    console.log(response);
+    
   };
 
   function displayError() {
