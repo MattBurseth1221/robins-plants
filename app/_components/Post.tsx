@@ -298,7 +298,7 @@ export default function Post({
             </div>
           </div>
 
-          <p className="text-left mt-4 break-words line-clamp-3">{post.body}</p>
+          <p className="text-left mt-4">{post.body}</p>
 
           <div>
             <form
