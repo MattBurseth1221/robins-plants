@@ -102,7 +102,6 @@ export default function Post({
         })
       } catch (e) {
         console.log("Unknown error occurred when fetching comments.");
-        alert("Error fetching comments.");
         return;
       }
     }

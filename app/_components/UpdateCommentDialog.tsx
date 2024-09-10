@@ -25,7 +25,7 @@ export default function UpdateCommentDialog({
 
   //Takes the form data from the edit comment modal and send it to comment put endpoint
   async function updateComment(formData: FormData) {
-    const body = formData.get("comment-body") as string;
+    const body = (formData.get("comment-body") as string).trim();
 
     if (!body || body.trim().length === 0) {
         alert("Body cannot be empty.");
@@ -38,10 +38,15 @@ export default function UpdateCommentDialog({
     }
 
     try {
+      console.log("changing comment...");
       const response = await fetch(`/api/comments?id=${comment.comment_id}`, {
         method: "PUT",
         body: formData,
       }).then((res) => res.json());
+      console.log("changed comment");
+
+      console.log(response);
+      console.log(response.error);
 
       if (response.success) {
         let oldComments = comments as CommentType[];

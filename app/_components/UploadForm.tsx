@@ -44,13 +44,14 @@ export default function UploadForm() {
       body: formData,
     }).then((res) => res.json());
 
+    console.log("response here");
+    console.log(response);
+
     if (response.success) {
       alert("Photo uploaded successfully.");
       setLoading(false);
       router.push("/");
     }
-
-    console.log(response);
   }
 
   return (

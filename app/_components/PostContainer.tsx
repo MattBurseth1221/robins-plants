@@ -90,7 +90,6 @@ export default function PostContainer() {
 
       for (let i = 0; i < postArray.length; i++) {
         postArray[i].image_refs = postArray[i].image_ref.split(";");
-        console.log(postArray[i].image_refs);
       }
 
       setPosts(postArray);
