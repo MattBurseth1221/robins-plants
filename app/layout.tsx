@@ -5,8 +5,8 @@ import { SessionProvider } from "@/app/_lib/hooks/SessionContext";
 import { validateRequest } from "@/app/_lib/auth";
 
 export const metadata: Metadata = {
-  title: "Robin's Plants",
-  description: "Robin's Plant website",
+  title: "Robin Plants",
+  description: "Post about, research, and discuss your favorite plants!",
 };
 
 export default async function RootLayout({

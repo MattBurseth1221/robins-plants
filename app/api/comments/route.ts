@@ -101,8 +101,6 @@ export async function GET(request: NextRequest) {
 
     const postComments = (await pool.query(commentQuery)).rows;
 
-    console.log(postComments);
-
     return NextResponse.json({
       success: "Comments retrieved.",
       data: postComments,
