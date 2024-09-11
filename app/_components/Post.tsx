@@ -46,7 +46,7 @@ export default function Post({
   const post = useContext(PostContext);
   const [comments, setComments] = useState<CommentType[]>([]);
   const value = useMemo(() => ({comments, setComments}), [comments])
-
+  const [numLikes, setNumLikes] = useState<number>(post!.total_likes);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [editingPost, setEditingPost] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
@@ -170,7 +170,7 @@ export default function Post({
 
       if (likeResponse.success) {
         console.log(likeResponse.success);
-        post!.total_likes++;
+        setNumLikes(numLikes + 1);
       } else {
         alert("Something went wrong.");
       }
@@ -184,7 +184,7 @@ export default function Post({
 
       if (deleteLikeResponse.success) {
         console.log(deleteLikeResponse.success);
-        post!.total_likes--;
+        setNumLikes(numLikes - 1);
       } else {
         alert("Something went wrong.");
       }
@@ -293,7 +293,7 @@ export default function Post({
                   beat={heartBeat}
                 />
               </button>
-              <p className="text-sm mt-2">{post.total_likes}</p>
+              <p className="text-sm mt-2">{numLikes}</p>
             </div>
           </div>
 

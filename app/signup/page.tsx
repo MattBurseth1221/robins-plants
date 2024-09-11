@@ -11,8 +11,6 @@ import { v4 as uuidv4 } from "uuid";
 import type { ActionResult } from "../_components/Form";
 import { testPassword, generateSHA256 } from "../_utils/helper-functions";
 
-//export const runtime = "edge";
-
 export default async function Page() {
   const { user } = await validateRequest();
   if (user) {
@@ -21,7 +19,7 @@ export default async function Page() {
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
       <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
-        <h1>Create an account</h1>
+        <h1 className="text-xl">Create an account</h1>
         <Form action={signup}>
           <label htmlFor="username">Username</label>
           <input name="username" id="username" />
@@ -35,9 +33,11 @@ export default async function Page() {
           <label htmlFor="confirm-password">Confirm Password</label>
           <input type="password" name="confirm-password" id="password" />
           <br />
-          <button>Continue</button>
+          <div className="flex justify-around">
+            <button className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Create</button>
+            <Link href="/login" className="w-42 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Back to Login</Link>
+          </div>
         </Form>
-        <Link href="/login">Sign in</Link>
       </div>
     </main>
   );
@@ -59,14 +59,14 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
   }
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirm-password") as string;
-  
+
   const passwordValid = testPassword(password, confirmPassword);
 
   if (passwordValid.error) return passwordValid;
 
   const hashedPassword = generateSHA256(password);
 
-  console.log('hash test: ');
+  console.log("hash test: ");
   console.log(hashedPassword);
 
   const userId = uuidv4();

@@ -19,34 +19,22 @@ export default function Page() {
 
   useEffect(() => {
     const resetID = searchParams.get("id");
-    console.log("searching for params...");
-
-    console.log("reset id: " + resetID);
 
     async function isResetIDValid(resetID: string) {
-      console.log("calling the api");
-
       const validIDCheck = await fetch(`/api/password?id=${resetID}`, {
         method: "GET",
       }).then((res) => res.json());
 
-      console.log("back from the api, here's the response:");
-      console.log(validIDCheck);
-      console.log(validIDCheck.result);
-
       if (validIDCheck.error) {
-        console.log(validIDCheck.error);
         return;
       }
 
       const user_id = validIDCheck.user_id;
-      console.log(user_id);
       if (!user_id) return;
 
       setChangingUserID(user_id);
 
       if (resetID && resetID !== "" && validIDCheck.isIDValid) {
-        console.log("in here");
         setIsChangingPassword(true);
       }
     }
@@ -69,14 +57,12 @@ export default function Page() {
 
     if (passwordChangeResponse.error) {
       setDisplayMessage(
-        <p className="mt-4 text-red-600 outline-black">
-          {passwordChangeResponse.error}
+        <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
+          If the username/email exists, then a password change email has been sent.
         </p>
       );
       return;
     }
-
-    console.log(passwordChangeResponse);
 
     const emailResponse = await fetch("/api/send", {
       method: "POST",
@@ -87,13 +73,10 @@ export default function Page() {
       }),
     }).then((res) => res.json());
 
-    console.log(emailResponse);
-
     if (emailResponse.success) {
-      console.log(emailResponse.success);
       setDisplayMessage(
-        <p className="mt-4 text-green-700 outline-black">
-          Password change email sent.
+        <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
+          If the username/email exists, then a password change email has been sent.
         </p>
       );
     }
@@ -102,8 +85,6 @@ export default function Page() {
   async function setNewPassword() {
     const passwordValid = testPassword(passwordValue, confirmPasswordValue);
 
-    console.log(passwordValid);
-
     if (passwordValid.error) {
       setDisplayMessage(
         <p className="mt-4 text-red-600 outline-black">{passwordValid.error}</p>
@@ -111,11 +92,7 @@ export default function Page() {
       return;
     }
 
-    console.log("changing user id " + changingUserID);
-    console.log("using password " + passwordValue);
-
     const newPasswordHash = generateSHA256(passwordValue);
-    console.log(newPasswordHash);
 
     const passwordChangeResponse = await fetch(
       "/api/user?action=reset-password",
@@ -128,10 +105,7 @@ export default function Page() {
       }
     ).then((res) => res.json());
 
-    console.log("do we make it here");
-
     if (passwordChangeResponse.error) {
-      console.log(passwordChangeResponse.error);
       setDisplayMessage(
         <p className="mt-4 text-red-600 outline-black">
           {passwordChangeResponse.error}
@@ -171,7 +145,7 @@ export default function Page() {
           onClick={() => {
             sendPasswordResetEmail();
           }}
-          className="mt-4"
+          className="w-40 mt-4 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
         >
           Send email
         </button>
@@ -206,16 +180,17 @@ export default function Page() {
             className="border-[1px] border-gray-400 p-2 w-[100%] rounded-md"
           />
           <button
-            className="mt-2 w-[100%] mx-auto"
+            className="mt-4 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
             onClick={() => setNewPassword()}
           >
             Reset
           </button>
         </div>
         {displayMessage}
-        <div className="mt-4 flex justify-between">
+        <div className="mt-4 flex items-center">
           <p className="w-64">Remembered your password?</p>
           <button
+          className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
             onClick={() => {
               setIsChangingPassword(false);
               router.push("/login");
