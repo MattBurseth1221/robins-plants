@@ -9,6 +9,7 @@ import {
   faLongArrowDown,
   faLongArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { loadingFlower } from "@/public/flower-loading";
 
 import { UserContext } from "../_providers/UserProvider";
 import PostProvider from "../_providers/PostProvider";
@@ -76,12 +77,9 @@ export default function PostContainer() {
     const paramsString = params.toString();
 
     async function getPosts() {
-      const postArray = await fetch(
-        `/api/posts?${paramsString}`,
-        {
-          method: "GET",
-        }
-      )
+      const postArray = await fetch(`/api/posts?${paramsString}`, {
+        method: "GET",
+      })
         .then((res) => res.json())
         .then((data) => data.result)
         .catch((e) => {
@@ -112,16 +110,11 @@ export default function PostContainer() {
     setPosts(posts.filter((post) => post.post_id !== id));
   }
 
-  function refreshPage() {
-    setTimeout(() => {
-      window.location.reload();
-      console.log("refreshed.");
-    }, 100);
-  }
-
-  return loadingPosts ? (<div className="w-[50%] ">
-    <div>No posts found.</div>
-  </div>) : posts.length > 0 ? (
+  return loadingPosts ? (
+    <div className="w-[50%] ">
+      <div>No posts found.</div>
+    </div>
+  ) : posts.length > 0 ? (
     <>
       <div className="">
         <select
@@ -147,7 +140,7 @@ export default function PostContainer() {
       <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
         {posts.map((post: PostType) => {
           return (
-            <PostProvider key={post.post_id} post={ post }>
+            <PostProvider key={post.post_id} post={post}>
               <Post {...PostProps} />
             </PostProvider>
           );
@@ -155,8 +148,9 @@ export default function PostContainer() {
       </div>
     </>
   ) : (
-    <div className="w-[50%]">
-      <div>Loading posts...</div>
+    <div className="flex justify-center text-center">
+      <code className="mr-2">Loading posts...</code>
+      <div className="">{loadingFlower}</div>
     </div>
   );
 }
