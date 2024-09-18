@@ -12,7 +12,6 @@ export default function UploadForm() {
   const handleFileSelect = (formData: FormData) => {
     if (!user) router.push("/login");
 
-    console.log("can we set it to truyye");
     setLoading(true);
 
     postUpload(formData);
