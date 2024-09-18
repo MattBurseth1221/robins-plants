@@ -8,7 +8,7 @@ const loadingFlower = (
     height="32"
     className="mx-auto"
   >
-    <g stroke-linecap="round" stroke-width="15">
+    <g strokeLinecap="round" strokeWidth="15">
       <path id="a" d="m0 35 0,14" />
       <use transform="rotate(210)" xlinkHref="#a" stroke="#f0f0f0" />
       <use transform="rotate(240)" xlinkHref="#a" stroke="#ebebeb" />
