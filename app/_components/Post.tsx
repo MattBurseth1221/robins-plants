@@ -27,6 +27,7 @@ import Image from "next/image";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
+import Link from "next/link";
 
 export type CommentContextType = {
   comments: CommentType[];
@@ -252,7 +253,7 @@ export default function Post({
 
         <div className="min-h-16 mt-2">
           <div className="grid grid-cols-3 border-b-[1px] border-slate-500 border-opacity-20 pb-2">
-            <p className="text-left text-xl">{post.username}</p>
+            <Link className="text-left text-xl hover:text-gray-600" href={`/profile/${post.username}`}>{post.username}</Link>
 
             {post.image_refs!.length !== 1 && (
               <div className="flex justify-center h-8">

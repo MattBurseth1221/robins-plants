@@ -22,16 +22,25 @@ export default function ProfileBar() {
       <ul className="flex flex-col justify-between items-center">
         {user && <p>{user.username}</p>}
         {user ? (
-          <button
+          <>
+            <button
+              className="bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2"
+              onClick={() => {
+                logout();
+              }}
+            >
+              Log Out
+            </button>
+            <button
             className="bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2"
             onClick={() => {
-              logout();
-            }}
-          >
-            Log out
-          </button>
+              router.push(`/profile/${user.username}`)
+            }}>
+              My Profile
+            </button>
+          </>
         ) : (
-          <a href="/login">Sign in</a>
+          <a href="/login">Sign In</a>
         )}
       </ul>
     </nav>

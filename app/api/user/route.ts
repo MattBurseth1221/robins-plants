@@ -6,6 +6,23 @@ import { v4 as uuidv4 } from "uuid";
 
 //export const runtime = "edge";
 
+export async function GET(request: NextRequest) {
+  const searchParams = await request.nextUrl.searchParams;
+  const username = searchParams.get("username");
+  
+  if (!username) return NextResponse.json({ error: "No username supplied to API." });
+
+  try {
+    const fetchedUser = await pool.query(`SELECT * FROM auth_user WHERE username = '${username}'`)
+    delete fetchedUser.rows[0] ['password_hash'];
+    console.log(fetchedUser.rows[0]);
+
+    return NextResponse.json({ success: "Fetched user by username.", data: fetchedUser.rows[0] })
+  } catch(e) {
+    return NextResponse.json({ error: e });
+  }
+}
+
 export async function PUT(request: NextRequest) {
   const searchParams = await request.nextUrl.searchParams;
   const action = searchParams.get("action");

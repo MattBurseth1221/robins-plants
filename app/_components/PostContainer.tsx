@@ -14,6 +14,13 @@ import { loadingFlower } from "@/public/flower-loading";
 import { UserContext } from "../_providers/UserProvider";
 import PostProvider from "../_providers/PostProvider";
 
+export interface UserType {
+  id: UUID;
+  create_date: Date;
+  username: string;
+  email: string;
+}
+
 export interface CommentType {
   comment_id: UUID;
   body: string;
