@@ -121,7 +121,7 @@ export default function PostContainer() {
           value={filters.sortType}
           name="sort"
           onChange={(e) => setFilters({ ...filters, sortType: e.target.value })}
-          className="border-2 rounded-md border-gray"
+          className="border-2 rounded-md border-gray p-1 cursor-pointer bg-white"
         >
           <option value="date">Date</option>
           <option value="title">Title</option>
