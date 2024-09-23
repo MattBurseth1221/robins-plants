@@ -12,7 +12,7 @@ export default async function ProfilePage(context: GetServerSidePropsContext) {
       <MainNav active={""} />
 
       <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-        <PageTitle title="- My Profile -" />
+        <PageTitle title={`- ${params!.username}'s Profile -`} />
 
         <ProfileContainer username={ params!.username } />
       </div>

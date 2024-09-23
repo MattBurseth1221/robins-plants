@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
 import { UserType } from "./PostContainer";
 import { loadingFlower } from "@/public/flower-loading";
@@ -12,22 +8,47 @@ import { loadingFlower } from "@/public/flower-loading";
 export default function ProfileContainer({ username }: any) {
   const user = useContext(UserContext);
   const [profileUser, setProfileUser] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isUserProfile, setIsUserProfile] = useState<boolean>(false);
 
   useEffect(() => {
     async function getUserByUsername() {
-      const profileUserResult = await fetch(`/api/user?username=${username}`,
-        {
-          method: "GET",
-        }
-      )
+      const profileUserResult = await fetch(`/api/user?username=${username}`, {
+        method: "GET",
+      })
         .then((res) => res.json())
         .then((data) => data.data);
 
-        setProfileUser(profileUserResult);
+      setProfileUser(profileUserResult);
     }
-    
+
+    setLoading(true);
     getUserByUsername();
+    setLoading(false);
   }, [username]);
 
-  return profileUser ? (<div className="">Hello {profileUser!.username}!</div>) : <div className="">{loadingFlower}</div>;
+  useEffect(() => {
+    if (user === null || profileUser === null) {
+      setIsUserProfile(false);
+    } else if (user.username === profileUser.username) {
+      setIsUserProfile(true);
+    }
+  }, [user, profileUser]);
+
+  return !loading ? (
+    profileUser ? (
+      isUserProfile ? (
+        <>
+          <div className="">Hello, {profileUser!.username}!</div>
+          <div>Profile view (owner)</div>
+        </>
+      ) : (
+        <div>Profile view (non-owner)</div>
+      )
+    ) : (
+      <div>{`User "${username}" not found.`}</div>
+    )
+  ) : (
+    <div>{loadingFlower}</div>
+  );
 }

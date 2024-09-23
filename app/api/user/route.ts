@@ -15,7 +15,6 @@ export async function GET(request: NextRequest) {
   try {
     const fetchedUser = await pool.query(`SELECT * FROM auth_user WHERE username = '${username}'`)
     delete fetchedUser.rows[0] ['password_hash'];
-    console.log(fetchedUser.rows[0]);
 
     return NextResponse.json({ success: "Fetched user by username.", data: fetchedUser.rows[0] })
   } catch(e) {
