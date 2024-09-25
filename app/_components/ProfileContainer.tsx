@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
 import { UserType } from "./PostContainer";
 import { loadingFlower } from "@/public/flower-loading";
+import ProfileOwner from "./ProfileOwner";
 
 export default function ProfileContainer({ username }: any) {
   const user = useContext(UserContext);
@@ -38,10 +39,7 @@ export default function ProfileContainer({ username }: any) {
   return !loading ? (
     profileUser ? (
       isUserProfile ? (
-        <>
-          <div className="">Hello, {profileUser!.username}!</div>
-          <div>Profile view (owner)</div>
-        </>
+        <ProfileOwner profileUser={profileUser} />
       ) : (
         <div>Profile view (non-owner)</div>
       )

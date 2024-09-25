@@ -253,7 +253,7 @@ export default function Post({
 
         <div className="min-h-16 mt-2">
           <div className="grid grid-cols-3 border-b-[1px] border-slate-500 border-opacity-20 pb-2">
-            <Link className="text-left text-xl hover:text-gray-600" href={`/profile/${post.username}`}>{post.username}</Link>
+            <Link className="text-left text-xl hover:text-gray-600 transition-all" href={`/profile/${post.username}`}>{post.username}</Link>
 
             {post.image_refs!.length !== 1 && (
               <div className="flex justify-center h-8">
