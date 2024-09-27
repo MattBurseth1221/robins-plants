@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatDate } from "../_utils/helper-functions";
 import { UserType } from "./PostContainer";
 import {
@@ -8,6 +8,11 @@ import {
   Dialog,
   DialogPanel,
   DialogTitle,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
 } from "@headlessui/react";
 
 export default function ProfileOwner({
@@ -16,6 +21,19 @@ export default function ProfileOwner({
   profileUser: UserType;
 }) {
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
+  const userPosts = useRef();
+
+  useEffect(() => {
+    async function getPosts() {
+      const postResponse = await fetch(`/api/posts/${profileUser.id}`).then(
+        (res) => res.json()
+      );
+
+      userPosts.current = postResponse.data;
+    }
+
+    getPosts();
+  });
 
   function toggleDeleteAccountModal() {
     setDeletingAccount(!deletingAccount);
@@ -26,16 +44,39 @@ export default function ProfileOwner({
   }
 
   return (
-    <>
+    <div className="flex flex-col w-[100%]">
       <div className="">Hello, {profileUser!.username}!</div>
       <div>Profile view (owner)</div>
       <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
       <div>{`Account created on ${formatDate(
         new Date(profileUser.create_date)
       )}`}</div>
+
+      <TabGroup defaultIndex={0}>
+        <TabList className="flex justify-between w-[50%] mx-auto">
+          <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
+            Tab 1
+          </Tab>
+          <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
+            Tab 2
+          </Tab>
+          <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
+            Tab 3
+          </Tab>
+        </TabList>
+        <TabPanels className="mt-4">
+          <TabPanel>
+            <h1>Posts</h1>
+            {}
+          </TabPanel>
+          <TabPanel>Comments</TabPanel>
+          <TabPanel>Something else</TabPanel>
+        </TabPanels>
+      </TabGroup>
+
       <button
         onClick={() => setDeletingAccount(true)}
-        className="mb-4 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+        className="mt-32 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
       >
         Delete account
       </button>
@@ -53,8 +94,8 @@ export default function ProfileOwner({
                 This will permanently delete your account.
               </Description>
               <p>
-                Are you sure you want to delete your account? This is
-                irreversible.
+                Are you sure you want to delete your account? All of your posts
+                and comments will also be deleted. This is irreversible.
               </p>
               <div className="flex gap-4">
                 <button
@@ -74,6 +115,6 @@ export default function ProfileOwner({
           </div>
         </Dialog>
       )}
-    </>
+    </div>
   );
 }
