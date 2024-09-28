@@ -5,6 +5,8 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const userID = searchParams.get("userID");
 
+  console.log("made it here");
+
   if (!userID) throw new Error("No user id provided.");
 
   try {

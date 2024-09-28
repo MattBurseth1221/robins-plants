@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatDate } from "../_utils/helper-functions";
-import { UserType } from "./PostContainer";
+import { PostType, UserType } from "./PostContainer";
 import {
   Description,
   Dialog,
@@ -21,15 +21,19 @@ export default function ProfileOwner({
   profileUser: UserType;
 }) {
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
-  const userPosts = useRef();
+  const userPosts = useRef<Array<PostType>>([]);
 
   useEffect(() => {
     async function getPosts() {
-      const postResponse = await fetch(`/api/posts/${profileUser.id}`).then(
+      const postResponse = await fetch(`/api/posts/${profileUser.id}`)
+      .then(
         (res) => res.json()
       );
 
-      userPosts.current = postResponse.data;
+      console.log(postResponse);
+      console.log(postResponse);
+
+      //userPosts.current = postResponse;
     }
 
     getPosts();
@@ -67,7 +71,14 @@ export default function ProfileOwner({
         <TabPanels className="mt-4">
           <TabPanel>
             <h1>Posts</h1>
-            {}
+            {userPosts.current && userPosts.current.map((post: PostType) => {
+              return (
+                <div className="w-[75%] flex flex-col">
+                  <div>{post.title}</div>
+                  <div>{formatDate(new Date(post.create_date))}</div>
+                </div>
+              )
+            })}
           </TabPanel>
           <TabPanel>Comments</TabPanel>
           <TabPanel>Something else</TabPanel>
