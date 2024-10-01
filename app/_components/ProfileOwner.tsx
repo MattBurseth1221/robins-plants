@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDate } from "../_utils/helper-functions";
 import { PostType, UserType } from "./PostContainer";
 import {
@@ -21,22 +21,37 @@ export default function ProfileOwner({
   profileUser: UserType;
 }) {
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
-  const userPosts = useRef<Array<PostType>>([]);
+  const [userPosts, setUserPosts] = useState<Array<PostType>>([]);
+  const [likedPosts, setLikedPosts] = useState<Array<PostType>>([]);
 
   useEffect(() => {
     async function getPosts() {
-      const postResponse = await fetch(`/api/posts/${profileUser.id}`)
-      .then(
+      const postResponse = await fetch(`/api/posts/${profileUser.id}`).then(
         (res) => res.json()
       );
 
-      console.log(postResponse);
-
-      userPosts.current = postResponse;
+      setUserPosts(postResponse.data);
     }
 
     getPosts();
-  });
+  }, []);
+
+  useEffect(() => {
+    async function getLikedItems() {
+      const likedItemsResult = await fetch(
+        `/api/likes?user_id=${profileUser.id}`,
+        {
+          method: "GET",
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => res.data);
+
+      setLikedPosts(likedItemsResult);
+    }
+
+    getLikedItems();
+  }, [profileUser]);
 
   function toggleDeleteAccountModal() {
     setDeletingAccount(!deletingAccount);
@@ -68,19 +83,39 @@ export default function ProfileOwner({
           </Tab>
         </TabList>
         <TabPanels className="mt-4">
-          <TabPanel>
-            <h1>Posts</h1>
-            {userPosts.current && userPosts.current.map((post: PostType) => {
-              return (
-                <div className="w-[75%] flex flex-col">
-                  <div>{post.title}</div>
-                  <div>{formatDate(new Date(post.create_date))}</div>
-                </div>
-              )
-            })}
+          <TabPanel className="flex flex-col justify-center">
+            <h1 className="mb-2 text-xl">Posts</h1>
+            {userPosts &&
+              userPosts.map((post: PostType) => {
+                return (
+                  <div
+                    key={post.post_id}
+                    className="w-[75%] flex flex-col mx-auto border-[1px] border-slate-500 rounded-md mb-2"
+                  >
+                    <div>{post.title}</div>
+                    <div>{formatDate(new Date(post.create_date))}</div>
+                  </div>
+                );
+              })}
           </TabPanel>
-          <TabPanel>Comments</TabPanel>
-          <TabPanel>Something else</TabPanel>
+          <TabPanel>
+            <h1 className="mb-2 text-xl">Comments</h1>
+          </TabPanel>
+          <TabPanel>
+            <h1 className="mb-2 text-xl">Likes</h1>
+            {likedPosts &&
+              likedPosts.map((post: PostType) => {
+                return (
+                  <div
+                    key={post.post_id}
+                    className="w-[75%] flex flex-col mx-auto border-[1px] border-slate-500 rounded-md mb-2"
+                  >
+                    <div>{post.title}</div>
+                    <div>{formatDate(new Date(post.create_date))}</div>
+                  </div>
+                );
+              })}
+          </TabPanel>
         </TabPanels>
       </TabGroup>
 

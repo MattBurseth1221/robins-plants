@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   const user_id = searchParams.get("user_id");
 
   try {
-    await pool.query('BEGIN');
+    await pool.query("BEGIN");
     const values = [post_id, user_id, uuidv4()];
     const query = {
       text: `INSERT INTO likes(parent_id, user_id, like_id) VALUES($1, $2, $3);`,
@@ -24,11 +24,11 @@ export async function POST(request: NextRequest) {
     const updateQuery = `UPDATE posts SET total_likes = total_likes + 1 WHERE post_id = '${post_id}'`;
 
     await pool.query(updateQuery);
-    await pool.query('COMMIT');
+    await pool.query("COMMIT");
 
     return NextResponse.json({ success: "Like received." });
   } catch (e) {
-    await pool.query('ROLLBACK');
+    await pool.query("ROLLBACK");
 
     return NextResponse.json({ error: e });
   }
@@ -41,7 +41,7 @@ export async function DELETE(request: NextRequest) {
   const user_id = searchParams.get("user_id");
 
   try {
-    await pool.query('BEGIN');
+    await pool.query("BEGIN");
 
     const query = `DELETE FROM likes WHERE parent_id = '${parent_id}' AND user_id = '${user_id}'`;
     await pool.query(query);
@@ -49,34 +49,30 @@ export async function DELETE(request: NextRequest) {
     const updateQuery = `UPDATE posts SET total_likes = total_likes - 1 WHERE post_id = '${parent_id}'`;
     await pool.query(updateQuery);
 
-    await pool.query('COMMIT');
+    await pool.query("COMMIT");
 
     return NextResponse.json({ success: "Deleted like." });
   } catch (e) {
-    await pool.query('ROLLBACK');
+    await pool.query("ROLLBACK");
 
     return NextResponse.json({ error: e });
   }
 }
 
 //Retrieves all liked posts/comments for a given user, expects search parameter "user_id"
+//DOES NOT retrieve actual posts/comments, only a list of post_id's
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const user_id = searchParams.get("user_id");
 
   try {
-    const query = `SELECT parent_id FROM likes WHERE user_id = '${user_id}'`;
+    const query = `SELECT p.* FROM likes l LEFT JOIN posts p on l.parent_id = p.post_id WHERE l.user_id = '${user_id}'`;
 
     const likedItemsResponse = (await pool.query(query)).rows;
-    let likedItems = [];
-
-    for (let i = 0; i < likedItemsResponse.length; i++) {
-      likedItems.push(likedItemsResponse[i].parent_id);
-    }
 
     return NextResponse.json({
       success: "Retrieved users liked items.",
-      data: likedItems,
+      data: likedItemsResponse,
     });
   } catch (e) {
     return NextResponse.json({ error: e });
