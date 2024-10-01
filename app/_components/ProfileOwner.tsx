@@ -31,9 +31,8 @@ export default function ProfileOwner({
       );
 
       console.log(postResponse);
-      console.log(postResponse);
 
-      //userPosts.current = postResponse;
+      userPosts.current = postResponse;
     }
 
     getPosts();
