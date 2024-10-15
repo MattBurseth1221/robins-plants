@@ -1,31 +1,46 @@
 import { WebSocketServer } from 'ws';
 
-let chatrooms: any = {}; // Store connections by chatroom ID
+let chatrooms: any = {}; // Store chatroom connections
+console.log("luck");
 
-export async function GET(req: any, { params }: { params: any }) {
-  const { id } = params; // chatroom ID from the URL
+export async function GET(request: any, { params }: any) {
+  console.log('Incoming GET request:', request.method, request.url);
 
-  if (!chatrooms[id]) {
-    chatrooms[id] = []; // Initialize a chatroom with an empty array of connections
+  console.log("oneone");
+  const { id: chatroomId } = params; // Extract chatroomId from URL
+  
+  if (!chatrooms[chatroomId]) {
+    chatrooms[chatroomId] = []; // Initialize chatroom connections array
   }
 
-  const { socket } = req;
+  console.log("one");
+
+  const { socket } = request;
   const server = socket.server;
 
+  console.log("two");
+
   if (!server.wss) {
+    console.log("three");
     server.wss = new WebSocketServer({ noServer: true });
 
-    server.on('upgrade', (request: any, socket: any, head: any) => {
-      const chatroomId = request.url.split('/').pop();
-      server.wss.handleUpgrade(request, socket, head, (ws: any) => {
-        if (!chatrooms[chatroomId]) {
-          chatrooms[chatroomId] = [];
-        }
-        chatrooms[chatroomId].push(ws);
+    console.log("four");
 
-        ws.on('message', (message: string) => {
+    server.on('upgrade', (req: any, sock: any, head: any) => {
+      console.log("five");
+      const roomId = req.url.split('/').pop(); // Get chatroomId from URL
+
+      console.log(roomId);
+
+      server.wss.handleUpgrade(req, sock, head, (ws: any) => {
+        if (!chatrooms[roomId]) {
+          chatrooms[roomId] = [];
+        }
+        chatrooms[roomId].push(ws);
+
+        ws.on('message', (message: any) => {
           // Broadcast message to everyone in the chatroom
-          chatrooms[chatroomId].forEach((client: any) => {
+          chatrooms[roomId].forEach((client: any) => {
             if (client.readyState === ws.OPEN) {
               client.send(message);
             }
@@ -33,8 +48,7 @@ export async function GET(req: any, { params }: { params: any }) {
         });
 
         ws.on('close', () => {
-          // Remove client on disconnect
-          chatrooms[chatroomId] = chatrooms[chatroomId].filter((client: any) => client !== ws);
+          chatrooms[roomId] = chatrooms[roomId].filter((client: any) => client !== ws);
         });
       });
     });
@@ -42,3 +56,4 @@ export async function GET(req: any, { params }: { params: any }) {
 
   return new Response(null, { status: 200 });
 }
+
