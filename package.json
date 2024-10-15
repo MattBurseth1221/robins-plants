@@ -23,6 +23,7 @@
     "@headlessui/react": "^2.1.2",
     "@lucia-auth/adapter-postgresql": "^3.1.2",
     "@types/pg": "^8.11.6",
+    "@types/react-fontawesome": "^1.6.8",
     "argon2id": "^1.0.1",
     "dotenv": "^16.4.5",
     "lucia": "^3.2.0",
@@ -33,13 +34,15 @@
     "resend": "^3.5.0",
     "robins-plants": "file:",
     "sharp": "^0.33.5",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.16.11",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.12",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
