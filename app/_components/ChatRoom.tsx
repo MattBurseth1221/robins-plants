@@ -2,6 +2,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 interface MessageType {
   content: string;
@@ -14,6 +16,7 @@ export default function ChatRoom() {
   const [messages, setMessages] = useState<Array<MessageType>>([]);
   const [message, setMessage] = useState<any>("");
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [shouldShake, setShouldShake] = useState<boolean>(false);
 
   useEffect(() => {
     if (!chatroomId) return;
@@ -39,6 +42,15 @@ export default function ChatRoom() {
   }, [chatroomId]);
 
   const sendMessage = () => {
+    if (!message || message.length === 0) {
+      setShouldShake(true);
+
+      setTimeout(() => {
+        setShouldShake(false);
+      }, 250);
+      return;
+    }
+
     if (socket) {
       socket.send(
         JSON.stringify({ content: message, username: user?.username })
@@ -48,21 +60,48 @@ export default function ChatRoom() {
   };
 
   return (
-    <div>
-      <h1>Chat Room: {chatroomId}</h1>
-      <div>
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <p>{`${msg.username} - ${msg.content}`}</p>
-          </div>
-        ))}
+    <div className="flex flex-col items-center">
+      <h1 className="text-xl mb-4">Chat Room: {chatroomId}</h1>
+      <div className="bottom-24 fixed max-w-[35%] min-w-[35%] flex flex-col">
+        <div className="">
+          {messages.map((msg, index) => (
+            <div key={index} className={`flex flex-col`}>
+              <div
+                className={`mb-2 p-2 max-w-[60%] bg-slate-100 rounded-md inline-block text-wrap break-all ${
+                  msg.username === user?.username
+                    ? "ml-auto text-right"
+                    : "mr-auto text-left"
+                }`}
+              >
+                <p className="text-sm">{`${msg.username}`}</p>
+                <p className="text-md ">{`${msg.content}`}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <form
+            id="comment-form"
+            action={sendMessage}
+            className="flex justify-center items-center mt-4"
+          >
+            <textarea
+              placeholder={"Send a message..."}
+              rows={1}
+              className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none max-h-[30vh]"
+              name="comment_body"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            ></textarea>
+            <button
+              className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
+              type="submit"
+            >
+              <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
+            </button>
+          </form>
+        </div>
       </div>
-      <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message"
-      />
-      <button onClick={sendMessage}>Send</button>
     </div>
   );
 }
