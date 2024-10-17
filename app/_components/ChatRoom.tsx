@@ -1,32 +1,34 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useState, useEffect, useContext } from "react";
+import { useParams } from "next/navigation";
+import { UserContext } from "../_providers/UserProvider";
+
+interface MessageType {
+  content: string;
+  username: string;
+}
 
 export default function ChatRoom() {
+  const user = useContext(UserContext);
   const { id: chatroomId } = useParams(); // Get the chatroom ID from URL
-  const [messages, setMessages] = useState<Array<any>>([]);
-  const [message, setMessage] = useState<any>('');
+  const [messages, setMessages] = useState<Array<MessageType>>([]);
+  const [message, setMessage] = useState<any>("");
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    console.log("here");
     if (!chatroomId) return;
-    console.log("here two");
-    
+
     // Establish WebSocket connection
-    const newSocket = new WebSocket(`ws://localhost:3000/api/chat/${chatroomId}`);
+    const newSocket = new WebSocket(`wss://localhost:3001/chat/${chatroomId}`);
     setSocket(newSocket);
 
     newSocket.onerror = (error) => {
       console.log(error);
-    }
+    };
 
     newSocket.onopen = () => {
       console.log("connected");
-    }
-
-    console.log("here again?");
-    console.log(newSocket);
+    };
 
     newSocket.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
@@ -38,8 +40,10 @@ export default function ChatRoom() {
 
   const sendMessage = () => {
     if (socket) {
-      socket.send(JSON.stringify({ content: message }));
-      setMessage(''); // Clear input field after sending
+      socket.send(
+        JSON.stringify({ content: message, username: user?.username })
+      );
+      setMessage(""); // Clear input field after sending
     }
   };
 
@@ -48,7 +52,9 @@ export default function ChatRoom() {
       <h1>Chat Room: {chatroomId}</h1>
       <div>
         {messages.map((msg, index) => (
-          <p key={index}>{msg.content}</p>
+          <div key={index}>
+            <p>{`${msg.username} - ${msg.content}`}</p>
+          </div>
         ))}
       </div>
       <input
@@ -60,4 +66,3 @@ export default function ChatRoom() {
     </div>
   );
 }
-
