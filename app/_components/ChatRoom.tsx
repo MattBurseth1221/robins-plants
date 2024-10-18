@@ -44,6 +44,7 @@ export default function ChatRoom() {
   const sendMessage = () => {
     if (!message || message.length === 0) {
       setShouldShake(true);
+      setMessage("");
 
       setTimeout(() => {
         setShouldShake(false);
@@ -62,18 +63,18 @@ export default function ChatRoom() {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-xl mb-4">Chat Room: {chatroomId}</h1>
-      <div className="bottom-24 fixed max-w-[35%] min-w-[35%] flex flex-col">
-        <div className="">
+      <div className="h-5/6 overflow-y-auto bottom-24 fixed max-w-[35%] min-w-[35%] flex flex-col">
+        <div className="overflow-y-auto">
           {messages.map((msg, index) => (
             <div key={index} className={`flex flex-col`}>
               <div
-                className={`mb-2 p-2 max-w-[60%] bg-slate-100 rounded-md inline-block text-wrap break-all ${
+                className={`mb-2 p-2 max-w-[60%] bg-slate-100 rounded-md inline-block text-wrap break-words ${
                   msg.username === user?.username
-                    ? "ml-auto text-right"
+                    ? "ml-auto text-left"
                     : "mr-auto text-left"
                 }`}
               >
-                <p className="text-sm">{`${msg.username}`}</p>
+                {msg.username !== user?.username && <p className="text-xs">{`${msg.username}`}</p>}
                 <p className="text-md ">{`${msg.content}`}</p>
               </div>
             </div>
