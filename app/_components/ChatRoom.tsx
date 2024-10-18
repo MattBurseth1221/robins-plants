@@ -61,12 +61,12 @@ export default function ChatRoom() {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <>
       <h1 className="text-xl mb-4">Chat Room: {chatroomId}</h1>
-      <div className="h-5/6 overflow-y-auto bottom-24 fixed max-w-[35%] min-w-[35%] flex flex-col">
-        <div className="overflow-y-auto">
+      <div className="fixed bottom-12 justify-end max-w-[35%] min-w-[35%] flex flex-col px-2">
+        <div className="max-h-[70vh] overflow-y-scroll snap-start">
           {messages.map((msg, index) => (
-            <div key={index} className={`flex flex-col`}>
+            <div key={index} className={`flex flex-col px-4`}>
               <div
                 className={`mb-2 p-2 max-w-[60%] bg-slate-100 rounded-md inline-block text-wrap break-words ${
                   msg.username === user?.username
@@ -74,13 +74,15 @@ export default function ChatRoom() {
                     : "mr-auto text-left"
                 }`}
               >
-                {msg.username !== user?.username && <p className="text-xs">{`${msg.username}`}</p>}
+                {msg.username !== user?.username && (
+                  <p className="text-xs">{`${msg.username}`}</p>
+                )}
                 <p className="text-md ">{`${msg.content}`}</p>
               </div>
             </div>
           ))}
         </div>
-        <div>
+        <div className="">
           <form
             id="comment-form"
             action={sendMessage}
@@ -103,6 +105,6 @@ export default function ChatRoom() {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
