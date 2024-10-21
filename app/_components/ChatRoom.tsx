@@ -22,7 +22,8 @@ export default function ChatRoom() {
     async function getMessages() {
       const messagesResult = await fetch(
         `/api/messages?display_id=${chatroomId}`
-      ).then((res) => res.json());
+      ).then((res) => res.json())
+      .then((res) => res.success);
 
       let pulledMessages = [];
 
@@ -90,7 +91,7 @@ export default function ChatRoom() {
     return () => newSocket.close();
   }, [chatroomId]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!message || message.length === 0) {
       setShouldShake(true);
       setMessage("");
@@ -105,6 +106,20 @@ export default function ChatRoom() {
       socket.send(
         JSON.stringify({ content: message, username: user?.username })
       );
+
+      console.log("chat room id is " + chatroomId);
+
+      const messageResult = await fetch(`/api/messages?display_id=${chatroomId}`, {
+        method: "POST",
+        body: JSON.stringify({ content: message, username: user?.username }),
+      }).then((res) => res.json());
+
+      if (messageResult.error) {
+        console.log(messageResult.error);
+        alert("Message failed to post");
+      } else if (messageResult.success) {
+        console.log(messageResult.success);
+      }
 
       setMessage("");
     }

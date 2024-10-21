@@ -1,5 +1,4 @@
 import ResetPasswordEmail from "@/app/_components/ResetPasswordEmail";
-import { createTempPassword } from "@/app/_utils/helper-functions";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
