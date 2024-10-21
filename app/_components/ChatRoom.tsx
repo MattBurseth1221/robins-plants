@@ -12,16 +12,57 @@ interface MessageType {
 
 export default function ChatRoom() {
   const user = useContext(UserContext);
-  const { id: chatroomId } = useParams(); // Get the chatroom ID from URL
+  const { id: chatroomId } = useParams();
   const [messages, setMessages] = useState<Array<MessageType>>([]);
   const [message, setMessage] = useState<any>("");
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [shouldShake, setShouldShake] = useState<boolean>(false);
 
   useEffect(() => {
+    async function getMessages() {
+      const messagesResult = await fetch(
+        `/api/messages?display_id=${chatroomId}`
+      ).then((res) => res.json());
+
+      let pulledMessages = [];
+
+      for (let i = 0; i < messagesResult.length; i++) {
+        pulledMessages.push(messagesResult[i].message_data);
+      }
+
+      setMessages(pulledMessages);
+    }
+
+    getMessages();
+  }, [chatroomId]);
+
+  useEffect(() => {
     if (!chatroomId) return;
 
-    // Establish WebSocket connection
+    async function doesChatExist() {
+      const chatResult = await fetch(`/api/chat?display_id=${chatroomId}`).then(
+        (res) => res.json()
+      );
+
+      if (chatResult.error) {
+        console.log(chatResult.error);
+        return;
+        //not sure, return or redirect user out?
+      }
+
+      //otherwise, if chatResult has one row of data then the chat exists already
+      if (chatResult.success.length !== 1) {
+        const createChatResult = await createChat();
+      }
+    }
+
+    doesChatExist();
+  }, []);
+
+  useEffect(() => {
+    if (!chatroomId) return;
+
+    //create new chat with chatroom id
     const newSocket = new WebSocket(`wss://localhost:3001/chat/${chatroomId}`);
     setSocket(newSocket);
 
@@ -35,10 +76,18 @@ export default function ChatRoom() {
 
     newSocket.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
+
+      console.log(newMessage.content);
+      console.log(message);
+
+      if ((newMessage.content as string) === (message as string)) {
+        console.log("true asf");
+      }
+
       setMessages((prev) => [...prev, newMessage]);
     };
 
-    return () => newSocket.close(); // Close socket when component unmounts
+    return () => newSocket.close();
   }, [chatroomId]);
 
   const sendMessage = () => {
@@ -56,9 +105,17 @@ export default function ChatRoom() {
       socket.send(
         JSON.stringify({ content: message, username: user?.username })
       );
-      setMessage(""); // Clear input field after sending
+
+      setMessage("");
     }
   };
+
+  async function createChat() {
+    const createChatResult = await fetch(`/api/chat?display_id=${chatroomId}`, {
+      method: "POST",
+    }).then((res) => res.json());
+    return createChatResult;
+  }
 
   return (
     <>

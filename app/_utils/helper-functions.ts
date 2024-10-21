@@ -28,11 +28,11 @@ export function formatDate(date: Date) {
   return newDate;
 }
 
-export async function createTempPassword() {
+export async function createTempPassword(len: number) {
   let tempPassword = "";
-  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "0123456789";
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < len; i++) {
     const randomInd = Math.floor(Math.random() * characters.length);
     tempPassword += characters.charAt(randomInd);
   }
