@@ -76,6 +76,7 @@ export default function ChatRoom() {
     };
 
     newSocket.onmessage = (event) => {
+      console.log("new incoming");
       const newMessage = JSON.parse(event.data);
 
       console.log(newMessage.content);
