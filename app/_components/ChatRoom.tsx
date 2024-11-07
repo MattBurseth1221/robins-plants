@@ -17,13 +17,16 @@ export default function ChatRoom() {
   const [message, setMessage] = useState<any>("");
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [shouldShake, setShouldShake] = useState<boolean>(false);
+  const [typing, setTyping] = useState<Array<string>>([]);
+  const [typingDebounce, setTypingDebounce] = useState<boolean>(false);
 
   useEffect(() => {
     async function getMessages() {
       const messagesResult = await fetch(
         `/api/messages?display_id=${chatroomId}`
-      ).then((res) => res.json())
-      .then((res) => res.success);
+      )
+        .then((res) => res.json())
+        .then((res) => res.success);
 
       let pulledMessages = [];
 
@@ -78,6 +81,17 @@ export default function ChatRoom() {
     newSocket.onmessage = (event) => {
       console.log("new incoming");
       const newMessage = JSON.parse(event.data);
+      console.log(newMessage);
+
+      if (newMessage.typing === true) {
+        console.log("its true");
+        setTyping([...typing, newMessage.username]);
+        return;
+      } else if (newMessage.typing === false) {
+        console.log("false");
+        setTyping(typing.filter((typer) => typer === newMessage.username));
+        return;
+      }
 
       console.log(newMessage.content);
       console.log(message);
@@ -110,10 +124,13 @@ export default function ChatRoom() {
 
       console.log("chat room id is " + chatroomId);
 
-      const messageResult = await fetch(`/api/messages?display_id=${chatroomId}`, {
-        method: "POST",
-        body: JSON.stringify({ content: message, username: user?.username }),
-      }).then((res) => res.json());
+      const messageResult = await fetch(
+        `/api/messages?display_id=${chatroomId}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ content: message, username: user?.username }),
+        }
+      ).then((res) => res.json());
 
       if (messageResult.error) {
         console.log(messageResult.error);
@@ -125,6 +142,24 @@ export default function ChatRoom() {
       setMessage("");
     }
   };
+
+  async function userTyping() {
+    if (socket && !typingDebounce) {
+      socket.send(JSON.stringify({ typing: true, username: user?.username }));
+
+      setTypingDebounce(true);
+
+      setTimeout(() => {
+        setTypingDebounce(false);
+  
+        if (socket) {
+          socket.send(JSON.stringify({ typing: false, username: user?.username }));
+        }
+      }, 3000);
+    }
+
+    
+  }
 
   async function createChat() {
     const createChatResult = await fetch(`/api/chat?display_id=${chatroomId}`, {
@@ -167,7 +202,10 @@ export default function ChatRoom() {
               className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none max-h-[30vh]"
               name="comment_body"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                userTyping();
+              }}
             ></textarea>
             <button
               className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
@@ -176,6 +214,10 @@ export default function ChatRoom() {
               <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
             </button>
           </form>
+
+          {typing.map((typer, index: number) => (
+            <div key={index}>{`${typer} is typing...`}</div>
+          ))}
         </div>
       </div>
     </>
