@@ -215,7 +215,7 @@ export default function ChatRoom() {
             </button>
           </form>
 
-          {typing.map((typer, index: number) => (
+          {typing.filter((typer) => typer !== user?.username).map((typer, index: number) => (
             <div key={index}>{`${typer} is typing...`}</div>
           ))}
         </div>
