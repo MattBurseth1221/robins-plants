@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { setSourceMapsEnabled } from "process";
 
 interface MessageType {
   content: string;
@@ -18,7 +19,8 @@ export default function ChatRoom() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [typing, setTyping] = useState<Array<string>>([]);
-  const [typingDebounce, setTypingDebounce] = useState<boolean>(false);
+  const [typingDebounce, setTypingDebounce] = useState<number>(Date.now());
+  const [sentTyping, setSentTyping] = useState<boolean>(false);
 
   useEffect(() => {
     async function getMessages() {
@@ -143,29 +145,27 @@ export default function ChatRoom() {
     }
   };
 
-  async function userTyping() {
-    if (socket && !typingDebounce) {
-      socket.send(JSON.stringify({ typing: true, username: user?.username }));
-
-      setTypingDebounce(true);
-
-      setTimeout(() => {
-        setTypingDebounce(false);
-  
-        if (socket) {
-          socket.send(JSON.stringify({ typing: false, username: user?.username }));
-        }
-      }, 3000);
-    }
-
-    
-  }
-
   async function createChat() {
     const createChatResult = await fetch(`/api/chat?display_id=${chatroomId}`, {
       method: "POST",
     }).then((res) => res.json());
     return createChatResult;
+  }
+
+  async function adjustTypeTime() {
+    setTypingDebounce(Date.now());
+
+    if (socket) {
+      socket.send(JSON.stringify({ typing: true, username: user?.username }));
+    }
+
+    setTimeout(() => {
+      if (Date.now() >= typingDebounce + 5000) {
+        if (socket) {
+          socket.send(JSON.stringify({ typing: false, username: user?.username }));
+        }
+      }
+    }, 3000)
   }
 
   return (
@@ -183,9 +183,9 @@ export default function ChatRoom() {
                 }`}
               >
                 {msg.username !== user?.username && (
-                  <p className="text-xs">{`${msg.username}`}</p>
+                  <p className="text-sm font-bold">{`${msg.username}`}</p>
                 )}
-                <p className="text-md ">{`${msg.content}`}</p>
+                <p className="text-base ">{`${msg.content}`}</p>
               </div>
             </div>
           ))}
@@ -196,17 +196,18 @@ export default function ChatRoom() {
             action={sendMessage}
             className="flex justify-center items-center mt-4"
           >
-            <textarea
+            <input
               placeholder={"Send a message..."}
-              rows={1}
+              // rows={1}
+              autoComplete="off"
               className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none max-h-[30vh]"
               name="comment_body"
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
-                userTyping();
+                //adjustTypeTime();
               }}
-            ></textarea>
+            ></input>
             <button
               className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
               type="submit"
@@ -215,9 +216,11 @@ export default function ChatRoom() {
             </button>
           </form>
 
-          {typing.filter((typer) => typer !== user?.username).map((typer, index: number) => (
-            <div key={index}>{`${typer} is typing...`}</div>
-          ))}
+          {/* {typing
+            .filter((typer) => typer !== user?.username)
+            .map((typer, index: number) => (
+              <div key={index}>{`${typer} is typing...`}</div>
+            ))} */}
         </div>
       </div>
     </>
