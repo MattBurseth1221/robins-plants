@@ -96,7 +96,7 @@ export default function PostContainer() {
 
     getPosts();
 
-    setLoadingPosts(false);
+    //setLoadingPosts(false);
   }, [filters, sortOrder]);
 
   function toggleSortOrder() {
