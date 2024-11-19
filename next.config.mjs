@@ -2,14 +2,6 @@
 const nextConfig = {
   reactStrictMode: false,
   output: 'standalone',
-    async rewrites() {
-        return [
-          {
-            source: '/api/:path*',
-            destination: 'https://storage.googleapis.com/:path*',
-          },
-        ]
-      },
     images: {
         remotePatterns: [
             {

@@ -16,7 +16,7 @@ export default async function Page() {
         <MainNav active={"Home"} />
 
         <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-          <PageTitle title="- Council Beta Test -" />
+          <PageTitle title="- Robin Plants -" />
 
           <Suspense fallback={<div>Loading posts...</div>}>
             <PostContainer />

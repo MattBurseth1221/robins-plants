@@ -111,9 +111,11 @@ export default function PostContainer() {
   }
 
   return loadingPosts ? (
-    <div className="w-[50%] ">
-      <div>No posts found.</div>
+    <div className="flex justify-center text-center">
+      <code className="mr-2">Loading posts...</code>
+      <div className="">{loadingFlower}</div>
     </div>
+    
   ) : posts.length > 0 ? (
     <>
       <div className="">
@@ -148,9 +150,8 @@ export default function PostContainer() {
       </div>
     </>
   ) : (
-    <div className="flex justify-center text-center">
-      <code className="mr-2">Loading posts...</code>
-      <div className="">{loadingFlower}</div>
+    <div className="w-[50%] ">
+      <div>No posts found.</div>
     </div>
   );
 }
