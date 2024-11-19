@@ -45,7 +45,7 @@ export default function PostContainer() {
     limit: "30",
   });
   const [likedItems, setLikedItems] = useState<Array<UUID>>([]);
-  const [loadingPosts, setLoadingPosts] = useState<Boolean>(false);
+  const [loadingPosts, setLoadingPosts] = useState<Boolean>(true);
   const user = useContext(UserContext);
 
   const PostProps = {
@@ -91,6 +91,7 @@ export default function PostContainer() {
       }
 
       setPosts(postArray);
+      setLoadingPosts(false);
     }
 
     getPosts();
