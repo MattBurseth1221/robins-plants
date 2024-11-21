@@ -5,7 +5,7 @@ import ProfileContainer from "@/app/_components/ProfileContainer";
 import { GetServerSidePropsContext } from "next";
 
 export default async function ProfilePage(context: GetServerSidePropsContext) {
-  const { params } = context;
+  const params = (await context.params);
 
   return (
     <main className="flex min-h-screen">

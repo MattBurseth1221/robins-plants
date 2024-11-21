@@ -36,17 +36,13 @@ export default function ProfileContainer({ username }: any) {
     }
   }, [user, profileUser]);
 
-  return !loading ? (
-    profileUser ? (
-      isUserProfile ? (
-        <ProfileOwner profileUser={profileUser} />
-      ) : (
-        <div>Profile view (non-owner)</div>
-      )
-    ) : (
-      <div>{`User "${username}" not found.`}</div>
-    )
-  ) : (
+  return loading ? (
     <div>{loadingFlower}</div>
+  ) : !profileUser ? (
+    <div>{`User "${username}" not found.`}</div>
+  ) : !isUserProfile ? (
+    <div>Profile view (non-owner)</div>
+  ) : (
+    <ProfileOwner profileUser={profileUser} />
   );
 }

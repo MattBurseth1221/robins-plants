@@ -3,7 +3,7 @@ import { pool } from "../../../_lib/db";
 
 export async function GET(req: NextRequest, { params }: { params: { userID: string }}) {
   console.log("got to get");
-  const { userID } = params;
+  const { userID } = (await params);
 
   if (!userID) throw new Error("No user id provided.");
 

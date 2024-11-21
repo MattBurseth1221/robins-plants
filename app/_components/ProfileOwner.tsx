@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatDate } from "../_utils/helper-functions";
-import { PostType, UserType } from "./PostContainer";
+import { CommentType, PostType, UserType } from "./PostContainer";
 import {
   Description,
   Dialog,
@@ -23,14 +23,23 @@ export default function ProfileOwner({
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
   const [userPosts, setUserPosts] = useState<Array<PostType>>([]);
   const [likedPosts, setLikedPosts] = useState<Array<PostType>>([]);
+  const [userComments, setUserComments] = useState<Array<CommentType>>([]);
 
   useEffect(() => {
     async function getPosts() {
       const postResponse = await fetch(`/api/posts/${profileUser.id}`).then(
         (res) => res.json()
-      );
+      ).catch((e) => console.log(e));
 
       setUserPosts(postResponse.data);
+    }
+
+    async function getComments() {
+      const postResponse = await fetch(`/api/comments/${profileUser.id}`).then(
+        (res) => res.json()
+      ).catch((e) => console.log(e));
+
+      setUserComments(postResponse.data);
     }
 
     getPosts();
@@ -73,13 +82,13 @@ export default function ProfileOwner({
       <TabGroup defaultIndex={0}>
         <TabList className="flex justify-between w-[50%] mx-auto">
           <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
-            Tab 1
+            Posts
           </Tab>
           <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
-            Tab 2
+            Comments
           </Tab>
           <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
-            Tab 3
+            Likes
           </Tab>
         </TabList>
         <TabPanels className="mt-4">
@@ -100,6 +109,18 @@ export default function ProfileOwner({
           </TabPanel>
           <TabPanel>
             <h1 className="mb-2 text-xl">Comments</h1>
+            {userComments &&
+              userComments.map((comment: CommentType) => {
+                return (
+                  <div
+                    key={comment.post_id}
+                    className="w-[75%] flex flex-col mx-auto border-[1px] border-slate-500 rounded-md mb-2"
+                  >
+                    <div>{comment.post_id}</div>
+                    <div>{formatDate(new Date(comment.create_date))}</div>
+                  </div>
+                );
+              })}
           </TabPanel>
           <TabPanel>
             <h1 className="mb-2 text-xl">Likes</h1>
@@ -121,7 +142,7 @@ export default function ProfileOwner({
 
       <button
         onClick={() => setDeletingAccount(true)}
-        className="mt-32 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+        className="mt-32 w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
       >
         Delete account
       </button>
