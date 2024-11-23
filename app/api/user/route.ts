@@ -7,30 +7,60 @@ import { v4 as uuidv4 } from "uuid";
 //export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
-  const searchParams = await request.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
   const username = searchParams.get("username");
-  
-  if (!username) return NextResponse.json({ error: "No username supplied to API." });
+
+  if (!username)
+    return NextResponse.json({ error: "No username supplied to API." });
 
   try {
-    const fetchedUser = await pool.query(`SELECT * FROM auth_user WHERE username = '${username}'`)
-    delete fetchedUser.rows[0] ['password_hash'];
+    const fetchedUser = await pool.query(
+      `SELECT * FROM auth_user WHERE username = '${username}'`
+    );
+    delete fetchedUser.rows[0]["password_hash"];
 
-    return NextResponse.json({ success: "Fetched user by username.", data: fetchedUser.rows[0] })
-  } catch(e) {
+    return NextResponse.json({
+      success: "Fetched user by username.",
+      data: fetchedUser.rows[0],
+    });
+  } catch (e) {
     return NextResponse.json({ error: e });
   }
 }
 
 export async function PUT(request: NextRequest) {
-  const searchParams = await request.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
   const action = searchParams.get("action");
-  const body = await request.json();
-  const usernameValue = body.usernameValue;
 
-  console.log(usernameValue);
+  if (action === "update-profile") {
+    console.log("got here aasdfa");
+    const formData = await request.formData();
+
+    try {
+      const updateProfileQuery = `UPDATE auth_user SET first_name = '${formData.get(
+        "firstname"
+      )}', last_name = '${formData.get("lastname")}' WHERE id = '${formData.get(
+        "user_id"
+      )}'`;
+
+      await pool.query("BEGIN;");
+
+      await pool.query(updateProfileQuery);
+
+      await pool.query("COMMIT;");
+    } catch (e) {
+      await pool.query("ROLLBACK;");
+      console.log(e);
+      return NextResponse.json({ error: e });
+    } finally {
+      return NextResponse.json({ success: "Updated profile info." });
+    }
+  }
+
+  const body = await request.json();
 
   if (action === "reset-password-email") {
+    const usernameValue = body.usernameValue;
     return resetPasswordEmail(usernameValue);
   }
 
@@ -79,7 +109,8 @@ async function resetPasswordEmail(usernameValue: string) {
   const emailAlreadySentQuery = `SELECT COUNT(*) FROM password_change_requests WHERE user_id = '${queryResult[0].id}'`;
   const emailAlreadySentResult = await pool.query(emailAlreadySentQuery);
   console.log(emailAlreadySentResult);
-  if (emailAlreadySentResult.rows[0].count >= 1) return NextResponse.json({ error: "Email already sent" });
+  if (emailAlreadySentResult.rows[0].count >= 1)
+    return NextResponse.json({ error: "Email already sent" });
 
   const tempPassword = await createTempPassword();
 

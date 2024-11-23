@@ -9,7 +9,7 @@ import ProfileOwner from "./ProfileOwner";
 export default function ProfileContainer({ username }: any) {
   const user = useContext(UserContext);
   const [profileUser, setProfileUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isUserProfile, setIsUserProfile] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,7 +23,6 @@ export default function ProfileContainer({ username }: any) {
       setProfileUser(profileUserResult);
     }
 
-    setLoading(true);
     getUserByUsername();
     setLoading(false);
   }, [username]);

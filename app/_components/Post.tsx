@@ -90,7 +90,7 @@ export default function Post({
   useEffect(() => {
     async function getComments() {
       try {
-        const commentResult = await fetch(`/api/comments?id=${post?.post_id}`, {
+        const commentResult = await fetch(`/api/comments?post_id=${post?.post_id}`, {
           method: "GET",
         }).then((res) => res.json())
         .then((data) => {

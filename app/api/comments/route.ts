@@ -89,16 +89,28 @@ export async function GET(request: NextRequest) {
   console.log("Fetching comments");
 
   const searchParams = request.nextUrl.searchParams;
-  const post_id = searchParams.get("id");
+  const post_id = searchParams.get("post_id");
+  const user_id = searchParams.get("user_id");
 
-  try {
-    const commentQuery = `select c.*, u.username
+  let commentQuery = "";
+
+  if (post_id) {
+    commentQuery = `select c.*, u.username
       from comments c
       left join auth_user u 
       on c.user_id = u.id
       where c.post_id = '${post_id}'
       order by c.create_date DESC`;
+  } else if (user_id) {
+    commentQuery = `select c.*, u.username
+      from comments c
+      left join auth_user u 
+      on c.user_id = u.id
+      where c.user_id = '${user_id}'
+      order by c.create_date DESC`;
+  }
 
+  try {
     const postComments = (await pool.query(commentQuery)).rows;
 
     return NextResponse.json({
