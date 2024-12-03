@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { formatDate } from "../_utils/helper-functions";
+import { useContext, useEffect, useState } from "react";
+import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 import { CommentType, PostType, UserType } from "./PostContainer";
 import {
   Description,
@@ -15,57 +15,45 @@ import {
   TabPanels,
 } from "@headlessui/react";
 import { useRouter } from "next/navigation";
+import { UserContext } from "../_providers/UserProvider";
+
+const emptyArray = 'mt-8 opacity-50';
+
+interface ProfileDataType {
+  likedPosts: Array<PostType>;
+  userPosts: Array<PostType>;
+  userComments: Array<CommentType>;
+}
 
 export default function ProfileOwner({
   profileUser,
 }: {
   profileUser: UserType;
 }) {
+  const user = useContext(UserContext);
+  const [{ likedPosts, userPosts, userComments }, setProfileData] = useState<ProfileDataType>({ likedPosts: [], userPosts: [], userComments: [] });
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
-  const [userPosts, setUserPosts] = useState<Array<PostType>>([]);
-  const [likedPosts, setLikedPosts] = useState<Array<PostType>>([]);
-  const [userComments, setUserComments] = useState<Array<CommentType>>([]);
   const [editingProfile, setEditingProfile] = useState<boolean>(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    async function getPosts() {
-      const postResponse = await fetch(`/api/posts/${profileUser.id}`)
-        .then((res) => res.json())
-        .catch((e) => console.log(e));
-
-      setUserPosts(postResponse.data);
-    }
-
-    async function getComments() {
-      const postResponse = await fetch(`/api/comments?user_id=${profileUser.id}`)
-        .then((res) => res.json())
-        .catch((e) => console.log(e));
-
-      setUserComments(postResponse.data);
-    }
-
-    getComments();
-    getPosts();
+    const fetchData = async () => {
+      const [likesResponse, postsResponse, commentsResponse] = await Promise.all([
+        fetch(`/api/likes?user_id=${profileUser.id}`),
+        fetch(`/api/posts/${profileUser.id}`),
+        fetch(`/api/comments?user_id=${profileUser.id}`),
+      ]);
+  
+      const likedPosts = (await likesResponse.json()).data;
+      const userPosts = (await postsResponse.json()).data;
+      const userComments = (await commentsResponse.json()).data;
+  
+      setProfileData({ likedPosts, userPosts, userComments });
+    };
+  
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    async function getLikedItems() {
-      const likedItemsResult = await fetch(
-        `/api/likes?user_id=${profileUser.id}`,
-        {
-          method: "GET",
-        }
-      )
-        .then((res) => res.json())
-        .then((res) => res.data);
-
-      setLikedPosts(likedItemsResult);
-    }
-
-    getLikedItems();
-  }, [profileUser]);
 
   function toggleDeleteAccountModal() {
     setDeletingAccount(!deletingAccount);
@@ -76,12 +64,16 @@ export default function ProfileOwner({
   }
 
   async function updateProfile(formData: FormData) {
+    
     formData.append("user_id", profileUser.id);
 
-    const updateProfileResponse = await fetch(`/api/user?user_id=${profileUser.id}&action=update-profile`, {
-      method: "PUT",
-      body: formData,
-    }).then((res) => res.json());
+    const updateProfileResponse = await fetch(
+      `/api/user?user_id=${profileUser.id}&action=update-profile`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    ).then((res) => res.json());
 
     setEditingProfile(false);
 
@@ -160,7 +152,7 @@ export default function ProfileOwner({
           <TabPanels className="mt-4">
             <TabPanel>
               <h1 className="mb-2 text-xl">Posts</h1>
-              {userPosts &&
+              {userPosts.length !== 0 ?
                 userPosts.map((post: PostType) => {
                   return (
                     <div
@@ -171,11 +163,11 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(post.create_date))}</div>
                     </div>
                   );
-                })}
+                }) : <div className={emptyArray}>User has no posts...</div>}
             </TabPanel>
             <TabPanel>
               <h1 className="mb-2 text-xl">Comments</h1>
-              {userComments &&
+              {userComments.length !== 0 ?
                 userComments.map((comment: CommentType) => {
                   return (
                     <div
@@ -186,11 +178,11 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(comment.create_date))}</div>
                     </div>
                   );
-                })}
+                }) : <div className={emptyArray}>User has no comments...</div>}
             </TabPanel>
             <TabPanel>
               <h1 className="mb-2 text-xl">Likes</h1>
-              {likedPosts &&
+              {likedPosts.length !== 0 ? 
                 likedPosts.map((post: PostType) => {
                   return (
                     <div
@@ -201,27 +193,29 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(post.create_date))}</div>
                     </div>
                   );
-                })}
+                }) : <div className={emptyArray}>User has no liked items...</div>}
             </TabPanel>
           </TabPanels>
         </TabGroup>
       )}
 
-      <div className="flex flex-row justify-evenly">
-        <button
-          onClick={() => setEditingProfile(true)}
-          className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
-        >
-          Edit account
-        </button>
+      {(user?.username === profileUser.username || userIsAdmin(user)) && (
+        <div className="flex flex-row justify-evenly">
+          <button
+            onClick={() => setEditingProfile(true)}
+            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
+          >
+            Edit account
+          </button>
 
-        <button
-          onClick={() => setDeletingAccount(true)}
-          className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
-        >
-          Delete account
-        </button>
-      </div>
+          <button
+            onClick={() => setDeletingAccount(true)}
+            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
+          >
+            Delete account
+          </button>
+        </div>
+      )}
 
       {deletingAccount && (
         <Dialog

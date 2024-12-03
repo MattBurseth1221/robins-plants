@@ -39,9 +39,9 @@ export default function ProfileContainer({ username }: any) {
     <div>{loadingFlower}</div>
   ) : !profileUser ? (
     <div>{`User "${username}" not found.`}</div>
-  ) : !isUserProfile ? (
-    <div>Profile view (non-owner)</div>
   ) : (
+    // !isUserProfile ? (
+    //   <div>Profile view (non-owner)</div>) :
     <ProfileOwner profileUser={profileUser} />
   );
 }
