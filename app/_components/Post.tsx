@@ -148,8 +148,7 @@ export default function Post({
 
         console.log(response.success);
       } else {
-        console.log(response.error);
-        return;
+        throw(response.error);
       }
     } catch (e) {
       console.log(e);

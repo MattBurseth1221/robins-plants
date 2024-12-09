@@ -6,7 +6,7 @@ export default async function MainNav({ active }: {active: string}) {
   const { user } = await validateRequest();
 
   return (
-    <nav className="w-40 px-5 pt-5">
+    <nav className="w-52">
       <ul>
         <NavItem linkRedirect="/" itemName="Home" active={active === "Home"} />
         <NavItem
@@ -30,6 +30,11 @@ export default async function MainNav({ active }: {active: string}) {
             linkRedirect="/admin"
             itemName="Create Post"
             active={active === "Admin"}
+          />
+          <NavItem
+            linkRedirect={`/profile/${user!.username}`}
+            itemName="Profile"
+            active={active === "Profile"}
           />
       </ul>
     </nav>

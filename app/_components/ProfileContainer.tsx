@@ -8,7 +8,7 @@ import ProfileOwner from "./ProfileOwner";
 
 export default function ProfileContainer({ username }: any) {
   const user = useContext(UserContext);
-  const [profileUser, setProfileUser] = useState<UserType | null>(null);
+  const [profileUser, setProfileUser] = useState<UserType | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [isUserProfile, setIsUserProfile] = useState<boolean>(false);
 
@@ -28,12 +28,14 @@ export default function ProfileContainer({ username }: any) {
   }, [username]);
 
   useEffect(() => {
-    if (user === null || profileUser === null) {
+    if (user === null || profileUser === null || profileUser === undefined) {
       setIsUserProfile(false);
     } else if (user.username === profileUser.username) {
       setIsUserProfile(true);
     }
   }, [user, profileUser]);
+
+  if (profileUser === undefined) return <div>No user found...</div>;
 
   return loading ? (
     <div>{loadingFlower}</div>
