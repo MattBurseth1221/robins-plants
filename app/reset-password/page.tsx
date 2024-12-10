@@ -5,8 +5,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { generateSHA256, testPassword } from "../_utils/helper-functions";
 import { UUID } from "node:crypto";
 
-//export const runtime = "edge";
-
 export default function Page() {
   const [usernameValue, setUsernameValue] = useState<string>("");
   const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
@@ -26,6 +24,7 @@ export default function Page() {
       }).then((res) => res.json());
 
       if (validIDCheck.error) {
+        console.log(validIDCheck.error);
         return;
       }
 
@@ -35,8 +34,11 @@ export default function Page() {
       setChangingUserID(user_id);
 
       if (resetID && resetID !== "" && validIDCheck.isIDValid) {
+        console.log("reset id valid");
         setIsChangingPassword(true);
       }
+
+      setIsChangingPassword(true);
     }
 
     isResetIDValid(resetID!);

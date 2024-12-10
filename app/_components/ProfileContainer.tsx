@@ -14,6 +14,8 @@ export default function ProfileContainer({ username }: any) {
 
   useEffect(() => {
     async function getUserByUsername() {
+      setLoading(true);
+
       const profileUserResult = await fetch(`/api/user?username=${username}`, {
         method: "GET",
       })
@@ -21,21 +23,17 @@ export default function ProfileContainer({ username }: any) {
         .then((data) => data.data);
 
       setProfileUser(profileUserResult);
+
+      if (profileUserResult === undefined || profileUserResult === null || user === null || user.username !== profileUserResult.username) {
+        setIsUserProfile(false);
+      } else {
+        setIsUserProfile(true);
+      }
     }
 
     getUserByUsername();
     setLoading(false);
   }, [username]);
-
-  useEffect(() => {
-    if (user === null || profileUser === null || profileUser === undefined) {
-      setIsUserProfile(false);
-    } else if (user.username === profileUser.username) {
-      setIsUserProfile(true);
-    }
-  }, [user, profileUser]);
-
-  if (profileUser === undefined) return <div>No user found...</div>;
 
   return loading ? (
     <div>{loadingFlower}</div>

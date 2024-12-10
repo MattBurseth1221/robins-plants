@@ -34,13 +34,13 @@ export default function ProfileBar() {
             >
               Log Out
             </button>
-            <button
+            {/* <button
             className="bg-slate-300 text-slate-900 p-2 px-4 w-auto rounded-xl border-slate-500 border-2 hover:bg-slate-200 transition mt-2"
             onClick={() => {
               router.push(`/profile/${user.username}`)
             }}>
               My Profile
-            </button>
+            </button> */}
           </>
         ) : (
           <a href="/login">Sign In</a>

@@ -35,8 +35,18 @@ export default async function Page() {
           </button>
         </Form>
         <div className="w-[100%] flex flex-row justify-center gap-8">
-          <Link href="/signup" className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Create an account</Link>
-          <Link href="/reset-password" className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Forgot password?</Link>
+          <Link
+            href="/signup"
+            className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+          >
+            Create an account
+          </Link>
+          <Link
+            href="/reset-password"
+            className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+          >
+            Forgot password?
+          </Link>
         </div>
       </div>
     </main>

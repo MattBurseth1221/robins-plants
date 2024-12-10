@@ -5,9 +5,12 @@ import PostContainer from "./_components/PostContainer";
 import { Suspense } from "react";
 import { validateRequest } from "./_lib/auth";
 import UserProvider from "./_providers/UserProvider";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
   const { user }: any = await validateRequest();
+
+  if (!user) redirect('/login');
 
   return (
     <UserProvider user={user}>
