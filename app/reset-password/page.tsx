@@ -12,6 +12,8 @@ export default function Page() {
   const [passwordValue, setPasswordValue] = useState<string>("");
   const [confirmPasswordValue, setConfirmPasswordValue] = useState<string>("");
   const [changingUserID, setChangingUserID] = useState<UUID | null>(null);
+  const [isSendEmailButtonHidden, setIsSendEmailButtonHidden] =
+    useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -60,7 +62,8 @@ export default function Page() {
     if (passwordChangeResponse.error) {
       setDisplayMessage(
         <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
-          If the username/email exists, then a password change email has been sent.
+          If the username/email exists, then a password change email has been
+          sent.
         </p>
       );
       return;
@@ -75,13 +78,14 @@ export default function Page() {
       }),
     }).then((res) => res.json());
 
-    if (emailResponse.success) {
-      setDisplayMessage(
-        <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
-          If the username/email exists, then a password change email has been sent.
-        </p>
-      );
-    }
+    setDisplayMessage(
+      <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
+        If the username/email exists, then a password change email has been
+        sent.
+      </p>
+    );
+
+    
   }
 
   async function setNewPassword() {
@@ -143,14 +147,17 @@ export default function Page() {
           }}
           className="border-[1px] border-gray-400 p-2 w-[50%] rounded-md"
         />
-        <button
-          onClick={() => {
-            sendPasswordResetEmail();
-          }}
-          className="w-40 mt-4 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
-        >
-          Send email
-        </button>
+        {!isSendEmailButtonHidden && (
+          <button
+            onClick={() => {
+              setIsSendEmailButtonHidden(true);
+              sendPasswordResetEmail();
+            }}
+            className="w-40 mt-4 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+          >
+            Send email
+          </button>
+        )}
         {displayMessage}
       </div>
     </main>
@@ -192,7 +199,7 @@ export default function Page() {
         <div className="mt-4 flex items-center">
           <p className="w-64">Remembered your password?</p>
           <button
-          className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+            className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
             onClick={() => {
               setIsChangingPassword(false);
               router.push("/login");

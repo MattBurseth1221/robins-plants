@@ -14,10 +14,10 @@ export function Form({
     error: null,
   });
   return (
-    <form className="mb-2 mt-4" action={formAction}>
+    <form className="mb-2 mt-4 flex-col justify-center" action={formAction}>
       {children}
       {state.error && (
-        <p className="inline-block border-md border-red-500 border-2 bg-red-300 opacity-100 p-2 px-4 rounded-md text-black text-opacity-100 text-center mt-2 w-auto m-auto ">
+        <p className="border-md border-red-500 border-2 bg-red-300 opacity-100 p-2 px-4 rounded-md text-black text-opacity-100 text-center w-fit mb-4 mx-auto ">
           {state.error}
         </p>
       )}
