@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
 
-const emptyArray = 'mt-8 opacity-50';
+const emptyArray = 'mb-2 mt-4 opacity-50';
 
 interface ProfileDataType {
   likedPosts: Array<PostType>;
@@ -82,7 +82,7 @@ export default function ProfileOwner({
   }
 
   return (
-    <div className="flex flex-col w-[100%]">
+    <div className="w-[100%]">
       {editingProfile ? (
         <form action={updateProfile} className="w-[50%] mx-auto">
           {/* <div className="flex justify-center"> */}
@@ -124,9 +124,9 @@ export default function ProfileOwner({
           </div>
         </form>
       ) : (
-        <div className="mb-8">
+        <div className="mb-8 text-left bg-slate-100 w-[30%] rounded-md border-slate-300 border-2 p-4">
           <div className="">Hello, {profileUser!.username}!</div>
-          <div>Profile view (owner)</div>
+          {/* <div>Profile view (owner)</div> */}
           <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
           <div>
             {`Account created on ${formatDate(
@@ -137,6 +137,7 @@ export default function ProfileOwner({
       )}
 
       {!editingProfile && (
+        <div className="p-4 border-2 border-slate-300 max-w-[50%] rounded-md bg-slate-100">
         <TabGroup defaultIndex={0}>
           <TabList className="flex justify-between w-[50%] mx-auto">
             <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
@@ -193,18 +194,19 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(post.create_date))}</div>
                     </div>
                   );
-                }) : <div className={emptyArray}>User has no liked items...</div>}
+                }) : <div className={`${emptyArray}`}>User has no liked items...</div>}
             </TabPanel>
           </TabPanels>
         </TabGroup>
+        </div>
       )}
 
       {(user?.username === profileUser.username || userIsAdmin(user)) && (
-        <div className="flex flex-row justify-evenly">
+        <div className="max-w-[50%] flex flex-row justify-evenly">
           <button
             onClick={() => setEditingProfile(true)}
             className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
-          >
+          > 
             Edit account
           </button>
 
