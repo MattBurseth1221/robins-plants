@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
 
-const emptyArray = 'mb-2 mt-4 opacity-50';
+const emptyArray = "mb-2 mt-4 opacity-50";
 
 interface ProfileDataType {
   likedPosts: Array<PostType>;
@@ -31,7 +31,12 @@ export default function ProfileOwner({
   profileUser: UserType;
 }) {
   const user = useContext(UserContext);
-  const [{ likedPosts, userPosts, userComments }, setProfileData] = useState<ProfileDataType>({ likedPosts: [], userPosts: [], userComments: [] });
+  const [{ likedPosts, userPosts, userComments }, setProfileData] =
+    useState<ProfileDataType>({
+      likedPosts: [],
+      userPosts: [],
+      userComments: [],
+    });
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
   const [editingProfile, setEditingProfile] = useState<boolean>(false);
 
@@ -39,19 +44,20 @@ export default function ProfileOwner({
 
   useEffect(() => {
     const fetchData = async () => {
-      const [likesResponse, postsResponse, commentsResponse] = await Promise.all([
-        fetch(`/api/likes?user_id=${profileUser.id}`),
-        fetch(`/api/posts/${profileUser.id}`),
-        fetch(`/api/comments?user_id=${profileUser.id}`),
-      ]);
-  
+      const [likesResponse, postsResponse, commentsResponse] =
+        await Promise.all([
+          fetch(`/api/likes?user_id=${profileUser.id}`),
+          fetch(`/api/posts/${profileUser.id}`),
+          fetch(`/api/comments?user_id=${profileUser.id}`),
+        ]);
+
       const likedPosts = (await likesResponse.json()).data;
       const userPosts = (await postsResponse.json()).data;
       const userComments = (await commentsResponse.json()).data;
-  
+
       setProfileData({ likedPosts, userPosts, userComments });
     };
-  
+
     fetchData();
   }, []);
 
@@ -64,7 +70,6 @@ export default function ProfileOwner({
   }
 
   async function updateProfile(formData: FormData) {
-    
     formData.append("user_id", profileUser.id);
 
     const updateProfileResponse = await fetch(
@@ -81,65 +86,65 @@ export default function ProfileOwner({
     router.refresh();
   }
 
+  if (editingProfile)
+    return (
+      <form action={updateProfile} className="w-[50%] mx-auto">
+        {/* <div className="flex justify-center"> */}
+        <div>
+          <label htmlFor="firstname">First name</label>
+          <input
+            name="firstname"
+            id="firstname"
+            minLength={2}
+            maxLength={32}
+            className="w-[60%] focus:p-2 transition-all duration-150"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="lastname">Last name</label>
+          <input
+            name="lastname"
+            id="lastname"
+            minLength={2}
+            maxLength={32}
+            className="w-[60%]"
+          />
+          <br />
+        </div>
+        <div className="flex justify-around">
+          <button
+            className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-green-500 transition"
+            type="submit"
+          >
+            Save
+          </button>
+          <button
+            className="w-42 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-red-500 hover:text-white transition"
+            onClick={() => setEditingProfile(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    );
+
   return (
     <div className="w-[100%]">
-      {editingProfile ? (
-        <form action={updateProfile} className="w-[50%] mx-auto">
-          {/* <div className="flex justify-center"> */}
-          <div>
-            <label htmlFor="firstname">First name</label>
-            <input
-              name="firstname"
-              id="firstname"
-              minLength={2}
-              maxLength={32}
-              className="w-[60%] focus:p-2 transition-all duration-150"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="lastname">Last name</label>
-            <input
-              name="lastname"
-              id="lastname"
-              minLength={2}
-              maxLength={32}
-              className="w-[60%]"
-            />
-            <br />
-          </div>
-          <div className="flex justify-around">
-            <button
-              className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-green-500 transition"
-              type="submit"
-            >
-              Save
-            </button>
-            <button
-              className="w-42 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-red-500 hover:text-white transition"
-              onClick={() => setEditingProfile(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      ) : (
-        <div className="mb-8 text-left bg-slate-100 w-[30%] rounded-md border-slate-300 border-2 p-4">
-          <div className="">Hello, {profileUser!.username}!</div>
-          {/* <div>Profile view (owner)</div> */}
-          <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
-          <div>
-            {`Account created on ${formatDate(
-              new Date(profileUser.create_date)
-            )}`}
-          </div>
+      <div className="mb-8 text-left bg-slate-100 max-w-[50%] rounded-md border-slate-300 border-2 p-4 shadow-md">
+        <div className="">Hello, {profileUser!.username}!</div>
+        {/* <div>Profile view (owner)</div> */}
+        <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
+        <div>
+          {`Account created on ${formatDate(
+            new Date(profileUser.create_date)
+          )}`}
         </div>
-      )}
+      </div>
 
-      {!editingProfile && (
-        <div className="p-4 border-2 border-slate-300 max-w-[50%] rounded-md bg-slate-100">
+      <div className="p-4 border-2 border-slate-300 max-w-[50%] rounded-md bg-slate-100 shadow-md">
         <TabGroup defaultIndex={0}>
-          <TabList className="flex justify-between w-[50%] mx-auto">
+          <TabList className="flex justify-between mx-auto">
             <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
               Posts
             </Tab>
@@ -153,7 +158,7 @@ export default function ProfileOwner({
           <TabPanels className="mt-4">
             <TabPanel>
               <h1 className="mb-2 text-xl">Posts</h1>
-              {userPosts.length !== 0 ?
+              {userPosts.length !== 0 ? (
                 userPosts.map((post: PostType) => {
                   return (
                     <div
@@ -164,11 +169,14 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(post.create_date))}</div>
                     </div>
                   );
-                }) : <div className={emptyArray}>User has no posts...</div>}
+                })
+              ) : (
+                <div className={emptyArray}>User has no posts...</div>
+              )}
             </TabPanel>
             <TabPanel>
               <h1 className="mb-2 text-xl">Comments</h1>
-              {userComments.length !== 0 ?
+              {userComments.length !== 0 ? (
                 userComments.map((comment: CommentType) => {
                   return (
                     <div
@@ -179,11 +187,14 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(comment.create_date))}</div>
                     </div>
                   );
-                }) : <div className={emptyArray}>User has no comments...</div>}
+                })
+              ) : (
+                <div className={emptyArray}>User has no comments...</div>
+              )}
             </TabPanel>
             <TabPanel>
               <h1 className="mb-2 text-xl">Likes</h1>
-              {likedPosts.length !== 0 ? 
+              {likedPosts.length !== 0 ? (
                 likedPosts.map((post: PostType) => {
                   return (
                     <div
@@ -194,19 +205,23 @@ export default function ProfileOwner({
                       <div>{formatDate(new Date(post.create_date))}</div>
                     </div>
                   );
-                }) : <div className={`${emptyArray}`}>User has no liked items...</div>}
+                })
+              ) : (
+                <div className={`${emptyArray}`}>
+                  User has no liked items...
+                </div>
+              )}
             </TabPanel>
           </TabPanels>
         </TabGroup>
-        </div>
-      )}
+      </div>
 
       {(user?.username === profileUser.username || userIsAdmin(user)) && (
         <div className="max-w-[50%] flex flex-row justify-evenly">
           <button
             onClick={() => setEditingProfile(true)}
             className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
-          > 
+          >
             Edit account
           </button>
 
