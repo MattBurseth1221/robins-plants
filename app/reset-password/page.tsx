@@ -26,7 +26,6 @@ export default function Page() {
       }).then((res) => res.json());
 
       if (validIDCheck.error) {
-        console.log(validIDCheck.error);
         return;
       }
 

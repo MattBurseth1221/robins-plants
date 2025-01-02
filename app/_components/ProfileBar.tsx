@@ -21,8 +21,8 @@ export default function ProfileBar() {
   //bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2
 
   return (
-    <nav className="w-40 p-5">
-      <ul className="flex flex-col justify-between items-center">
+    <nav className="p-5 flex-col flex-grow">
+      <ul className="flex flex-col justify-between flex-grow">
         {user && <p className="text-xl">{user.username}</p>}
         {user ? (
           <>

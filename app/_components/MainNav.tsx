@@ -18,8 +18,9 @@ export default async function MainNav({ active }: {active: string}) {
   // }
 
   return (
+    <>
     <nav className="w-52">
-      <ul>
+      <ul className="">
         <NavItem linkRedirect="/" itemName="Home" active={active === "Home"} />
         <NavItem
           linkRedirect="/directory"
@@ -48,8 +49,10 @@ export default async function MainNav({ active }: {active: string}) {
             itemName="Profile"
             active={active === "Profile"}
           />
-          <ProfileBar />
+          
       </ul>
     </nav>
+    <ProfileBar />
+    </>
   );
 }

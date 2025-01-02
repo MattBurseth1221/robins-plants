@@ -73,6 +73,34 @@ export async function PUT(request: NextRequest) {
   return NextResponse.json({ success: "worked?" });
 }
 
+export async function DELETE(request: NextRequest) {
+  console.log("trying to delete")
+
+  try {
+    const body = await request.json();
+    const userId = body.user_id;
+
+    console.log(userId);
+
+    if (!userId) throw new Error("No user ID supplied");
+
+    await pool.query("BEGIN;");
+
+    //Delete user session before account
+    await pool.query(`DELETE FROM user_session WHERE user_id = '${userId}'`)
+    await pool.query(`DELETE FROM auth_user WHERE id = '${userId}'`);
+
+    await pool.query("COMMIT;");
+
+  } catch (e) {
+    await pool.query("ROLLBACK;");
+
+    return NextResponse.json({ error: e });
+  }
+
+  return NextResponse.json({ success: "User deleted successfully." });
+}
+
 async function resetPassword(user_id: UUID, newPasswordHash: string) {
   try {
     await pool.query("BEGIN;");

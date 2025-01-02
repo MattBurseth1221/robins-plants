@@ -20,32 +20,62 @@ export default async function Page() {
       <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
         <h1 className="text-xl mb-2">Create an account</h1>
         <Form action={signup}>
-          <div className="flex justify-between">
-            <div>
-              <label htmlFor="firstname">First name</label>
-              <input name="firstname" id="firstname" minLength={2} maxLength={32} className="w-[60%] focus:p-2 transition-all duration-150" />
-            </div>
-
-            <div>
-              <label htmlFor="lastname">Last name</label>
-              <input name="lastname" id="lastname" minLength={2} maxLength={32} className="w-[60%]" />
-              <br />
-            </div>
+          {/* <div className="flex justify-between"> */}
+          {/* <div>
+            <label htmlFor="firstname">First name</label>
+            <input
+              name="firstname"
+              id="firstname"
+              minLength={2}
+              maxLength={32}
+              className="w-[60%] focus:p-2 transition-all duration-150"
+            />
           </div>
 
-          <div className="flex flex-col justify-center text-center items-center">
+          <div>
+            <label htmlFor="lastname">Last name</label>
+            <input
+              name="lastname"
+              id="lastname"
+              minLength={2}
+              maxLength={32}
+              className="w-[60%]"
+            />
+            <br />
+          </div> */}
+          {/* </div> */}
+
+          <div className="flex flex-col justify-center text-left items-center">
+            <label htmlFor="firstname">First name</label>
+            <input
+              name="firstname"
+              id="firstname"
+              minLength={2}
+              maxLength={32}
+              className=""
+              // className="w-[60%] focus:p-2 transition-all duration-150"
+            />
+            <br />
+            <label htmlFor="lastname">Last name</label>
+            <input
+              name="lastname"
+              id="lastname"
+              minLength={2}
+              maxLength={32}
+              // className="w-[60%]"
+            />
             <label htmlFor="username">Username</label>
-            <input name="username" id="username" className="w-[50%]" />
+            <input name="username" id="username" className="" />
             <br />
             <label htmlFor="email">Email</label>
-            <input type="email" name="email" id="email" className="w-[50%]" />
+            <input type="email" name="email" id="email" className="" />
             <br />
             <label htmlFor="password">Password</label>
             <input
               type="password"
               name="password"
               id="password"
-              className="w-[50%]"
+              className=""
             />
             <br />
             <label htmlFor="confirm-password">Confirm Password</label>
@@ -53,17 +83,17 @@ export default async function Page() {
               type="password"
               name="confirm-password"
               id="password"
-              className="w-[50%]"
+              className=""
             />
             <br />
           </div>
-          <div className="flex justify-around">
-            <button className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
-              Create
+          <div className="flex justify-center gap-8">
+            <button className="block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
+              Create Account
             </button>
             <Link
               href="/login"
-              className="w-42 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+              className="block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
             >
               Back to Login
             </Link>
@@ -107,7 +137,14 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
 
   const query = {
     text: "INSERT INTO auth_user(id, username, password_hash, email, first_name, last_name) VALUES($1, $2, $3, $4, $5, $6)",
-    values: [userId, username, hashedPassword, emailAddress, firstName, lastName],
+    values: [
+      userId,
+      username,
+      hashedPassword,
+      emailAddress,
+      firstName,
+      lastName,
+    ],
   };
 
   try {

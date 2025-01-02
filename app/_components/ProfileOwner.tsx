@@ -16,6 +16,7 @@ import {
 } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
+import { GSP_NO_RETURNED_VALUE } from "next/dist/lib/constants";
 
 const emptyArray = "mb-2 mt-4 opacity-50";
 
@@ -65,11 +66,33 @@ export default function ProfileOwner({
     setDeletingAccount(!deletingAccount);
   }
 
-  function handleAccountDelete() {
+  async function handleAccountDelete() {
     console.log("deleting account...");
+
+    const deleteUserResult = await fetch(`/api/user`, {
+      method: 'DELETE',
+      body: JSON.stringify({ 'user_id': user!.id }),
+    }).then((res) => res.json());
+
+    if (deleteUserResult.error) {
+      alert("There was an issue deleting the user.");
+      console.log(deleteUserResult.error)
+      return;
+    }
+
+    console.log(deleteUserResult.success);
+    router.push("/");
   }
 
   async function updateProfile(formData: FormData) {
+    let firstName = formData.get("firstname") as string;
+    let lastName = formData.get("lastname") as string;
+
+    if (!firstName || firstName.trim().length === 0 || !lastName || lastName.trim().length === 0) {
+      //Probably need to have inline error here at some point, for now just cancel request
+      return;
+    }
+
     formData.append("user_id", profileUser.id);
 
     const updateProfileResponse = await fetch(
@@ -136,7 +159,7 @@ export default function ProfileOwner({
         {/* <div>Profile view (owner)</div> */}
         <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
         <div>
-          {`Account created on ${formatDate(
+          {`Account created: ${formatDate(
             new Date(profileUser.create_date)
           )}`}
         </div>
@@ -163,7 +186,7 @@ export default function ProfileOwner({
                   return (
                     <div
                       key={post.post_id}
-                      className="max-w-[50%] flex flex-col mx-auto border-[1px] border-slate-500 rounded-md mb-2"
+                      className="max-w-[50%] flex flex-col mx-auto rounded-md mb-2"
                     >
                       <div>{post.title}</div>
                       <div>{formatDate(new Date(post.create_date))}</div>
@@ -181,7 +204,7 @@ export default function ProfileOwner({
                   return (
                     <div
                       key={comment.comment_id}
-                      className="max-w-[50%] flex flex-col mx-auto border-[1px] border-slate-500 rounded-md mb-2"
+                      className="max-w-[50%] flex flex-col mx-auto rounded-md mb-2"
                     >
                       <div>{comment.body}</div>
                       <div>{formatDate(new Date(comment.create_date))}</div>
@@ -199,7 +222,7 @@ export default function ProfileOwner({
                   return (
                     <div
                       key={post.post_id}
-                      className="max-w-[50%] flex flex-col mx-auto border-[1px] border-slate-500 rounded-md mb-2"
+                      className="max-w-[50%] flex flex-col mx-auto rounded-md mb-2"
                     >
                       <div>{post.title}</div>
                       <div>{formatDate(new Date(post.create_date))}</div>

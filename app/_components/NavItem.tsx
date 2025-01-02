@@ -13,7 +13,7 @@ export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
       <button
         className={`px-5 mb-5 w-[100%] text-left hover:bg-slate-400
          cursor-pointer py-2 transition ease-in duration-150 rounded-lg ${
-           active ? "underline text-black" : ""
+           active ? "underline text-black " : ""
          }`}
       >
         {itemName}
