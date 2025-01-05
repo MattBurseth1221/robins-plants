@@ -127,9 +127,6 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
 
   const hashedPassword = generateSHA256(password);
 
-  console.log("hash test: ");
-  console.log(hashedPassword);
-
   const userId = uuidv4();
   const emailAddress = formData.get("email");
   const firstName = formData.get("firstname");

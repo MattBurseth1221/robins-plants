@@ -14,8 +14,9 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
+import { ActionResult, Form } from "./Form";
 
 const emptyArray = "mb-2 mt-4 opacity-50";
 
@@ -89,13 +90,15 @@ export default function ProfileOwner({
     router.push("/");
   }
 
-  async function updateProfile(formData: FormData) {
+  async function updateProfile(_: any, formData: FormData): Promise<ActionResult> {
     let firstName = formData.get("firstname") as string;
     let lastName = formData.get("lastname") as string;
 
     if (!firstName || firstName.trim().length === 0 || !lastName || lastName.trim().length === 0) {
       //Probably need to have inline error here at some point, for now just cancel request
-      return;
+      return {
+        error: "Fields cannot be null",
+      };
     }
 
     formData.append("user_id", profileUser.id);
@@ -108,19 +111,29 @@ export default function ProfileOwner({
       }
     ).then((res) => res.json());
 
+    if (updateProfileResponse.error) {
+      return {
+        error: updateProfileResponse.error,
+      }
+    }
+
     setEditingProfile(false);
 
-    router.push(`${process.env.HOME_URL}/${profileUser.username}`);
+    router.push(`/profile/${profileUser.username}`);
     router.refresh();
+
+    return redirect(`/`);
   }
 
   const formChangeHandler = (e: FormEvent<HTMLInputElement>) => {
-    setProfileUpdateForm({ ...profileUpdateForm, [e.target.name]: e.currentTarget.value })
+    setProfileUpdateForm({ ...profileUpdateForm, [e.currentTarget.name]: e.currentTarget.value })
   }
+
+  //OLD style for form: className="w-[50%] mx-auto"
 
   if (editingProfile)
     return (
-      <form onChange={formChangeHandler} action={updateProfile} className="w-[50%] mx-auto">
+      <Form action={updateProfile} >
         {/* <div className="flex justify-center"> */}
         <div>
           <label htmlFor="firstname">First name</label>
@@ -130,7 +143,7 @@ export default function ProfileOwner({
             minLength={2}
             maxLength={32}
             className="w-[60%]"
-            value={profileUpdateForm.firstName}
+            defaultValue={profileUpdateForm.firstName}
           />
         </div>
 
@@ -142,7 +155,7 @@ export default function ProfileOwner({
             minLength={2}
             maxLength={32}
             className="w-[60%]"
-            placeholder={profileUpdateForm.lastName}
+            defaultValue={profileUpdateForm.lastName}
           />
           <br />
         </div>
@@ -160,7 +173,7 @@ export default function ProfileOwner({
             Cancel
           </button>
         </div>
-      </form>
+      </Form>
     );
 
   return (
