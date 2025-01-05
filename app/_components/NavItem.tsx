@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type NavProps = {
   itemName: string;
   linkRedirect: string;
@@ -9,7 +11,7 @@ type NavProps = {
 
 export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
   return (
-    <a href={linkRedirect} className="text-lg">
+    <Link href={linkRedirect} className="text-lg">
       <button
         className={`px-5 mb-5 w-[100%] text-left hover:bg-slate-400
          cursor-pointer py-2 transition ease-in duration-150 rounded-lg ${
@@ -18,6 +20,6 @@ export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
       >
         {itemName}
       </button>
-    </a>
+    </Link>
   );
 }

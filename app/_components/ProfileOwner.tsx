@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, FormEvent } from "react";
 import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 import { CommentType, PostType, UserType } from "./PostContainer";
 import {
@@ -16,7 +16,6 @@ import {
 } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
-import { GSP_NO_RETURNED_VALUE } from "next/dist/lib/constants";
 
 const emptyArray = "mb-2 mt-4 opacity-50";
 
@@ -24,6 +23,11 @@ interface ProfileDataType {
   likedPosts: Array<PostType>;
   userPosts: Array<PostType>;
   userComments: Array<CommentType>;
+}
+
+interface UpdateProfileFormType {
+  firstName: string;
+  lastName: string;
 }
 
 export default function ProfileOwner({
@@ -40,6 +44,7 @@ export default function ProfileOwner({
     });
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
   const [editingProfile, setEditingProfile] = useState<boolean>(false);
+  const [profileUpdateForm, setProfileUpdateForm] = useState<UpdateProfileFormType>({ firstName: profileUser.first_name, lastName: profileUser.last_name });
 
   const router = useRouter();
 
@@ -105,13 +110,17 @@ export default function ProfileOwner({
 
     setEditingProfile(false);
 
-    router.push(`/profile/${profileUser.username}`);
+    router.push(`${process.env.HOME_URL}/${profileUser.username}`);
     router.refresh();
+  }
+
+  const formChangeHandler = (e: FormEvent<HTMLInputElement>) => {
+    setProfileUpdateForm({ ...profileUpdateForm, [e.target.name]: e.currentTarget.value })
   }
 
   if (editingProfile)
     return (
-      <form action={updateProfile} className="w-[50%] mx-auto">
+      <form onChange={formChangeHandler} action={updateProfile} className="w-[50%] mx-auto">
         {/* <div className="flex justify-center"> */}
         <div>
           <label htmlFor="firstname">First name</label>
@@ -120,7 +129,8 @@ export default function ProfileOwner({
             id="firstname"
             minLength={2}
             maxLength={32}
-            className="w-[60%] focus:p-2 transition-all duration-150"
+            className="w-[60%]"
+            value={profileUpdateForm.firstName}
           />
         </div>
 
@@ -132,6 +142,7 @@ export default function ProfileOwner({
             minLength={2}
             maxLength={32}
             className="w-[60%]"
+            placeholder={profileUpdateForm.lastName}
           />
           <br />
         </div>

@@ -29,10 +29,12 @@ export default function ProfileContainer({ username }: any) {
       } else {
         setIsUserProfile(true);
       }
+
+      setLoading(false);
     }
 
     getUserByUsername();
-    setLoading(false);
+    // setLoading(false);
   }, [username]);
 
   return loading ? (
