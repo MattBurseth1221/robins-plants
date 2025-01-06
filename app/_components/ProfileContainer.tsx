@@ -1,12 +1,12 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
 import { UserType } from "./PostContainer";
 import { loadingFlower } from "@/public/flower-loading";
 import ProfileOwner from "./ProfileOwner";
 
-export default function ProfileContainer({ username }: any) {
+export default function ProfileContainer({ username, children }: any) {
   const user = useContext(UserContext);
   const [profileUser, setProfileUser] = useState<UserType | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,6 +44,9 @@ export default function ProfileContainer({ username }: any) {
   ) : (
     // !isUserProfile ? (
     //   <div>Profile view (non-owner)</div>) :
-    <ProfileOwner profileUser={profileUser} />
+    <>
+    <ProfileOwner profUser={profileUser} />
+    { children }
+    </>
   );
 }

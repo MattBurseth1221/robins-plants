@@ -18,7 +18,7 @@ export interface UserType {
   id: UUID;
   create_date: Date;
   username: string;
-  email: string;
+  email: string | null;
   first_name: string;
   last_name: string;
 }

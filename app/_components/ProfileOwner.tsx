@@ -14,7 +14,7 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
 import { ActionResult, Form } from "./Form";
 
@@ -32,11 +32,12 @@ interface UpdateProfileFormType {
 }
 
 export default function ProfileOwner({
-  profileUser,
+  profUser,
 }: {
-  profileUser: UserType;
+  profUser: UserType;
 }) {
   const user = useContext(UserContext);
+  const [profileUser, setProfileUser] = useState<UserType>(profUser);
   const [{ likedPosts, userPosts, userComments }, setProfileData] =
     useState<ProfileDataType>({
       likedPosts: [],
@@ -45,7 +46,11 @@ export default function ProfileOwner({
     });
   const [deletingAccount, setDeletingAccount] = useState<boolean>(false);
   const [editingProfile, setEditingProfile] = useState<boolean>(false);
-  const [profileUpdateForm, setProfileUpdateForm] = useState<UpdateProfileFormType>({ firstName: profileUser.first_name, lastName: profileUser.last_name });
+  const [profileUpdateForm, setProfileUpdateForm] =
+    useState<UpdateProfileFormType>({
+      firstName: profUser.first_name,
+      lastName: profUser.last_name,
+    });
 
   const router = useRouter();
 
@@ -76,13 +81,13 @@ export default function ProfileOwner({
     console.log("deleting account...");
 
     const deleteUserResult = await fetch(`/api/user`, {
-      method: 'DELETE',
-      body: JSON.stringify({ 'user_id': user!.id }),
+      method: "DELETE",
+      body: JSON.stringify({ user_id: user!.id }),
     }).then((res) => res.json());
 
     if (deleteUserResult.error) {
       alert("There was an issue deleting the user.");
-      console.log(deleteUserResult.error)
+      console.log(deleteUserResult.error);
       return;
     }
 
@@ -90,11 +95,19 @@ export default function ProfileOwner({
     router.push("/");
   }
 
-  async function updateProfile(_: any, formData: FormData): Promise<ActionResult> {
+  async function updateProfile(
+    _: any,
+    formData: FormData
+  ): Promise<ActionResult> {
     let firstName = formData.get("firstname") as string;
     let lastName = formData.get("lastname") as string;
 
-    if (!firstName || firstName.trim().length === 0 || !lastName || lastName.trim().length === 0) {
+    if (
+      !firstName ||
+      firstName.trim().length === 0 ||
+      !lastName ||
+      lastName.trim().length === 0
+    ) {
       //Probably need to have inline error here at some point, for now just cancel request
       return {
         error: "Fields cannot be null",
@@ -114,26 +127,31 @@ export default function ProfileOwner({
     if (updateProfileResponse.error) {
       return {
         error: updateProfileResponse.error,
-      }
+      };
     }
+
+    setProfileUser({...profileUser, first_name: firstName, last_name: lastName});
 
     setEditingProfile(false);
 
-    router.push(`/profile/${profileUser.username}`);
+    //router.push(`${process.env.HOME_URL}/profile/`);
     router.refresh();
 
-    return redirect(`/`);
+    return { error: null };
   }
 
-  const formChangeHandler = (e: FormEvent<HTMLInputElement>) => {
-    setProfileUpdateForm({ ...profileUpdateForm, [e.currentTarget.name]: e.currentTarget.value })
-  }
+  // const formChangeHandler = (e: FormEvent<HTMLInputElement>) => {
+  //   setProfileUpdateForm({
+  //     ...profileUpdateForm,
+  //     [e.currentTarget.name]: e.currentTarget.value,
+  //   });
+  // };
 
   //OLD style for form: className="w-[50%] mx-auto"
 
   if (editingProfile)
     return (
-      <Form action={updateProfile} >
+      <Form action={updateProfile}>
         {/* <div className="flex justify-center"> */}
         <div>
           <label htmlFor="firstname">First name</label>
@@ -161,7 +179,7 @@ export default function ProfileOwner({
         </div>
         <div className="flex justify-around">
           <button
-            className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-green-500 transition"
+            className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-green-500 hover:text-white transition"
             type="submit"
           >
             Save
@@ -183,9 +201,7 @@ export default function ProfileOwner({
         {/* <div>Profile view (owner)</div> */}
         <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
         <div>
-          {`Account created: ${formatDate(
-            new Date(profileUser.create_date)
-          )}`}
+          {`Account created: ${formatDate(new Date(profileUser.create_date))}`}
         </div>
       </div>
 
@@ -267,14 +283,14 @@ export default function ProfileOwner({
         <div className="max-w-[50%] flex flex-row justify-evenly">
           <button
             onClick={() => setEditingProfile(true)}
-            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
+            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white transition-all duration-150"
           >
             Edit account
           </button>
 
           <button
             onClick={() => setDeletingAccount(true)}
-            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white hover:py-4 transition-all duration-300"
+            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white transition-all duration-150"
           >
             Delete account
           </button>

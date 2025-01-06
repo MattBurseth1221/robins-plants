@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
       `SELECT * FROM auth_user WHERE username = '${username}'`
     );
     delete fetchedUser.rows[0]["password_hash"];
+    delete fetchedUser.rows[0]["email"];
 
     return NextResponse.json({
       success: "Fetched user by username.",
