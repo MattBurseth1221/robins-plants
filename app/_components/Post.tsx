@@ -108,7 +108,7 @@ export default function Post({
     }
 
     getComments();
-  }, []);
+  }, [post]);
 
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {

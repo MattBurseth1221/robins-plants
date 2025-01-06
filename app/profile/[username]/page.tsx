@@ -3,20 +3,8 @@ import PageTitle from "@/app/_components/PageTitle";
 import ProfileContainer from "@/app/_components/ProfileContainer";
 import { GetServerSidePropsContext } from "next";
 
-import { UserType } from "@/app/_components/PostContainer";
-import ProfileOwner from "@/app/_components/ProfileOwner";
-
-export default async function ProfilePage(context: GetServerSidePropsContext) {
+export default async function ProfilePage(context: any) {
   const params = await context.params;
-
-  const profileUser: UserType = await fetch(
-    `${process.env.HOME_URL}/api/user?username=${params!.username}`,
-    {
-      method: "GET",
-    }
-  )
-    .then((res) => res.json())
-    .then((data) => data.data);
 
   if (params!.username === undefined || params!.username === null)
     return (

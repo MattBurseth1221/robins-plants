@@ -35,7 +35,7 @@ export default function ProfileContainer({ username, children }: any) {
 
     getUserByUsername();
     // setLoading(false);
-  }, [username]);
+  }, [username, user]);
 
   return loading ? (
     <div>{loadingFlower}</div>

@@ -71,7 +71,7 @@ export default function ProfileOwner({
     };
 
     fetchData();
-  }, []);
+  }, [profileUser]);
 
   function toggleDeleteAccountModal() {
     setDeletingAccount(!deletingAccount);
@@ -133,9 +133,6 @@ export default function ProfileOwner({
     setProfileUser({...profileUser, first_name: firstName, last_name: lastName});
 
     setEditingProfile(false);
-
-    //router.push(`${process.env.HOME_URL}/profile/`);
-    router.refresh();
 
     return { error: null };
   }
