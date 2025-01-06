@@ -7,8 +7,6 @@ import UploadForm from "../_components/UploadForm";
 import { userIsAdmin } from "../_utils/helper-functions";
 import UserProvider from "../_providers/UserProvider";
 
-//export const runtime = "edge";
-
 export default async function Page() {
   const { user }: any = await validateRequest();
   // if (!userIsAdmin(user)) {
