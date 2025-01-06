@@ -17,21 +17,33 @@ export default function ProfileBar() {
     }
   }
 
+  //bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2
+  //bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2
+
   return (
-    <nav className="w-40 p-5 h-64">
-      <ul className="flex flex-col justify-between items-center">
-        {user && <p>{user.username}</p>}
+    <nav className="p-5 flex-col flex-grow">
+      <ul className="flex flex-col justify-between flex-grow">
+        {user && <p className="text-xl">{user.username}</p>}
         {user ? (
-          <button
-            className="bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2"
+          <>
+            <button
+              className="bg-slate-300 text-slate-900 p-2 px-4 w-auto rounded-xl border-slate-500 border-2 hover:bg-slate-200 transition mt-2"
+              onClick={() => {
+                logout();
+              }}
+            >
+              Log Out
+            </button>
+            {/* <button
+            className="bg-slate-300 text-slate-900 p-2 px-4 w-auto rounded-xl border-slate-500 border-2 hover:bg-slate-200 transition mt-2"
             onClick={() => {
-              logout();
-            }}
-          >
-            Log out
-          </button>
+              router.push(`/profile/${user.username}`)
+            }}>
+              My Profile
+            </button> */}
+          </>
         ) : (
-          <a href="/login">Sign in</a>
+          <a href="/login">Sign In</a>
         )}
       </ul>
     </nav>

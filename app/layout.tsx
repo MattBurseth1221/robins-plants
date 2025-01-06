@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { SessionProvider } from "@/app/_lib/hooks/SessionContext";
 import { validateRequest } from "@/app/_lib/auth";
+import UserProvider from "./_providers/UserProvider";
 
 export const metadata: Metadata = {
   title: "Robin Plants",
@@ -15,9 +16,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await validateRequest();
+  const { user }: any = await validateRequest();
 
   return (
-    <html lang="en">
+    <UserProvider user={user} >
+      <html lang="en">
       <head>
         <meta
           name="viewport"
@@ -25,10 +28,12 @@ export default async function RootLayout({
         ></meta>
       </head>
 
-      <body className="bg-gradient-to-b bg-slate-200 from-slate-100 to-slate-400">
+      <body className="bg-gradient-to-b  from-slate-200 from-50% via-slate-300  to-slate-500 to-90%">
         <SessionProvider value={session}>{children}</SessionProvider>
       </body>
     </html>
+    </UserProvider>
+    
   );
 }
 

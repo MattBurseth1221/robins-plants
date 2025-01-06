@@ -3,6 +3,7 @@ import { formatDate, userIsAdmin } from "../_utils/helper-functions";
 import CommentMenu from "./CommentMenu";
 import { CommentType } from "./PostContainer";
 import { UserContext } from "../_providers/UserProvider";
+import Link from "next/link";
 
 export default function Comment(comment: CommentType) {
   const user = useContext(UserContext);
@@ -11,7 +12,7 @@ export default function Comment(comment: CommentType) {
     <div className="mt-2">
       <div className="flex justify-between">
         <div className="flex items-center">
-          <p className="text-left opacity-50 text-xs mr-1">{comment.username}</p>
+          <Link href={`/profile/${comment.username}`} className="text-left opacity-50 text-xs mr-1 hover:opacity-75 transition-all">{comment.username}</Link>
           {comment.been_edited && <p className="opacity-50 text-xs">● Edited</p>}
           {(user!.username === comment.username || userIsAdmin(user)) && <CommentMenu comment={comment} /> }
         </div>

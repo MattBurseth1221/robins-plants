@@ -12,15 +12,15 @@ export default async function Directory() {
   return (
     <UserProvider user={user} >
       <main className="flex min-h-screen">
-      <MainNav active={"Directory"} />
+      <div className="pt-5 flex flex-col border-r-[1px] border-slate-300 fixed h-[100vh] px-5">
+        <MainNav active={"Directory"} />
+      </div>
 
       <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
         <PageTitle title="- Plant Directory -" />
 
         <p>I haven&apos;t written this part of the app yet </p>
       </div>
-
-      <ProfileBar />
     </main>
     </UserProvider>
     

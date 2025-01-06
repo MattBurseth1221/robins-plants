@@ -14,6 +14,15 @@ import { loadingFlower } from "@/public/flower-loading";
 import { UserContext } from "../_providers/UserProvider";
 import PostProvider from "../_providers/PostProvider";
 
+export interface UserType {
+  id: UUID;
+  create_date: Date;
+  username: string;
+  email: string | null;
+  first_name: string;
+  last_name: string;
+}
+
 export interface CommentType {
   comment_id: UUID;
   body: string;
@@ -63,7 +72,13 @@ export default function PostContainer() {
         .then((res) => res.json())
         .then((res) => res.data);
 
-      setLikedItems(likedItemsResult);
+        let likedItems = [];
+
+        for (let i = 0; i < likedItemsResult.length; i++) {
+          likedItems.push(likedItemsResult[i].post_id);
+        }
+
+      setLikedItems(likedItems);
     }
 
     getLikedItems();

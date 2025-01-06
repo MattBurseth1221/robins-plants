@@ -5,15 +5,24 @@ import PostContainer from "./_components/PostContainer";
 import { Suspense } from "react";
 import { validateRequest } from "./_lib/auth";
 import UserProvider from "./_providers/UserProvider";
-import { User } from "lucia";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
   const { user }: any = await validateRequest();
 
+  if (!user) redirect('/login');
+
   return (
     <UserProvider user={user}>
       <main className="flex min-h-screen">
-        <MainNav active={"Home"} />
+        <div className="pt-5 flex flex-col border-r-[1px] border-slate-300 fixed h-[100vh] px-5">
+          
+          <MainNav active={"Home"} />
+          {/* <div className="flex-grow">
+            <ProfileBar />
+          </div> */}
+          
+        </div>
 
         <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
           <PageTitle title="- Robin Plants -" />
@@ -23,7 +32,7 @@ export default async function Page() {
           </Suspense>
         </div>
 
-        <ProfileBar />
+        {/* <ProfileBar /> */}
 
         {/* <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg"></div>
       <div className="w-[50%] h-32 bg-gradient-to-b from-dg to-lb"></div>

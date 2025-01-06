@@ -27,6 +27,7 @@ import Image from "next/image";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
+import Link from "next/link";
 
 export type CommentContextType = {
   comments: CommentType[];
@@ -89,7 +90,7 @@ export default function Post({
   useEffect(() => {
     async function getComments() {
       try {
-        const commentResult = await fetch(`/api/comments?id=${post?.post_id}`, {
+        const commentResult = await fetch(`/api/comments?post_id=${post?.post_id}`, {
           method: "GET",
         }).then((res) => res.json())
         .then((data) => {
@@ -147,8 +148,7 @@ export default function Post({
 
         console.log(response.success);
       } else {
-        console.log(response.error);
-        return;
+        throw(response.error);
       }
     } catch (e) {
       console.log(e);
@@ -211,7 +211,7 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col">
+      <div className="border-slate-300 border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col shadow-md">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
         <div
           className={`relative ${
@@ -252,7 +252,7 @@ export default function Post({
 
         <div className="min-h-16 mt-2">
           <div className="grid grid-cols-3 border-b-[1px] border-slate-500 border-opacity-20 pb-2">
-            <p className="text-left text-xl">{post.username}</p>
+            <Link className="text-left text-xl hover:text-gray-600 transition-all" href={`/profile/${post.username}`}>{post.username}</Link>
 
             {post.image_refs!.length !== 1 && (
               <div className="flex justify-center h-8">

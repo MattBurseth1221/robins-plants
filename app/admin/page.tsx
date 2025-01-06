@@ -16,15 +16,15 @@ export default async function Page() {
   return (
     <UserProvider user={user}>
       <main className="flex min-h-screen">
+      <div className="pt-5 flex flex-col border-r-[1px] border-slate-300 fixed h-[100vh] px-5">
         <MainNav active={"Admin"} />
+      </div>
 
         <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
           <PageTitle title="- Create Post -" />
 
           <UploadForm />
         </div>
-
-        <ProfileBar />
       </main>
     </UserProvider>
   );
