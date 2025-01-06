@@ -43,7 +43,7 @@ export default function Page() {
     }
 
     isResetIDValid(resetID!);
-  }, []);
+  }, [searchParams]);
 
   async function sendPasswordResetEmail() {
     if (!usernameValue || typeof usernameValue !== "string") return;

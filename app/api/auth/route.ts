@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 //export const runtime = "edge";
 
-export async function GET(request: Request, response: Response) {
+export async function GET(request: Request) {
   const { user, session } = await validateRequest();
 
   if (!session) {
