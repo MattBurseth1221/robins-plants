@@ -158,7 +158,7 @@ export default function ProfileOwner({
             minLength={2}
             maxLength={32}
             className="w-[60%]"
-            defaultValue={profileUpdateForm.firstName}
+            defaultValue={profileUser.first_name}
           />
         </div>
 
@@ -170,7 +170,7 @@ export default function ProfileOwner({
             minLength={2}
             maxLength={32}
             className="w-[60%]"
-            defaultValue={profileUpdateForm.lastName}
+            defaultValue={profileUser.last_name}
           />
           <br />
         </div>
