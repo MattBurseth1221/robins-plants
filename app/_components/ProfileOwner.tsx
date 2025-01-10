@@ -17,6 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
 import { ActionResult, Form } from "./Form";
+import { Button } from "@mantine/core";
 
 const emptyArray = "mb-2 mt-4 opacity-50";
 
@@ -274,6 +275,10 @@ export default function ProfileOwner({
             </TabPanel>
           </TabPanels>
         </TabGroup>
+      </div>
+
+      <div>
+        <Button>Click me</Button>
       </div>
 
       {(user?.username === profileUser.username || userIsAdmin(user)) && (

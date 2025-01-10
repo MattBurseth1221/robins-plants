@@ -14,6 +14,8 @@ import { loadingFlower } from "@/public/flower-loading";
 import { UserContext } from "../_providers/UserProvider";
 import PostProvider from "../_providers/PostProvider";
 
+import { useReportWebVitals } from 'next/web-vitals';
+
 export interface UserType {
   id: UUID;
   create_date: Date;
