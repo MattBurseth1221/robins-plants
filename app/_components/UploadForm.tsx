@@ -26,6 +26,25 @@ export default function UploadForm() {
       return;
     }
 
+    const newForm = new FormData();
+    let newFiles = files;
+
+    for (let i = 0; i < newFiles.length; i++) {
+      console.log(newFiles[i])
+      newForm.append("images", newFiles[i]);
+    }
+    
+
+    const plantDetectionResponse = await fetch(
+      `https://my-api.plantnet.org/v2/identify/all?api-key=`,
+      {
+        method: "POST",
+        body: newForm,
+      }
+    ).then((res) => res.json());
+
+    console.log(plantDetectionResponse);
+
     const maxUploadSize = 2000 * 1024 * 1024;
     for (let file of files) {
       file = file as File;
@@ -51,12 +70,12 @@ export default function UploadForm() {
       setLoading(false);
       router.push("/");
     }
-  }
+  };
 
   return (
-    <form action={handleFileSelect} className="flex flex-col gap-4">
+    <form action={handleFileSelect} className="flex flex-col gap-4 text-left">
       <label>
-        <span>Upload a Photo (JPG only I think)</span>
+        <span>Upload a photo</span>
         <input
           type="file"
           name="files"
