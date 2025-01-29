@@ -8,7 +8,7 @@ export default function UploadForm() {
   const router = useRouter();
   const user = useContext(UserContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [plantDetectResults, setPlantDetectResults] = useState<any>(null);
+  const [plantDetectResults, setPlantDetectResults] = useState<any>([]);
 
   const handleFileSelect = (formData: FormData) => {
     if (!user) router.push("/login");
@@ -103,9 +103,9 @@ export default function UploadForm() {
       >
         Submit
       </button>
-      {plantDetectResults !== null && 
+      {plantDetectResults.length !== 0 && 
       plantDetectResults.map((result: any, index: number) => {
-        <div key={index}>{ result }</div>
+        <div className="bg-white" key={index}>{ result }</div>
       })}
       {loading && (
         <svg
