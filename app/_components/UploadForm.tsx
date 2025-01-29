@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
 
 export default function UploadForm() {
   const router = useRouter();
   const user = useContext(UserContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const [plantDetectResults, setPlantDetectResults] = useState<any>(null);
 
   const handleFileSelect = (formData: FormData) => {
     if (!user) router.push("/login");
@@ -16,6 +17,11 @@ export default function UploadForm() {
 
     postUpload(formData);
   };
+
+  // const detectPlants = async (e: FormEvent) => {
+  //   console.log("here");
+  //   console.log(e)
+  // }
 
   const postUpload = async (formData: FormData) => {
     const files = formData.getAll("files");
@@ -26,24 +32,19 @@ export default function UploadForm() {
       return;
     }
 
-    const newForm = new FormData();
-    let newFiles = files;
+    const plantDetectionResponse = await fetch(`/api/plant-detection`, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((res) => res.success)
+      .catch((error) => error);
 
-    for (let i = 0; i < newFiles.length; i++) {
-      console.log(newFiles[i])
-      newForm.append("images", newFiles[i]);
+    const plantResults = plantDetectionResponse.results;
+    for (let i = 0; i < plantResults.length; i++) {
+      console.log(plantResults[i]);
     }
-    
-
-    const plantDetectionResponse = await fetch(
-      `https://my-api.plantnet.org/v2/identify/all?api-key=`,
-      {
-        method: "POST",
-        body: newForm,
-      }
-    ).then((res) => res.json());
-
-    console.log(plantDetectionResponse);
+    setPlantDetectResults(plantResults);
 
     const maxUploadSize = 2000 * 1024 * 1024;
     for (let file of files) {
@@ -57,19 +58,20 @@ export default function UploadForm() {
 
     formData.append("user_id", user!.id);
 
-    const response = await fetch("/api/posts", {
-      method: "POST",
-      body: formData,
-    }).then((res) => res.json());
+    //ACTUAL FILE UPLOAD ================================================
+    // const response = await fetch("/api/posts", {
+    //   method: "POST",
+    //   body: formData,
+    // }).then((res) => res.json());
 
-    console.log("response here");
-    console.log(response);
+    // console.log("response here");
+    // console.log(response);
 
-    if (response.success) {
-      alert("Photo uploaded successfully.");
-      setLoading(false);
-      router.push("/");
-    }
+    // if (response.success) {
+    //   alert("Photo uploaded successfully.");
+    //   setLoading(false);
+    //   router.push("/");
+    // }
   };
 
   return (
@@ -83,7 +85,9 @@ export default function UploadForm() {
           multiple
           required
         />
+        
       </label>
+      {/* <button onClick={detectPlants} className="bg-lime-300 text-black inline-block rounded-md py-2 border-2 border-lime-500">Print results</button> */}
       <label>
         <span>Title</span>
         <input type="text" name="title" maxLength={50} required />
@@ -99,6 +103,10 @@ export default function UploadForm() {
       >
         Submit
       </button>
+      {plantDetectResults !== null && 
+      plantDetectResults.map((result: any, index: number) => {
+        <div key={index}>{ result }</div>
+      })}
       {loading && (
         <svg
           version="1.1"
