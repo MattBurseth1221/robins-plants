@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
 
 export default function UploadForm() {
@@ -41,6 +41,7 @@ export default function UploadForm() {
       .catch((error) => error);
 
     const plantResults = plantDetectionResponse.results;
+    console.log(plantResults);
     for (let i = 0; i < plantResults.length; i++) {
       console.log(plantResults[i]);
     }
@@ -75,73 +76,84 @@ export default function UploadForm() {
   };
 
   return (
-    <form action={handleFileSelect} className="flex flex-col gap-4 text-left">
-      <label>
-        <span>Upload a photo</span>
-        <input
-          type="file"
-          name="files"
-          accept="image/*,video/*"
-          multiple
-          required
-        />
-        
-      </label>
-      {/* <button onClick={detectPlants} className="bg-lime-300 text-black inline-block rounded-md py-2 border-2 border-lime-500">Print results</button> */}
-      <label>
-        <span>Title</span>
-        <input type="text" name="title" maxLength={50} required />
-      </label>
-      <label>
-        <span>Body</span>
-        <textarea name="body" rows={5} className="w-[100%]" required />
-      </label>
-      <button
-        type="submit"
-        className="border-2 border-gray-500 rounded-md w-[20%] mx-auto p-2 hover:bg-slate-400 transition disabled:text-gray-500 disabled:border-gray-300"
-        disabled={loading}
+    <>
+      <form
+        action={handleFileSelect}
+        className="flex flex-col gap-4 text-left px-8 max-w-96"
       >
-        Submit
-      </button>
-      {plantDetectResults.length !== 0 && 
-      plantDetectResults.map((result: any, index: number) => {
-        <div className="bg-white" key={index}>{ result }</div>
-      })}
-      {loading && (
-        <svg
-          version="1.1"
-          viewBox="-58 -58 116 116"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          width="32"
-          height="32"
-          className="mx-auto"
-        >
-          <g strokeLinecap="round" strokeWidth="15">
-            <path id="a" d="m0 35 0,14" />
-            <use transform="rotate(210)" xlinkHref="#a" stroke="#f0f0f0" />
-            <use transform="rotate(240)" xlinkHref="#a" stroke="#ebebeb" />
-            <use transform="rotate(270)" xlinkHref="#a" stroke="#d3d3d3" />
-            <use transform="rotate(300)" xlinkHref="#a" stroke="#bcbcbc" />
-            <use transform="rotate(330)" xlinkHref="#a" stroke="#a4a4a4" />
-            <use transform="rotate(0)" xlinkHref="#a" stroke="#8d8d8d" />
-            <use transform="rotate(30)" xlinkHref="#a" stroke="#757575" />
-            <use transform="rotate(60)" xlinkHref="#a" stroke="#5e5e5e" />
-            <use transform="rotate(90)" xlinkHref="#a" stroke="#464646" />
-            <use transform="rotate(120)" xlinkHref="#a" stroke="#2f2f2f" />
-            <use transform="rotate(150)" xlinkHref="#a" stroke="#171717" />
-            <use transform="rotate(180)" xlinkHref="#a" stroke="#000" />
-          </g>
-          <animateTransform
-            attributeName="transform"
-            type="rotate"
-            from="0 0 0"
-            to="360 0 0"
-            dur="1s"
-            repeatCount="indefinite"
+        <label>
+          <span>Upload a photo</span>
+          <input
+            type="file"
+            name="files"
+            accept="image/*,video/*"
+            multiple
+            required
           />
-        </svg>
+        </label>
+        {/* <button onClick={detectPlants} className="bg-lime-300 text-black inline-block rounded-md py-2 border-2 border-lime-500">Print results</button> */}
+        <label>
+          <span>Title</span>
+          <input type="text" name="title" maxLength={50} required />
+        </label>
+        <label>
+          <span>Body</span>
+          <textarea name="body" rows={5} className="w-[100%]" required />
+        </label>
+        <button
+          type="submit"
+          className="border-2 border-gray-500 rounded-md w-[20%] mx-auto p-2 hover:bg-slate-400 transition disabled:text-gray-500 disabled:border-gray-300"
+          disabled={loading}
+        >
+          Submit
+        </button>
+        {loading && (
+          <svg
+            version="1.1"
+            viewBox="-58 -58 116 116"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            width="32"
+            height="32"
+            className="mx-auto"
+          >
+            <g strokeLinecap="round" strokeWidth="15">
+              <path id="a" d="m0 35 0,14" />
+              <use transform="rotate(210)" xlinkHref="#a" stroke="#f0f0f0" />
+              <use transform="rotate(240)" xlinkHref="#a" stroke="#ebebeb" />
+              <use transform="rotate(270)" xlinkHref="#a" stroke="#d3d3d3" />
+              <use transform="rotate(300)" xlinkHref="#a" stroke="#bcbcbc" />
+              <use transform="rotate(330)" xlinkHref="#a" stroke="#a4a4a4" />
+              <use transform="rotate(0)" xlinkHref="#a" stroke="#8d8d8d" />
+              <use transform="rotate(30)" xlinkHref="#a" stroke="#757575" />
+              <use transform="rotate(60)" xlinkHref="#a" stroke="#5e5e5e" />
+              <use transform="rotate(90)" xlinkHref="#a" stroke="#464646" />
+              <use transform="rotate(120)" xlinkHref="#a" stroke="#2f2f2f" />
+              <use transform="rotate(150)" xlinkHref="#a" stroke="#171717" />
+              <use transform="rotate(180)" xlinkHref="#a" stroke="#000" />
+            </g>
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 0 0"
+              to="360 0 0"
+              dur="1s"
+              repeatCount="indefinite"
+            />
+          </svg>
+        )}
+      </form>
+      {plantDetectResults.length !== 0 && (
+        <div className="w-[50%]">
+          {plantDetectResults.map((result: any, index: number) => {
+            return (
+              <div className="bg-white text-black" key={index}>
+                {`${result.species.scientificName} or ${result.species.commonNames[0]} has a score of ${result.score}`}
+              </div>
+            );
+          })}
+        </div>
       )}
-    </form>
+    </>
   );
 }

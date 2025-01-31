@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
 
     const plantDetectionResponse = await fetch(
-      `https://my-api.plantnet.org/v2/identify/all?api-key=${process.env.PLANTNET_API_KEY}`,
+      `https://my-api.plantnet.org/v2/identify/all?api-key=${process.env.PLANTNET_API_KEY}&include-related-images=true`,
       {
         method: "POST",
         body: newForm,

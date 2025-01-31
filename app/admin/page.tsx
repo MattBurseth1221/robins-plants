@@ -20,7 +20,7 @@ export default async function Page() {
         <MainNav active={"Admin"} />
       </div>
 
-        <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
+        <div className="p-10 text-center w-[60%] mx-auto items-center">
           <PageTitle title="- Create Post -" />
 
           <UploadForm />
