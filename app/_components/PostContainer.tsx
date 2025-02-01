@@ -128,7 +128,7 @@ export default function PostContainer() {
 
   return loadingPosts ? (
     <div className="flex justify-center text-center">
-      <code className="mr-2">Loading posts...</code>
+      <p className="mr-2">Loading posts...</p>
       <div className="">{loadingFlower}</div>
     </div>
     

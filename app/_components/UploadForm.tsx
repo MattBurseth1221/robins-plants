@@ -4,33 +4,40 @@ import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
 
+import { PlantDetectResult } from "@/app/types";
+import TextArea from "./TextArea";
+import Image from "next/image";
+import Loading from "./Loading";
+import PlantDetectSkeleton from "./Skeletons/PlantDetectSkeleton";
+import LoadingSkeleton from "./Skeletons/PlantDetectSkeleton";
+
+const skeletonDiv = (
+  <>
+    <LoadingSkeleton />
+    <LoadingSkeleton />
+    <LoadingSkeleton />
+  </>
+);
+
 export default function UploadForm() {
   const router = useRouter();
   const user = useContext(UserContext);
+  const [loadingResult, setLoadingResult] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [plantDetectResults, setPlantDetectResults] = useState<any>([]);
+  const [detectChecked, setDetectChecked] = useState<boolean>(false);
+  const [plantDetectResults, setPlantDetectResults] = useState<
+    PlantDetectResult[]
+  >([]);
+  const [bodyText, setBodyText] = useState<string>("");
 
   const handleFileSelect = (formData: FormData) => {
     if (!user) router.push("/login");
 
-    setLoading(true);
-
     postUpload(formData);
   };
 
-  // const detectPlants = async (e: FormEvent) => {
-  //   console.log("here");
-  //   console.log(e)
-  // }
-
-  const postUpload = async (formData: FormData) => {
-    const files = formData.getAll("files");
-
-    if (files.length > 10) {
-      alert("Maximum of 10 images/videos allowed.");
-      setLoading(false);
-      return;
-    }
+  const detectPlants = async (formData: FormData) => {
+    setLoadingResult(true);
 
     const plantDetectionResponse = await fetch(`/api/plant-detection`, {
       method: "POST",
@@ -47,6 +54,21 @@ export default function UploadForm() {
     }
     setPlantDetectResults(plantResults);
 
+    setLoadingResult(false);
+  };
+
+  const postUpload = async (formData: FormData) => {
+    // setLoading(true);
+    const files = formData.getAll("files");
+
+    if (files.length > 10) {
+      alert("Maximum of 10 images/videos allowed.");
+      setLoading(false);
+      return;
+    }
+
+    if (detectChecked) detectPlants(formData);
+
     const maxUploadSize = 2000 * 1024 * 1024;
     for (let file of files) {
       file = file as File;
@@ -58,102 +80,128 @@ export default function UploadForm() {
     }
 
     formData.append("user_id", user!.id);
+  };
 
-    //ACTUAL FILE UPLOAD ================================================
-    // const response = await fetch("/api/posts", {
-    //   method: "POST",
-    //   body: formData,
-    // }).then((res) => res.json());
-
-    // console.log("response here");
-    // console.log(response);
-
-    // if (response.success) {
-    //   alert("Photo uploaded successfully.");
-    //   setLoading(false);
-    //   router.push("/");
-    // }
+  const handleCheckbox = (e: any) => {
+    setDetectChecked(!detectChecked);
+    console.log(e.target);
   };
 
   return (
-    <>
+    <div className="grid grid-cols-5 gap-4 shadow bg-white p-8 rounded-lg h-[656px] max-h-[565px]">
       <form
         action={handleFileSelect}
-        className="flex flex-col gap-4 text-left px-8 max-w-96"
+        className="col-span-2 bg-white p-4 rounded-md shadow shadow-slate-400 text-left px-8"
       >
         <label>
           <span>Upload a photo</span>
           <input
             type="file"
             name="files"
-            accept="image/*,video/*"
+            accept="image/jpeg,video/*,image/png"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             multiple
             required
           />
         </label>
-        {/* <button onClick={detectPlants} className="bg-lime-300 text-black inline-block rounded-md py-2 border-2 border-lime-500">Print results</button> */}
-        <label>
-          <span>Title</span>
-          <input type="text" name="title" maxLength={50} required />
+        <label className="block cursor-pointer mb-4">
+          <span>Plant Detection</span>
+          <input
+            type="checkbox"
+            value=""
+            className="appearance-none sr-only peer inline-block leading-tight"
+            onChange={handleCheckbox}
+            checked={detectChecked}
+          />
+          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700  peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+          <p className="text-sm">
+            <span className="text-black opacity-50 outline-none">
+              <span className="mr-1">&#x24D8;</span>Will automatically detect
+              the plant depicted in the uploaded image
+            </span>
+          </p>
         </label>
+
+        <label className="block text-left w-[100%]">
+          <span>Title</span>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            name="title"
+            placeholder="Title"
+            maxLength={50}
+            required
+          />
+        </label>
+
+        {/* <label>
+          <span>Body</span>
+          <textarea
+            name="body"
+            rows={5}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Body"
+            required
+          />
+        </label> */}
+
         <label>
           <span>Body</span>
-          <textarea name="body" rows={5} className="w-[100%]" required />
+          <TextArea
+            textValue={bodyText}
+            setTextValue={setBodyText}
+            name="body"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Body"
+            required={true}
+          />
         </label>
         <button
           type="submit"
-          className="border-2 border-gray-500 rounded-md w-[20%] mx-auto p-2 hover:bg-slate-400 transition disabled:text-gray-500 disabled:border-gray-300"
+          className="inline-block right-0 text-center border-2 text-green-700 border-green-700 rounded-md mx-auto p-2 hover:bg-green-600 hover:text-white transition disabled:text-gray-500 disabled:border-gray-300 disabled:bg-slate-200"
           disabled={loading}
         >
-          Submit
+          Create post
         </button>
-        {loading && (
-          <svg
-            version="1.1"
-            viewBox="-58 -58 116 116"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            width="32"
-            height="32"
-            className="mx-auto"
-          >
-            <g strokeLinecap="round" strokeWidth="15">
-              <path id="a" d="m0 35 0,14" />
-              <use transform="rotate(210)" xlinkHref="#a" stroke="#f0f0f0" />
-              <use transform="rotate(240)" xlinkHref="#a" stroke="#ebebeb" />
-              <use transform="rotate(270)" xlinkHref="#a" stroke="#d3d3d3" />
-              <use transform="rotate(300)" xlinkHref="#a" stroke="#bcbcbc" />
-              <use transform="rotate(330)" xlinkHref="#a" stroke="#a4a4a4" />
-              <use transform="rotate(0)" xlinkHref="#a" stroke="#8d8d8d" />
-              <use transform="rotate(30)" xlinkHref="#a" stroke="#757575" />
-              <use transform="rotate(60)" xlinkHref="#a" stroke="#5e5e5e" />
-              <use transform="rotate(90)" xlinkHref="#a" stroke="#464646" />
-              <use transform="rotate(120)" xlinkHref="#a" stroke="#2f2f2f" />
-              <use transform="rotate(150)" xlinkHref="#a" stroke="#171717" />
-              <use transform="rotate(180)" xlinkHref="#a" stroke="#000" />
-            </g>
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0 0 0"
-              to="360 0 0"
-              dur="1s"
-              repeatCount="indefinite"
-            />
-          </svg>
-        )}
+        {loading && <Loading />}
       </form>
-      {plantDetectResults.length !== 0 && (
-        <div className="w-[50%]">
-          {plantDetectResults.map((result: any, index: number) => {
+      <div className="col-span-1 flex-col justify-center items-center">
+        {loadingResult && (
+          <>
+            <Loading />
+            <p>Analyzing...</p>
+          </>
+        )}
+      </div>
+        <div className="col-span-2 overflow-scroll p-4">
+          {loadingResult && skeletonDiv}
+
+          {plantDetectResults.length !== 0 && plantDetectResults.map((result: any, index: number) => {
             return (
-              <div className="bg-white text-black" key={index}>
-                {`${result.species.scientificName} or ${result.species.commonNames[0]} has a score of ${result.score}`}
+              <div
+                className="bg-white text-black p-4 rounded-md shadow-md text-left px-8 mb-4 shadow-slate-400 hover:bg-slate-200 transition duration-150 flex flex-row hover:cursor-pointer"
+                key={index}
+                onClick={() => console.log(`${result.species.scientificName}`)}
+              >
+                <Image
+                  src={`${result.images[0].url.o}`}
+                  alt={`${result.species.scientificName}`}
+                  width="100"
+                  height="100"
+                  className="rounded-md h-auto inline-block w-[100px]"
+                />
+                <div className="flex-grow text-left flex flex-col pl-4">
+                  <span>
+                    {result.species.commonNames.length !== 0
+                      ? `${result.species.scientificName}, or "${result.species.commonNames[0]}"`
+                      : `${result.species.scientificName}`}
+                  </span>
+                  <p>Some information about the plant...</p>
+                </div>
               </div>
             );
           })}
         </div>
-      )}
-    </>
+    </div>
   );
 }
