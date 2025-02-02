@@ -173,10 +173,11 @@ export default function UploadForm() {
           </>
         )}
       </div>
-        <div className="col-span-2 overflow-scroll p-4">
-          {loadingResult && skeletonDiv}
+      <div className="col-span-2 overflow-scroll p-4">
+        {loadingResult && skeletonDiv}
 
-          {plantDetectResults.length !== 0 && plantDetectResults.map((result: any, index: number) => {
+        {plantDetectResults.length !== 0 &&
+          plantDetectResults.map((result: any, index: number) => {
             return (
               <div
                 className="bg-white text-black p-4 rounded-md shadow-md text-left px-8 mb-4 shadow-slate-400 hover:bg-slate-200 transition duration-150 flex flex-row hover:cursor-pointer"
@@ -186,6 +187,10 @@ export default function UploadForm() {
                 <Image
                   src={`${result.images[0].url.o}`}
                   alt={`${result.species.scientificName}`}
+                  style={{
+                    width: '100%',
+                    height: 'auto'
+                  }}
                   width="100"
                   height="100"
                   className="rounded-md h-auto inline-block w-[100px]"
@@ -201,7 +206,7 @@ export default function UploadForm() {
               </div>
             );
           })}
-        </div>
+      </div>
     </div>
   );
 }
