@@ -8,11 +8,11 @@ import { PlantDetectResult } from "@/app/types";
 import TextArea from "./TextArea";
 import Image from "next/image";
 import Loading from "./Loading";
-import PlantDetectSkeleton from "./Skeletons/PlantDetectSkeleton";
 import LoadingSkeleton from "./Skeletons/PlantDetectSkeleton";
 
 const skeletonDiv = (
   <>
+    <LoadingSkeleton />
     <LoadingSkeleton />
     <LoadingSkeleton />
     <LoadingSkeleton />
@@ -25,6 +25,7 @@ export default function UploadForm() {
   const [loadingResult, setLoadingResult] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [detectChecked, setDetectChecked] = useState<boolean>(false);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const [plantDetectResults, setPlantDetectResults] = useState<
     PlantDetectResult[]
   >([]);
@@ -38,6 +39,7 @@ export default function UploadForm() {
 
   const detectPlants = async (formData: FormData) => {
     setLoadingResult(true);
+    setPlantDetectResults([]);
 
     const plantDetectionResponse = await fetch(`/api/plant-detection`, {
       method: "POST",
@@ -88,7 +90,11 @@ export default function UploadForm() {
   };
 
   return (
-    <div className="grid grid-cols-5 gap-4 shadow bg-white p-8 rounded-lg h-[656px] max-h-[565px]">
+    <div
+      className={`grid grid-cols-5 gap-4 shadow bg-white p-8 rounded-lg h-[656px] max-h-[565px] ${
+        (loadingResult || plantDetectResults.length !== 0) && "col-cols-5"
+      } transition-all duration-300`}
+    >
       <form
         action={handleFileSelect}
         className="col-span-2 bg-white p-4 rounded-md shadow shadow-slate-400 text-left px-8"
@@ -116,8 +122,7 @@ export default function UploadForm() {
           <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700  peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
           <p className="text-sm">
             <span className="text-black opacity-50 outline-none">
-              <span className="mr-1">&#x24D8;</span>Will automatically detect
-              the plant depicted in the uploaded image
+              <span className="mr-1">&#x24D8;</span>Will detect the plant species
             </span>
           </p>
         </label>
@@ -165,31 +170,37 @@ export default function UploadForm() {
         </button>
         {loading && <Loading />}
       </form>
-      <div className="col-span-1 flex-col justify-center items-center">
-        {loadingResult && (
+      <div className="col-span-1 flex flex-col justify-center items-center">
+        {loadingResult ? (
           <>
             <Loading />
             <p>Analyzing...</p>
           </>
+        ) : (
+          plantDetectResults.length !== 0 && (
+            <h1 className="text-lg pl-4">Select a match</h1>
+          )
         )}
       </div>
-      <div className="col-span-2 overflow-scroll p-4">
+      <div className="col-span-2 overflow-scroll p-4 border-l-[1px] border-l-slate-400 border-opacity-30">
         {loadingResult && skeletonDiv}
 
         {plantDetectResults.length !== 0 &&
           plantDetectResults.map((result: any, index: number) => {
             return (
               <div
-                className="bg-white text-black p-4 rounded-md shadow-md text-left px-8 mb-4 shadow-slate-400 hover:bg-slate-200 transition duration-150 flex flex-row hover:cursor-pointer"
-                key={index}
-                onClick={() => console.log(`${result.species.scientificName}`)}
+                className={` text-black p-4 rounded-md shadow-md text-left px-4 mb-4 shadow-slate-400 hover:bg-slate-200 transition duration-150 flex flex-row hover:cursor-pointer ${
+                  selectedCard === index ? "bg-slate-200" : ""
+                }`}
+                key={JSON.stringify(result)}
+                onClick={() => setSelectedCard(index)}
               >
                 <Image
                   src={`${result.images[0].url.o}`}
                   alt={`${result.species.scientificName}`}
                   style={{
-                    width: '100%',
-                    height: 'auto'
+                    maxWidth: "50%",
+                    height: "auto",
                   }}
                   width="100"
                   height="100"
