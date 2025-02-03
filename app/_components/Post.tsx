@@ -211,7 +211,7 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-slate-300 border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col shadow-md">
+      <div className="border-slate-300 border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] lg:min-w-[600px] md:min-w-[600px] flex flex-col shadow-md">
         <p className="float-left my-4 text-2xl text-left">{post.title}</p>
         <div
           className={`relative ${
@@ -242,6 +242,11 @@ export default function Post({
                   post.image_refs![currentImageIndex]
                 }` || ""
               }
+              style={{
+                width: "100%",
+                maxWidth: "800px",
+                height: "auto"
+              }}
               height="0"
               width="1000"
               alt="Flower?"

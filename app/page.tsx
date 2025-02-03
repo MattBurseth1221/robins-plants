@@ -15,7 +15,7 @@ export default async function Page() {
   return (
     <UserProvider user={user}>
       <main className="flex min-h-screen">
-        <div className="pt-5 flex flex-col border-r-[1px] border-slate-300 fixed h-[100vh] px-5">
+        <div className="pt-5 flex flex-col fixed h-[100vh] px-5">
           
           <MainNav active={"Home"} />
           {/* <div className="flex-grow">
@@ -24,7 +24,7 @@ export default async function Page() {
           
         </div>
 
-        <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
+        <div className="lg:p-10 md:p-10 flex flex-col text-center sm:w-[100%] lg:w-[60%] md:w-[60%] mx-auto items-center">
           <PageTitle title="- Robin Plants -" />
 
           <Suspense fallback={<div>Loading posts...</div>}>

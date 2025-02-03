@@ -1,5 +1,7 @@
 "use client";
 
+import "@/app/globals.css";
+
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { UserContext } from "../_providers/UserProvider";
@@ -190,7 +192,7 @@ export default function UploadForm() {
             return (
               <div
                 className={` text-black p-4 rounded-md shadow-md text-left px-4 mb-4 shadow-slate-400 hover:bg-slate-200 transition duration-150 flex flex-row hover:cursor-pointer ${
-                  selectedCard === index ? "bg-slate-200" : ""
+                  selectedCard === index ? "bg-slate-200 wiggle 1s ease-in-out infinite" : ""
                 }`}
                 key={JSON.stringify(result)}
                 onClick={() => setSelectedCard(index)}
@@ -202,6 +204,7 @@ export default function UploadForm() {
                     maxWidth: "50%",
                     height: "auto",
                   }}
+                  priority={index in [0, 1, 2, 3]}
                   width="100"
                   height="100"
                   className="rounded-md h-auto inline-block w-[100px]"

@@ -31,12 +31,11 @@ body {
 } */
 
 Form label {
-  
   width: 100%;
 }
 
-Form input, Form textarea {
-
+Form input,
+Form textarea {
   margin-bottom: 1rem;
   border-radius: 4px;
   padding: 4px;
@@ -46,5 +45,15 @@ Form input, Form textarea {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
   }
 }

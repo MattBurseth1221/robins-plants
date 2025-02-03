@@ -133,7 +133,7 @@ export default function PostContainer() {
     </div>
     
   ) : posts.length > 0 ? (
-    <>
+    <div className="sm:w-[100%]">
       <div className="">
         <select
           value={filters.sortType}
@@ -155,7 +155,7 @@ export default function PostContainer() {
           />
         </button>
       </div>
-      <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
+      <div className="lg:w-[75%] sm:w-[100%] max-w-[800px] flex flex-col items-center p-8 rounded-md mx-auto">
         {posts.map((post: PostType) => {
           return (
             <PostProvider key={post.post_id} post={post}>
@@ -164,7 +164,7 @@ export default function PostContainer() {
           );
         })}
       </div>
-    </>
+    </div>
   ) : (
     <div className="w-[50%] ">
       <div>No posts found.</div>
