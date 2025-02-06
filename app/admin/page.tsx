@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
 import MainNav from "../_components/MainNav";
 import PageTitle from "../_components/PageTitle";
-import ProfileBar from "../_components/ProfileBar";
 import { validateRequest } from "../_lib/auth";
 import UploadForm from "../_components/UploadForm";
-import { userIsAdmin } from "../_utils/helper-functions";
 import UserProvider from "../_providers/UserProvider";
 
 export default async function Page() {
