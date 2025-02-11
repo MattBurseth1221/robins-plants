@@ -32,6 +32,7 @@ export default function UploadForm() {
     PlantDetectResult[]
   >([]);
   const [bodyText, setBodyText] = useState<string>("");
+  const [plantDetailError, setPlantDetailError] = useState<string>("");
 
   const handleFileSelect = (formData: FormData) => {
     if (!user) router.push("/login");
@@ -61,6 +62,24 @@ export default function UploadForm() {
     setLoadingResult(false);
   };
 
+  const retrievePlantDetails = async () => {
+    if (plantDetectResults.length === 0 || selectedCard === null) {
+      setPlantDetailError("Select a plant card");
+      return;
+    }
+
+    const response = await fetch(`/api/openai`, {
+      method: "POST",
+      body: JSON.stringify({ plant: plantDetectResults[selectedCard].species.scientificName })
+    }).then((res) => res.json())
+    .catch((e) => console.log(e));
+
+    if (response.error) return;
+
+    const parsedResult = response.success;
+    console.log(parsedResult);
+  };
+
   const postUpload = async (formData: FormData) => {
     // setLoading(true);
     const files = formData.getAll("files");
@@ -88,7 +107,6 @@ export default function UploadForm() {
 
   const handleCheckbox = (e: any) => {
     setDetectChecked(!detectChecked);
-    console.log(e.target);
   };
 
   return (
@@ -184,7 +202,11 @@ export default function UploadForm() {
             </>
           ) : (
             plantDetectResults.length !== 0 && (
-              <h1 className="text-lg pl-4">Select a match</h1>
+              <div className="flex flex-col justify-center items-center">
+                <h1 className="text-lg">Select a match</h1>
+                <button onClick={retrievePlantDetails} className="p-2 bg-slate-300 hover:bg-slate-200 transition duration-150 rounded-md border-[1px] border-slate-600" >Retrieve details</button>
+                <span className="text-red-500 mt-2">{plantDetailError}</span>
+              </div>
             )
           )}
         </div>

@@ -19,3 +19,8 @@ export interface PlantDetectResult {
   species: Species;
 }
 
+export interface PillType {
+  type: string;
+  text: string;
+}
+
