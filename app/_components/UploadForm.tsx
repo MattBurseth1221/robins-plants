@@ -70,9 +70,12 @@ export default function UploadForm() {
 
     const response = await fetch(`/api/openai`, {
       method: "POST",
-      body: JSON.stringify({ plant: plantDetectResults[selectedCard].species.scientificName })
-    }).then((res) => res.json())
-    .catch((e) => console.log(e));
+      body: JSON.stringify({
+        plant: plantDetectResults[selectedCard].species.scientificName,
+      }),
+    })
+      .then((res) => res.json())
+      .catch((e) => console.log(e));
 
     if (response.error) return;
 
@@ -127,7 +130,7 @@ export default function UploadForm() {
             type="file"
             name="files"
             accept="image/jpeg,video/*,image/png"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline file:rounded-full file:shadow-md file:bg-green-500 file:border-0 file:text-white file:text-sm file:py-2 file:px-4 file:font-serif hover:file:bg-green-400 cursor-pointer"
             multiple
             required
           />
@@ -204,7 +207,12 @@ export default function UploadForm() {
             plantDetectResults.length !== 0 && (
               <div className="flex flex-col justify-center items-center">
                 <h1 className="text-lg">Select a match</h1>
-                <button onClick={retrievePlantDetails} className="p-2 bg-slate-300 hover:bg-slate-200 transition duration-150 rounded-md border-[1px] border-slate-600" >Retrieve details</button>
+                <button
+                  onClick={retrievePlantDetails}
+                  className="p-2 bg-slate-300 hover:bg-slate-200 transition duration-150 rounded-md border-[1px] border-slate-600"
+                >
+                  Retrieve details
+                </button>
                 <span className="text-red-500 mt-2">{plantDetailError}</span>
               </div>
             )

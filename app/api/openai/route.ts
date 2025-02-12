@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
         {
           role: "system",
           content:
-            "Produce the corresponding plant information based on the inputted species.",
+            "You are a highly respected botanist and biologist with a vast knowledge of houseplants/garden maintenance. Produce the corresponding plant information based on the inputted species.",
         },
         {
           role: "user",

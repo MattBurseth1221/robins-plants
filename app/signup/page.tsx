@@ -15,11 +15,12 @@ export default async function Page() {
   if (user) {
     return redirect("/");
   }
+
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
-      <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg  bg-cover">
+      <div className="bg-white flex flex-col items-center w-[700px] max-w-[700px] justify-center mx-auto  rounded-xl p-8">
         <h1 className="text-xl mb-2">Create an account</h1>
-        <Form action={signup}>
+        <Form action={signup} page="signup">
           {/* <div className="flex justify-between"> */}
           {/* <div>
             <label htmlFor="firstname">First name</label>
@@ -45,14 +46,14 @@ export default async function Page() {
           </div> */}
           {/* </div> */}
 
-          <div className="flex flex-col justify-center text-left items-center">
+          <div className="flex flex-col justify-center text-left items-center w-full max-w-[400px]">
             <label htmlFor="firstname">First name</label>
             <input
               name="firstname"
               id="firstname"
               minLength={2}
               maxLength={32}
-              className=""
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               // className="w-[60%] focus:p-2 transition-all duration-150"
             />
             <br />
@@ -62,20 +63,29 @@ export default async function Page() {
               id="lastname"
               minLength={2}
               maxLength={32}
-              // className="w-[60%]"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <label htmlFor="username">Username</label>
-            <input name="username" id="username" className="" />
+            <input
+              name="username"
+              id="username"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
             <br />
             <label htmlFor="email">Email</label>
-            <input type="email" name="email" id="email" className="" />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
             <br />
             <label htmlFor="password">Password</label>
             <input
               type="password"
               name="password"
               id="password"
-              className=""
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <br />
             <label htmlFor="confirm-password">Confirm Password</label>
@@ -83,7 +93,7 @@ export default async function Page() {
               type="password"
               name="confirm-password"
               id="password"
-              className=""
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <br />
           </div>
