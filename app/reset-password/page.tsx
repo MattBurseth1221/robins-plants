@@ -60,7 +60,7 @@ export default function Page() {
 
     if (passwordChangeResponse.error) {
       setDisplayMessage(
-        <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
+        <p className="mt-4 text-green-600 rounded-md border-[1px] border-green-600 bg-green-100 p-2 w-[100%] text-center">
           If the username/email exists, then a password change email has been
           sent.
         </p>
@@ -78,13 +78,11 @@ export default function Page() {
     }).then((res) => res.json());
 
     setDisplayMessage(
-      <p className="mt-4 text-green-700 outline-black w-[50%] text-center">
+      <p className="mt-4 text-green-600 rounded-md border-[1px] border-green-600 bg-green-100 p-2 w-[100%] text-center">
         If the username/email exists, then a password change email has been
         sent.
       </p>
     );
-
-    
   }
 
   async function setNewPassword() {
@@ -92,7 +90,7 @@ export default function Page() {
 
     if (passwordValid.error) {
       setDisplayMessage(
-        <p className="mt-4 text-red-600 outline-black">{passwordValid.error}</p>
+        <p className="mt-4 text-red-500 rounded-md border-[1px] border-red-500 bg-red-100 p-2">{passwordValid.error}</p>
       );
       return;
     }
@@ -112,7 +110,7 @@ export default function Page() {
 
     if (passwordChangeResponse.error) {
       setDisplayMessage(
-        <p className="mt-4 text-red-600 outline-black">
+        <p className="mt-4 text-red-500 rounded-md border-[1px] border-red-500 bg-red-100 p-2">
           {passwordChangeResponse.error}
         </p>
       );
@@ -120,7 +118,7 @@ export default function Page() {
     }
 
     setDisplayMessage(
-      <p className="mt-4 text-green-700 outline-black">
+      <p className="text-green-600 rounded-md border-[1px] border-green-600 bg-green-100 p-2 mt-4">
         Password changed! Redirecting...
       </p>
     );
@@ -131,11 +129,10 @@ export default function Page() {
   }
 
   return !isChangingPassword ? (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
-      <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
-        <h1 className="text-xl mb-4">Reset Password</h1>
-
-        <h2 className="float-left mb-2">Enter your email/username</h2>
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
+      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-8 md:p-8 lg:p-10">
+        <h1 className="text-xl md:text-2xl mb-4">Reset Password</h1>
+        <h2 className="text-left mb-2">Enter your email/username</h2>
         <input
           type="text"
           name="username"
@@ -144,13 +141,24 @@ export default function Page() {
           onChange={(e) => {
             setUsernameValue(e.target.value);
           }}
-          className="border-[1px] border-gray-400 p-2 w-[50%] rounded-md"
+          className="border-[1px] border-gray-400 p-2 w-full sm:w-[50%] rounded-md disabled:text-opacity-30"
         />
         {!isSendEmailButtonHidden && (
           <button
+          id="email-button"
             onClick={() => {
-              setIsSendEmailButtonHidden(true);
-              sendPasswordResetEmail();
+              if (usernameValue && usernameValue !== "") {
+                document.getElementById("email-button")?.setAttribute("disabled", "true");
+                document.getElementById("username")?.setAttribute("disabled", "true");
+                setIsSendEmailButtonHidden(true);
+                sendPasswordResetEmail();
+              } else {
+                setDisplayMessage(
+                  <p className="text-red-500 rounded-md border-[1px] border-red-500 bg-red-100 mt-4 p-2">
+                    Username field empty
+                  </p>
+                );
+              }
             }}
             className="w-40 mt-4 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
           >
@@ -161,6 +169,35 @@ export default function Page() {
       </div>
     </main>
   ) : (
+    // <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
+    //   <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
+    //     <h1 className="text-xl mb-4">Reset Password</h1>
+
+    //     <h2 className="float-left mb-2">Enter your email/username</h2>
+    //     <input
+    //       type="text"
+    //       name="username"
+    //       id="username"
+    //       value={usernameValue}
+    //       onChange={(e) => {
+    //         setUsernameValue(e.target.value);
+    //       }}
+    //       className="border-[1px] border-gray-400 p-2 w-[50%] rounded-md"
+    //     />
+    //     {!isSendEmailButtonHidden && (
+    //       <button
+    //         onClick={() => {
+    //           setIsSendEmailButtonHidden(true);
+    //           sendPasswordResetEmail();
+    //         }}
+    //         className="w-40 mt-4 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+    //       >
+    //         Send email
+    //       </button>
+    //     )}
+    //     {displayMessage}
+    //   </div>
+    // </main>
     <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
       <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
         <h1 className="mb-4 text-xl">The link worked.</h1>

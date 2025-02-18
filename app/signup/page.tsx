@@ -17,11 +17,11 @@ export default async function Page() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg  bg-cover">
-      <div className="bg-white flex flex-col items-center  justify-center mx-auto  rounded-xl p-8 px-16">
-        <h1 className="text-xl mb-2">Create an account</h1>
-        <Form action={signup} page="signup">
-          <div className="flex flex-col justify-center text-left items-center w-full max-w-[400px]">
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
+      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-6 md:p-8 lg:p-10">
+        <h1 className="text-xl md:text-2xl mb-2">Create an account</h1>
+        <Form action={signup} page="signup" >
+          <div className="flex flex-col justify-center text-left items-center w-full max-w-md">
             <label htmlFor="firstname">First name</label>
             <input
               name="firstname"
@@ -29,9 +29,7 @@ export default async function Page() {
               minLength={2}
               maxLength={32}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              // className="w-[60%] focus:p-2 transition-all duration-150"
             />
-            <br />
             <label htmlFor="lastname">Last name</label>
             <input
               name="lastname"
@@ -46,7 +44,6 @@ export default async function Page() {
               id="username"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <br />
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -54,7 +51,6 @@ export default async function Page() {
               id="email"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <br />
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -62,23 +58,21 @@ export default async function Page() {
               id="password"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <br />
             <label htmlFor="confirm-password">Confirm Password</label>
             <input
               type="password"
               name="confirm-password"
-              id="password"
+              id="confirm-password"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <br />
           </div>
-          <div className="flex justify-center gap-8">
-            <button className="block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 w-full max-w-md">
+            <button className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
               Create Account
             </button>
             <Link
               href="/login"
-              className="block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+              className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 text-center hover:bg-gray-200 transition"
             >
               Back to Login
             </Link>
