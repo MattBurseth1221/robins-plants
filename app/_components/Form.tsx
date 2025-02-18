@@ -83,10 +83,10 @@ export function Form({
 
   return (
     <form
-      className="mb-2 mt-4 flex flex-col justify-center items-center w-[100%] max-w-[400px]"
+      className="mb-2 mt-4 flex flex-col justify-center items-center w-[100%] max-w-md"
       action={formAction}
       onChange={(e: any) => {
-        if (e.target.id === "password") {
+        if (page !== "login" && e.target.id === "password") {
           setPasswordValue(e.target.value);
           let result = zxcvbn(e.target.value);
           setPasswordStrength(result.score);

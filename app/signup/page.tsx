@@ -18,7 +18,7 @@ export default async function Page() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
-      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-6 md:p-8 lg:p-10">
+      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-6 md:p-8 lg:p-8">
         <h1 className="text-xl md:text-2xl mb-2">Create an account</h1>
         <Form action={signup} page="signup" >
           <div className="flex flex-col justify-center text-left items-center w-full max-w-md">
@@ -66,8 +66,8 @@ export default async function Page() {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 w-full max-w-md">
-            <button className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
+          <div className="flex flex-col sm:flex-row justify-between w-full max-w-md">
+            <button className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl px-8 p-2 hover:bg-gray-200 transition">
               Create Account
             </button>
             <Link
