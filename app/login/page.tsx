@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 import { lucia, validateRequest } from "../_lib/auth";
 import { redirect } from "next/navigation";
 import { Form } from "../_components/Form";
-import crypto from "node:crypto";
 
 import type { DatabaseUser } from "../_lib/db";
 import type { ActionResult } from "../_components/Form";
@@ -21,8 +20,8 @@ export default async function Page() {
   }
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
-      <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto rounded-xl p-8">
-        <h1 className="text-xl">Sign in</h1>
+      <div className="bg-white flex flex-col items-center justify-center mx-auto rounded-xl p-8 px-16">
+        <h1 className="text-xl">Log in</h1>
         <Form action={login} page={"login"}>
           <label htmlFor="username">Email/Username</label>
           <input name="username" id="username" placeholder="Email" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
@@ -31,7 +30,7 @@ export default async function Page() {
           <input type="password" name="password" id="password" placeholder="Password" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
           <br />
           {/* <div className="w-full"> */}
-            <button className="inline-block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
+            <button className="inline-block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 w-[100%] mt-2 hover:bg-gray-200 transition">
             Log in
           </button>
           {/* </div> */}

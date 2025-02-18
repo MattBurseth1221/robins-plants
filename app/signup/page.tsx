@@ -18,34 +18,9 @@ export default async function Page() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg  bg-cover">
-      <div className="bg-white flex flex-col items-center w-[700px] max-w-[700px] justify-center mx-auto  rounded-xl p-8">
+      <div className="bg-white flex flex-col items-center  justify-center mx-auto  rounded-xl p-8 px-16">
         <h1 className="text-xl mb-2">Create an account</h1>
         <Form action={signup} page="signup">
-          {/* <div className="flex justify-between"> */}
-          {/* <div>
-            <label htmlFor="firstname">First name</label>
-            <input
-              name="firstname"
-              id="firstname"
-              minLength={2}
-              maxLength={32}
-              className="w-[60%] focus:p-2 transition-all duration-150"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="lastname">Last name</label>
-            <input
-              name="lastname"
-              id="lastname"
-              minLength={2}
-              maxLength={32}
-              className="w-[60%]"
-            />
-            <br />
-          </div> */}
-          {/* </div> */}
-
           <div className="flex flex-col justify-center text-left items-center w-full max-w-[400px]">
             <label htmlFor="firstname">First name</label>
             <input
