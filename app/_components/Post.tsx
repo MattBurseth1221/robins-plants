@@ -106,7 +106,7 @@ export default function Post({
           setComments(data.data);
         })
       } catch (e) {
-        console.log("Unknown error occurred when fetching comments.");
+        console.log("Error fetching comments.");
         return;
       }
     }
@@ -190,7 +190,7 @@ export default function Post({
         console.log(deleteLikeResponse.success);
         setNumLikes(numLikes - 1);
       } else {
-        alert("Something went wrong.");
+        alert("Error liking post.");
       }
     }
 
@@ -261,7 +261,7 @@ export default function Post({
               }}
               height="0"
               width="1000"
-              alt="Flower?"
+              alt="A really pretty flower..."
               className="rounded-md mx-auto border-2 border-black block"
             />
           )}
