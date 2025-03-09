@@ -40,19 +40,26 @@ export default function UploadForm() {
 
     formData.append("user_id", user!.id);
 
-      const response = await fetch("/api/posts", {
-        method: "POST",
-        body: formData,
-      }).then((res) => res.json());
-  
-      console.log("response here");
-      console.log(response);
-  
-      if (response.success) {
-        alert("Photo uploaded successfully.");
-        setLoading(false);
-        router.push("/");
-      }
+
+    const response = await fetch("/api/posts", {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+
+    console.log("response here");
+    console.log(response);
+
+    if (response.success) {
+      alert("Photo uploaded successfully.");
+      setLoading(false);
+      router.push("/");
+    }
+  };
+
+  const handleCheckbox = (e: any) => {
+    setDetectChecked(!detectChecked);
+=======
+
   };
 
   return (
