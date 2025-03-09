@@ -29,9 +29,6 @@ import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
 import Link from "next/link";
 
-import { PillType } from "../types";
-import PostPill from "./PostPill";
-
 export type CommentContextType = {
   comments: CommentType[];
   setComments: Function;
@@ -60,7 +57,6 @@ export default function Post({
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const [postPills, setPostPills] = useState<PillType[]>([{ type: "genus", text: "Zinnia" }, { type: "postType", text: "Progress" }]);
 
   const UpdateDialogProps = {
     editingPost,
@@ -106,7 +102,7 @@ export default function Post({
           setComments(data.data);
         })
       } catch (e) {
-        console.log("Error fetching comments.");
+        console.log("Unknown error occurred when fetching comments.");
         return;
       }
     }
@@ -190,7 +186,7 @@ export default function Post({
         console.log(deleteLikeResponse.success);
         setNumLikes(numLikes - 1);
       } else {
-        alert("Error liking post.");
+        alert("Something went wrong.");
       }
     }
 
@@ -224,7 +220,6 @@ export default function Post({
           )
         })}
         </div> */}
-        
         <div
           className={`relative ${
             post.image_refs.length > 1 ? "h-[600px]" : ""
@@ -254,14 +249,9 @@ export default function Post({
                   post.image_refs![currentImageIndex]
                 }` || ""
               }
-              style={{
-                width: "100%",
-                maxWidth: "800px",
-                height: "auto"
-              }}
               height="0"
               width="1000"
-              alt="A really pretty flower..."
+              alt="Flower?"
               className="rounded-md mx-auto border-2 border-black block"
             />
           )}
