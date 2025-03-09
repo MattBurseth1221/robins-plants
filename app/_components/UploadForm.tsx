@@ -40,36 +40,20 @@ export default function UploadForm() {
 
     formData.append("user_id", user!.id);
 
-    const postUploadResponse = await fetch("/api/posts", {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-
-    if (postUploadResponse.success) {
-      alert("Post created succesfully. Redirecting...")
-      router.push("/");
-    } else {
-      alert("Something went wrong.");
-    }
-
-    setLoading(false);
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        body: formData,
+      }).then((res) => res.json());
+  
+      console.log("response here");
+      console.log(response);
+  
+      if (response.success) {
+        alert("Photo uploaded successfully.");
+        setLoading(false);
+        router.push("/");
+      }
   };
-
-    const response = await fetch("/api/posts", {
-      method: "POST",
-      body: formData,
-    }).then((res) => res.json());
-
-    console.log("response here");
-    console.log(response);
-
-    if (response.success) {
-      alert("Photo uploaded successfully.");
-      setLoading(false);
-      router.push("/");
-    }
-  }
 
   return (
     <form action={handleFileSelect} className="flex flex-col gap-4">
