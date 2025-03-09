@@ -1,7 +1,6 @@
 import MainNav from "@/app/_components/MainNav";
 import PageTitle from "@/app/_components/PageTitle";
 import ProfileContainer from "@/app/_components/ProfileContainer";
-import { GetServerSidePropsContext } from "next";
 
 export default async function ProfilePage(context: any) {
   const params = await context.params;
@@ -25,9 +24,7 @@ export default async function ProfilePage(context: any) {
           <>
             <PageTitle title={`- ${params!.username}'s Profile -`} />
 
-            <ProfileContainer username={params!.username}>
-              
-            </ProfileContainer>
+            <ProfileContainer username={params!.username} />
           </>
         )}
       </div>

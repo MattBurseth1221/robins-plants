@@ -15,85 +15,64 @@ export default async function Page() {
   if (user) {
     return redirect("/");
   }
+
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
-      <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
-        <h1 className="text-xl mb-2">Create an account</h1>
-        <Form action={signup}>
-          {/* <div className="flex justify-between"> */}
-          {/* <div>
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
+      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-6 md:p-8 lg:p-8">
+        <h1 className="text-xl md:text-2xl mb-2">Create an account</h1>
+        <Form action={signup} page="signup" >
+          <div className="flex flex-col justify-center text-left items-center w-full max-w-md">
             <label htmlFor="firstname">First name</label>
             <input
               name="firstname"
               id="firstname"
               minLength={2}
               maxLength={32}
-              className="w-[60%] focus:p-2 transition-all duration-150"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-          </div>
-
-          <div>
             <label htmlFor="lastname">Last name</label>
             <input
               name="lastname"
               id="lastname"
               minLength={2}
               maxLength={32}
-              className="w-[60%]"
-            />
-            <br />
-          </div> */}
-          {/* </div> */}
-
-          <div className="flex flex-col justify-center text-left items-center">
-            <label htmlFor="firstname">First name</label>
-            <input
-              name="firstname"
-              id="firstname"
-              minLength={2}
-              maxLength={32}
-              className=""
-              // className="w-[60%] focus:p-2 transition-all duration-150"
-            />
-            <br />
-            <label htmlFor="lastname">Last name</label>
-            <input
-              name="lastname"
-              id="lastname"
-              minLength={2}
-              maxLength={32}
-              // className="w-[60%]"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <label htmlFor="username">Username</label>
-            <input name="username" id="username" className="" />
-            <br />
+            <input
+              name="username"
+              id="username"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
             <label htmlFor="email">Email</label>
-            <input type="email" name="email" id="email" className="" />
-            <br />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
             <label htmlFor="password">Password</label>
             <input
               type="password"
               name="password"
               id="password"
-              className=""
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <br />
             <label htmlFor="confirm-password">Confirm Password</label>
             <input
               type="password"
               name="confirm-password"
-              id="password"
-              className=""
+              id="confirm-password"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <br />
           </div>
-          <div className="flex justify-center gap-8">
-            <button className="block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">
+          <div className="flex flex-col sm:flex-row justify-between w-full max-w-md">
+            <button className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl px-8 p-2 hover:bg-gray-200 transition">
               Create Account
             </button>
             <Link
               href="/login"
-              className="block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition"
+              className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 text-center hover:bg-gray-200 transition"
             >
               Back to Login
             </Link>
