@@ -18,6 +18,8 @@ export default function UploadForm() {
   };
 
   const postUpload = async (formData: FormData) => {
+    setLoading(true);
+        
     const files = formData.getAll("files");
 
     if (files.length > 10) {
@@ -37,6 +39,22 @@ export default function UploadForm() {
     }
 
     formData.append("user_id", user!.id);
+
+    const postUploadResponse = await fetch("/api/posts", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+
+    if (postUploadResponse.success) {
+      alert("Post created succesfully. Redirecting...")
+      router.push("/");
+    } else {
+      alert("Something went wrong.");
+    }
+
+    setLoading(false);
+  };
 
     const response = await fetch("/api/posts", {
       method: "POST",
