@@ -29,9 +29,6 @@ import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
 import Link from "next/link";
 
-import { PillType } from "../types";
-import PostPill from "./PostPill";
-
 export type CommentContextType = {
   comments: CommentType[];
   setComments: Function;
@@ -60,7 +57,6 @@ export default function Post({
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const [postPills, setPostPills] = useState<PillType[]>([{ type: "genus", text: "Zinnia" }, { type: "postType", text: "Progress" }]);
 
   const UpdateDialogProps = {
     editingPost,
@@ -106,7 +102,7 @@ export default function Post({
           setComments(data.data);
         })
       } catch (e) {
-        console.log("Error fetching comments.");
+        console.log("Unknown error occurred when fetching comments.");
         return;
       }
     }
@@ -190,7 +186,7 @@ export default function Post({
         console.log(deleteLikeResponse.success);
         setNumLikes(numLikes - 1);
       } else {
-        alert("Error liking post.");
+        alert("Something went wrong.");
       }
     }
 
@@ -215,16 +211,8 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-slate-300 border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] lg:min-w-[600px] md:min-w-[600px] flex flex-col shadow-md">
-        <p className="float-left mt-4 text-2xl text-left">{post.title}</p>
-        <div className="flex flex-row">
-          {postPills.map((pill: PillType, index: number) => {
-          return (
-            <PostPill key={ index } type={ pill.type } text={ pill.text } />
-          )
-        })}
-        </div>
-        
+      <div className="border-slate-300 border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col shadow-md">
+        <p className="float-left my-4 text-2xl text-left">{post.title}</p>
         <div
           className={`relative ${
             post.image_refs.length > 1 ? "h-[600px]" : ""
@@ -254,14 +242,9 @@ export default function Post({
                   post.image_refs![currentImageIndex]
                 }` || ""
               }
-              style={{
-                width: "100%",
-                maxWidth: "800px",
-                height: "auto"
-              }}
               height="0"
               width="1000"
-              alt="A really pretty flower..."
+              alt="Flower?"
               className="rounded-md mx-auto border-2 border-black block"
             />
           )}

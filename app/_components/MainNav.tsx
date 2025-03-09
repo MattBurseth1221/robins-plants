@@ -1,10 +1,11 @@
 import NavItem from "./NavItem";
 import { validateRequest } from "../_lib/auth";
+import { userIsAdmin } from "../_utils/helper-functions";
+import { useRouter } from "next/navigation";
 import ProfileBar from "./ProfileBar";
 
-export default async function MainNav({ active }: { active: string }) {
+export default async function MainNav({ active }: {active: string}) {
   const { user } = await validateRequest();
-
   //const router = useRouter();
 
   // async function logout() {
@@ -17,32 +18,28 @@ export default async function MainNav({ active }: { active: string }) {
   // }
 
   return (
-    <div className="w-52 hidden lg:block">
-      <nav className="">
-        <ul className="">
-          <NavItem
-            linkRedirect="/"
-            itemName="Home"
-            active={active === "Home"}
-          />
-          <NavItem
-            linkRedirect="/directory"
-            itemName="Directory"
-            active={active === "Directory"}
-          />
-          <NavItem
-            linkRedirect="/about"
-            itemName="About"
-            active={active === "About"}
-          />
-          {/* {userIsAdmin(user) && (
+    <>
+    <nav className="w-52">
+      <ul className="">
+        <NavItem linkRedirect="/" itemName="Home" active={active === "Home"} />
+        <NavItem
+          linkRedirect="/directory"
+          itemName="Directory"
+          active={active === "Directory"}
+        />
+        <NavItem
+          linkRedirect="/about"
+          itemName="About"
+          active={active === "About"}
+        />
+        {/* {userIsAdmin(user) && (
           <NavItem
             linkRedirect="/admin"
             itemName="Create Post"
             active={active === "Admin"}
           />
         )} */}
-          <NavItem
+        <NavItem
             linkRedirect="/admin"
             itemName="Create Post"
             active={active === "Admin"}
@@ -52,9 +49,10 @@ export default async function MainNav({ active }: { active: string }) {
             itemName="Profile"
             active={active === "Profile"}
           />
-        </ul>
-      </nav>
-      <ProfileBar />
-    </div>
+          
+      </ul>
+    </nav>
+    <ProfileBar />
+    </>
   );
 }
