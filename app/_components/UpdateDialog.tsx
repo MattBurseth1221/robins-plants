@@ -95,8 +95,7 @@ export default function UpdateDialog({
     <Dialog
       open={editingPost}
       onClose={() => setEditingPost(!editingPost)}
-      transition
-      className="fixed inset-0 transition duration-[500] ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+      className="relative z-50"
     >
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
         <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md absolute">
