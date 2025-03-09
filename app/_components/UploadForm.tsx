@@ -58,8 +58,6 @@ export default function UploadForm() {
 
   const handleCheckbox = (e: any) => {
     setDetectChecked(!detectChecked);
-=======
-
   };
 
   return (
