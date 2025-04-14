@@ -106,6 +106,21 @@ export default function UploadForm() {
     }
 
     formData.append("user_id", user!.id);
+
+    const response = await fetch("/api/posts", {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+
+    if (response.error) {
+      alert("Error uploading files. Please try again.");
+      setLoading(false);
+      return;
+    }
+    if (response.success) {
+      alert("Files uploaded successfully.");
+      router.push("/");
+    }
   };
 
   const handleCheckbox = (e: any) => {
@@ -140,6 +155,7 @@ export default function UploadForm() {
           <input
             type="checkbox"
             value=""
+            disabled
             className="appearance-none sr-only peer inline-block leading-tight"
             onChange={handleCheckbox}
             checked={detectChecked}
@@ -148,7 +164,7 @@ export default function UploadForm() {
           <p className="text-sm">
             <span className="text-black opacity-50 outline-none">
               <span className="mr-1">&#x24D8;</span>Will detect the plant
-              species
+              species in future releases
             </span>
           </p>
         </label>
