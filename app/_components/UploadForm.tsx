@@ -168,7 +168,7 @@ export default function UploadForm() {
           <p className="text-sm">
             <span className="text-black opacity-50 outline-none">
               <span className="mr-1">&#x24D8;</span>Will detect the plant
-              species in future releases.
+              species in future releases
             </span>
           </p>
         </label>
