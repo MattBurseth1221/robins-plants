@@ -84,7 +84,7 @@ export default function UploadForm() {
   };
 
   const postUpload = async (formData: FormData) => {
-    // setLoading(true);
+    setLoading(true);
     const files = formData.getAll("files");
 
     if (files.length > 10) {
@@ -107,20 +107,24 @@ export default function UploadForm() {
 
     formData.append("user_id", user!.id);
 
-    const response = await fetch("/api/posts", {
+    const postUploadResponse = await fetch(`/api/posts`, {
       method: "POST",
       body: formData,
-    }).then((res) => res.json());
+    }).then((res) => res.json())
+    .catch((e) => console.log(e));
 
-    if (response.error) {
-      alert("Error uploading files. Please try again.");
+    if (postUploadResponse.error) {
+      alert("Post was not created.");
       setLoading(false);
       return;
     }
-    if (response.success) {
-      alert("Files uploaded successfully.");
+    if (postUploadResponse.success) {
+      alert("Post created. Redirecting...");
       router.push("/");
+      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   const handleCheckbox = (e: any) => {

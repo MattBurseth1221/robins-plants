@@ -48,18 +48,18 @@ export default function DeleteDialog({
   return (
     <Dialog
       open={showDeleteCommentModal}
-      onClose={() => setShowDeleteCommentModal(!showDeleteCommentModal)} 
-      transition 
-      className="fixed inset-0 transition duration-[500] ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+      onClose={() => setShowDeleteCommentModal(!showDeleteCommentModal)}
+      className="relative z-50"
     >
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
         <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
-          <DialogTitle className="font-bold">Delete post...</DialogTitle>
+          <DialogTitle className="font-bold">Delete post?</DialogTitle>
           <Description>
             This will (semi) permanently delete the comment.
           </Description>
           <p>
-            Are you sure you want to delete?
+            Are you sure you want to delete this comment? It will be a pain in the
+            ass to put it back up again...
           </p>
           <div className="flex gap-4">
             <button
