@@ -106,7 +106,22 @@ export default function UploadForm() {
     }
 
     formData.append("user_id", user!.id);
-  };
+
+    //upload the post
+    const response = await fetch("/api/posts", {
+      method: "POST",
+      body: formData,
+  }).then((res) => res.json());
+
+    if (response.error) {
+      alert("Error uploading post. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    router.push("/");
+  }
 
   const handleCheckbox = (e: any) => {
     setDetectChecked(!detectChecked);
