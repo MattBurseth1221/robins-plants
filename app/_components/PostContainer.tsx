@@ -128,12 +128,12 @@ export default function PostContainer() {
 
   return loadingPosts ? (
     <div className="flex justify-center text-center">
-      <p className="mr-2">Loading posts...</p>
+      <code className="mr-2">Loading posts...</code>
       <div className="">{loadingFlower}</div>
     </div>
     
   ) : posts.length > 0 ? (
-    <div className="sm:w-[100%]">
+    <>
       <div className="">
         <select
           value={filters.sortType}
@@ -155,7 +155,7 @@ export default function PostContainer() {
           />
         </button>
       </div>
-      <div className="lg:w-[75%] sm:w-[100%] max-w-[800px] flex flex-col items-center p-8 rounded-md mx-auto">
+      <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
         {posts.map((post: PostType) => {
           return (
             <PostProvider key={post.post_id} post={post}>
@@ -164,7 +164,7 @@ export default function PostContainer() {
           );
         })}
       </div>
-    </div>
+    </>
   ) : (
     <div className="w-[50%] ">
       <div>No posts found.</div>

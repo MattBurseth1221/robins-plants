@@ -84,7 +84,7 @@ export default function UploadForm() {
   };
 
   const postUpload = async (formData: FormData) => {
-    // setLoading(true);
+    setLoading(true);
     const files = formData.getAll("files");
 
     if (files.length > 10) {
@@ -107,21 +107,25 @@ export default function UploadForm() {
 
     formData.append("user_id", user!.id);
 
-    //upload the post
-    const response = await fetch("/api/posts", {
+    const postUploadResponse = await fetch(`/api/posts`, {
       method: "POST",
       body: formData,
-  }).then((res) => res.json());
+    }).then((res) => res.json())
+    .catch((e) => console.log(e));
 
-    if (response.error) {
-      alert("Error uploading post. Please try again.");
+    if (postUploadResponse.error) {
+      alert("Post was not created.");
       setLoading(false);
       return;
     }
+    if (postUploadResponse.success) {
+      alert("Post created. Redirecting...");
+      router.push("/");
+      setLoading(false);
+    }
 
     setLoading(false);
-    router.push("/");
-  }
+  };
 
   const handleCheckbox = (e: any) => {
     setDetectChecked(!detectChecked);
@@ -155,6 +159,7 @@ export default function UploadForm() {
           <input
             type="checkbox"
             value=""
+            disabled
             className="appearance-none sr-only peer inline-block leading-tight"
             onChange={handleCheckbox}
             checked={detectChecked}
@@ -163,7 +168,7 @@ export default function UploadForm() {
           <p className="text-sm">
             <span className="text-black opacity-50 outline-none">
               <span className="mr-1">&#x24D8;</span>Will detect the plant
-              species
+              species in future releases
             </span>
           </p>
         </label>

@@ -148,7 +148,7 @@ export default function ProfileOwner({
 
   if (editingProfile)
     return (
-      <Form action={updateProfile} page={"profile"} >
+      <Form action={updateProfile} page="profile">
         {/* <div className="flex justify-center"> */}
         <div>
           <label htmlFor="firstname">First name</label>
