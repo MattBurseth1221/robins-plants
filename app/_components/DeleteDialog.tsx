@@ -49,27 +49,30 @@ export default function DeleteDialog({
     <Dialog
       open={confirmDeletePost}
       onClose={() => handleDeletePost()}
-      transition
-      className="fixed inset-0 transition duration-[500] ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+      className="fixed inset-0 z-50"
     >
-      <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
-          <DialogTitle className="font-bold">Delete post?</DialogTitle>
-          <Description>
+      {/* Dimmed background overlay */}
+      {confirmDeletePost && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity" aria-hidden="true" />
+      )}
+      <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
+        <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
+          <DialogTitle className="font-bold text-text">Delete post?</DialogTitle>
+          <Description className="text-muted">
             This will (semi) permanently delete the post.
           </Description>
-          <p>
+          <p className="text-text">
             Are you sure you want to delete this post?
           </p>
           <div className="flex gap-4">
             <button
-              className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
+              className="hover:bg-muted/20 text-muted rounded-md p-2 transition duration-150"
               onClick={() => handleDeletePost()}
             >
               Cancel
             </button>
             <button
-              className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
+              className="bg-error text-white p-2 rounded-md hover:bg-error/80 hover:text-white transition duration-150"
               onClick={() => {
                 deletePost();
               }}

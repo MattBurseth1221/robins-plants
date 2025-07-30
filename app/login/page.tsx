@@ -19,39 +19,45 @@ export default async function Page() {
     return redirect("/");
   }
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg sm:h-[100vh] lg:h-[900px] bg-cover px-4">
-      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-6 md:p-8 lg:p-8 xl:p-8">
-        <h1 className="text-xl md:text-2xl">Log in</h1>
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
+      <div className="bg-surface border border-border w-full max-w-md flex flex-col items-center justify-center mx-auto rounded-xl p-8 shadow-lg">
+        <h1 className="text-2xl font-bold text-text mb-6">Log in</h1>
         <Form action={login} page={"login"} >
-          <label htmlFor="username">Email/Username</label>
-          <input
-            name="username"
-            id="username"
-            placeholder="Email"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-          <button className="w-full border-gray-400 border-opacity-50 border-2 rounded-xl p-2 mt-2 hover:bg-gray-200 transition">
-            Log in
-          </button>
+          <div className="w-full space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-muted mb-2">Email/Username</label>
+              <input
+                name="username"
+                id="username"
+                placeholder="Email"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-muted mb-2">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Password"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <button className="w-full bg-primary text-white border border-primary rounded-md px-6 py-3 font-semibold hover:bg-primaryDark transition mt-4">
+              Log in
+            </button>
+          </div>
         </Form>
-        <div className="w-full flex flex-col sm:flex-row justify-between mt-2 border-t-[1px] border-slate-500 border-opacity-20 pt-4 max-w-md">
+        <div className="w-full flex flex-col sm:flex-row justify-between mt-6 pt-6 border-t border-border">
           <Link
             href="/signup"
-            className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-4 text-center hover:bg-gray-200 transition"
+            className="bg-surface text-primary border border-primary rounded-md px-4 py-2 text-center hover:bg-primary hover:text-white transition mb-2 sm:mb-0"
           >
             Create an account
           </Link>
           <Link
             href="/reset-password"
-            className="border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-4 text-center hover:bg-gray-200 transition mt-2 sm:mt-0"
+            className="bg-surface text-muted border border-border rounded-md px-4 py-2 text-center hover:bg-background transition"
           >
             Forgot password?
           </Link>

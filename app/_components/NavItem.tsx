@@ -11,12 +11,11 @@ type NavProps = {
 
 export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
   return (
-    <Link href={linkRedirect} className="text-lg">
+    <Link href={linkRedirect} className="block">
       <button
-        className={`px-5 mb-5 w-[100%] text-left hover:bg-slate-400
-         cursor-pointer py-2 transition ease-in duration-150 rounded-lg ${
-           active ? "underline text-black " : ""
-         }`}
+        className={`w-full text-left px-4 py-2 rounded-lg transition duration-150 ease-in mb-1
+          ${active ? "bg-primary text-white shadow font-semibold border-l-4 border-primary" : "text-muted hover:bg-primary/10 hover:text-primary"}
+          focus:outline-none focus:ring-2 focus:ring-primary/30`}
       >
         {itemName}
       </button>

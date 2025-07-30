@@ -18,61 +18,73 @@ export default async function Page() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
-      <div className="bg-white w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-xl flex flex-col items-center justify-center mx-auto rounded-xl p-8 sm:p-6 md:p-8 lg:p-8">
-        <h1 className="text-xl md:text-2xl mb-2">Create an account</h1>
+      <div className="bg-surface border border-border w-full max-w-md flex flex-col items-center justify-center mx-auto rounded-xl p-8 shadow-lg">
+        <h1 className="text-2xl font-bold text-text mb-6">Create an account</h1>
         <Form action={signup} page="signup" >
-          <div className="flex flex-col justify-center text-left items-center w-full max-w-md">
-            <label htmlFor="firstname">First name</label>
-            <input
-              name="firstname"
-              id="firstname"
-              minLength={2}
-              maxLength={32}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <label htmlFor="lastname">Last name</label>
-            <input
-              name="lastname"
-              id="lastname"
-              minLength={2}
-              maxLength={32}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <label htmlFor="username">Username</label>
-            <input
-              name="username"
-              id="username"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <label htmlFor="confirm-password">Confirm Password</label>
-            <input
-              type="password"
-              name="confirm-password"
-              id="confirm-password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
+          <div className="w-full space-y-4">
+            <div>
+              <label htmlFor="firstname" className="block text-sm font-medium text-muted mb-2">First name</label>
+              <input
+                name="firstname"
+                id="firstname"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="lastname" className="block text-sm font-medium text-muted mb-2">Last name</label>
+              <input
+                name="lastname"
+                id="lastname"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-muted mb-2">Username</label>
+              <input
+                name="username"
+                id="username"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-muted mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-muted mb-2">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-muted mb-2">Confirm Password</label>
+              <input
+                type="password"
+                name="confirm-password"
+                id="confirm-password"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row justify-between w-full max-w-md">
-            <button className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl px-8 p-2 hover:bg-gray-200 transition">
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <button className="flex-1 bg-primary text-white border border-primary rounded-md px-6 py-3 font-semibold hover:bg-primaryDark transition">
               Create Account
             </button>
             <Link
               href="/login"
-              className="w-full sm:w-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 text-center hover:bg-gray-200 transition"
+              className="flex-1 bg-surface text-muted border border-border rounded-md px-6 py-3 text-center font-semibold hover:bg-background transition"
             >
               Back to Login
             </Link>

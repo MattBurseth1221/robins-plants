@@ -17,9 +17,9 @@ export default async function MainNav({ active }: { active: string }) {
   // }
 
   return (
-    <div className="w-52 hidden lg:block">
-      <nav className="">
-        <ul className="">
+    <div className="w-56 hidden lg:flex flex-col h-full bg-surface border-r border-border shadow-md py-8 px-4 justify-between">
+      <nav className="flex-1">
+        <ul className="space-y-2">
           <NavItem
             linkRedirect="/"
             itemName="Home"
@@ -54,7 +54,9 @@ export default async function MainNav({ active }: { active: string }) {
           />
         </ul>
       </nav>
-      <ProfileBar />
+      <div className="mt-8">
+        <ProfileBar />
+      </div>
     </div>
   );
 }
