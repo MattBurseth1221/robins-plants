@@ -38,12 +38,15 @@ export default function ProfileContainer({ username, children }: any) {
   }, [username, user]);
 
   return loading ? (
-    <div>{loadingFlower}</div>
+    <div className="flex flex-col items-center justify-center py-12">
+      <div className="text-muted mb-4">Loading profile...</div>
+      <div>{loadingFlower}</div>
+    </div>
   ) : !profileUser ? (
-    <div>{`User "${username}" not found.`}</div>
+    <div className="text-center text-muted py-8">
+      {`User "${username}" not found.`}
+    </div>
   ) : (
-    // !isUserProfile ? (
-    //   <div>Profile view (non-owner)</div>) :
     <>
     <ProfileOwner profUser={profileUser} />
     { children }

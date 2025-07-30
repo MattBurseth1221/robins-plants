@@ -9,17 +9,17 @@ export default async function Page() {
 
   return (
     <UserProvider user={user}>
-      <main className="flex min-h-screen">
-        <div className="pt-5 flex flex-col border-r-[1px] border-slate-300 fixed h-[100vh] px-5">
+      <main className="flex min-h-screen bg-background">
+        <div className="flex flex-col fixed h-[100vh]">
           <MainNav active={"About"} />
         </div>
 
         <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-          <PageTitle title="- About -" />
-
-
-          <div>
-            <p>This is a website for users to upload posts and track the progress/growth of their gardens. </p>
+          <div className="bg-surface rounded-xl shadow-lg border border-border w-full p-8">
+            {/* <PageTitle title="- About -" /> */}
+            <div>
+              <p>This is a website for users to upload posts and track the progress/growth of their gardens. </p>
+            </div>
           </div>
         </div>
       </main>

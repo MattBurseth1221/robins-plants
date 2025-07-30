@@ -129,7 +129,7 @@ export default function UploadForm() {
 
   return (
     <div
-      className={`grid gap-4 shadow bg-white p-8 rounded-lg h-[656px] max-h-[565px] transition-all duration-300 ${
+      className={`grid gap-4 shadow-lg bg-surface border border-border p-8 rounded-xl min-h-[656px] transition-all duration-300 ${
         loadingResult || plantDetectResults.length !== 0
           ? "grid-cols-5"
           : "grid-cols-2"
@@ -137,41 +137,42 @@ export default function UploadForm() {
     >
       <form
         action={handleFileSelect}
-        className="col-span-2 bg-white p-4 rounded-md shadow shadow-slate-400 text-left px-8 transition-all duration-300"
+        className="col-span-2 bg-surface p-6 rounded-xl text-left transition-all duration-300"
       >
-        <label>
-          <span>Upload a photo</span>
+        <label className="block mb-4">
+          <span className="text-text font-medium">Upload a photo</span>
           <input
             type="file"
             name="files"
             accept="image/jpeg,video/*,image/png"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline file:rounded-full file:shadow-md file:bg-green-500 file:border-0 file:text-white file:text-sm file:py-2 file:px-4 file:font-serif hover:file:bg-green-400 cursor-pointer"
+            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 file:rounded-full file:shadow-md file:bg-primary file:border-0 file:text-white file:text-sm file:py-2 file:px-4 file:font-sans hover:file:bg-primaryDark cursor-pointer transition"
             multiple
             required
           />
         </label>
         <label className="block cursor-pointer mb-4">
-          <span>Plant Detection</span>
+          <span className="text-text font-medium">Plant Detection</span>
           <input
             type="checkbox"
             value=""
-            className="appearance-none sr-only peer inline-block leading-tight"
+            disabled
+            className="appearance-none sr-only peer"
             onChange={handleCheckbox}
             checked={detectChecked}
           />
-          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700  peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
-          <p className="text-sm">
-            <span className="text-black opacity-50 outline-none">
-              <span className="mr-1">&#x24D8;</span>Will detect the plant
-              species
+          <div className="relative w-11 h-6 bg-border rounded-full peer-focus:ring-2 peer-focus:ring-primary/30 peer-checked:bg-primary transition">
+            <div className={`absolute top-0.5 left-1 bg-background border border-border rounded-full h-5 w-5 transition-all ${detectChecked ? 'translate-x-5 border-primary' : ''}`}></div>
+          </div>
+          <p className="text-sm mt-1">
+            <span className="text-muted outline-none">
+              <span className="mr-1">&#x24D8;</span>Will detect the plant species in future releases
             </span>
           </p>
         </label>
-
-        <label className="block text-left w-[100%]">
-          <span>Title</span>
+        <label className="block text-left w-full mb-4">
+          <span className="text-text font-medium">Title</span>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
             type="text"
             name="title"
             placeholder="Title"
@@ -179,32 +180,20 @@ export default function UploadForm() {
             required
           />
         </label>
-
-        {/* <label>
-          <span>Body</span>
-          <textarea
-            name="body"
-            rows={5}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Body"
-            required
-          />
-        </label> */}
-
-        <label>
-          <span>Body</span>
+        <label className="block text-left w-full mb-4">
+          <span className="text-text font-medium">Body</span>
           <TextArea
             textValue={bodyText}
             setTextValue={setBodyText}
             name="body"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
             placeholder="Body"
             required={true}
           />
         </label>
         <button
           type="submit"
-          className="inline-block right-0 text-center border-2 text-green-700 border-green-700 rounded-md mx-auto p-2 hover:bg-green-600 hover:text-white transition disabled:text-gray-500 disabled:border-gray-300 disabled:bg-slate-200"
+          className="inline-block text-center bg-primary text-white border border-primary rounded-md px-6 py-2 font-semibold hover:bg-primaryDark hover:text-white transition disabled:text-muted disabled:border-border disabled:bg-surface mt-2"
           disabled={loading}
         >
           Create post
@@ -216,34 +205,34 @@ export default function UploadForm() {
           {loadingResult ? (
             <>
               <Loading />
-              <p>Analyzing...</p>
+              <p className="text-muted mt-2">Analyzing...</p>
             </>
           ) : (
             plantDetectResults.length !== 0 && (
               <div className="flex flex-col justify-center items-center">
-                <h1 className="text-lg">Select a match</h1>
+                <h1 className="text-lg text-text font-semibold mb-2">Select a match</h1>
                 <button
                   onClick={retrievePlantDetails}
-                  className="p-2 bg-slate-300 hover:bg-slate-200 transition duration-150 rounded-md border-[1px] border-slate-600"
+                  className="p-2 bg-primary text-white rounded-md border border-primary hover:bg-primaryDark transition duration-150"
                 >
                   Retrieve details
                 </button>
-                <span className="text-red-500 mt-2">{plantDetailError}</span>
+                <span className="text-error mt-2">{plantDetailError}</span>
               </div>
             )
           )}
         </div>
       )}
       {(loadingResult || plantDetectResults.length !== 0) && (
-        <div className="col-span-2 overflow-scroll p-4 border-l-[1px] border-l-slate-400 border-opacity-30">
+        <div className="col-span-2 overflow-scroll p-4 border-l border-border">
           {loadingResult && skeletonDiv}
 
           {plantDetectResults.length !== 0 &&
             plantDetectResults.map((result: any, index: number) => {
               return (
                 <div
-                  className={` text-black p-4 rounded-md shadow-md text-left px-4 mb-4 shadow-slate-400 hover:bg-slate-200 transition duration-150 flex flex-row hover:cursor-pointer ${
-                    selectedCard === index ? "bg-slate-200 wiggle" : ""
+                  className={`bg-surface text-text p-4 rounded-md shadow-md text-left mb-4 border border-border flex flex-row hover:bg-primary/10 transition duration-150 cursor-pointer ${
+                    selectedCard === index ? "bg-primary/10 border-primary" : ""
                   }`}
                   key={JSON.stringify(result)}
                   onClick={() => setSelectedCard(index)}
@@ -261,12 +250,12 @@ export default function UploadForm() {
                     className="rounded-md h-auto inline-block w-[100px]"
                   />
                   <div className="flex-grow text-left flex flex-col pl-4">
-                    <span>
+                    <span className="font-semibold">
                       {result.species.commonNames.length !== 0
                         ? `${result.species.scientificName}, or "${result.species.commonNames[0]}"`
                         : `${result.species.scientificName}`}
                     </span>
-                    <p>Some information about the plant...</p>
+                    <p className="text-muted">Some information about the plant...</p>
                   </div>
                 </div>
               );

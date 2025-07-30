@@ -148,177 +148,202 @@ export default function ProfileOwner({
 
   if (editingProfile)
     return (
-      <Form action={updateProfile} page={"profile"} >
-        {/* <div className="flex justify-center"> */}
-        <div>
-          <label htmlFor="firstname">First name</label>
-          <input
-            name="firstname"
-            id="firstname"
-            minLength={2}
-            maxLength={32}
-            className="w-[60%]"
-            defaultValue={profileUser.first_name}
-          />
-        </div>
+      <div className="max-w-2xl mx-auto">
+        <Form action={updateProfile} page={"profile"} >
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="firstname" className="block text-text font-medium mb-2">First name</label>
+              <input
+                name="firstname"
+                id="firstname"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                defaultValue={profileUser.first_name}
+              />
+            </div>
 
-        <div>
-          <label htmlFor="lastname">Last name</label>
-          <input
-            name="lastname"
-            id="lastname"
-            minLength={2}
-            maxLength={32}
-            className="w-[60%]"
-            defaultValue={profileUser.last_name}
-          />
-          <br />
-        </div>
-        <div className="flex justify-around">
-          <button
-            className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-green-500 hover:text-white transition"
-            type="submit"
-          >
-            Save
-          </button>
-          <button
-            className="w-42 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-red-500 hover:text-white transition"
-            onClick={() => setEditingProfile(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </Form>
+            <div>
+              <label htmlFor="lastname" className="block text-text font-medium mb-2">Last name</label>
+              <input
+                name="lastname"
+                id="lastname"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                defaultValue={profileUser.last_name}
+              />
+            </div>
+            <div className="flex gap-4">
+              <button
+                className="flex-1 bg-primary text-white border border-primary rounded-md px-6 py-2 font-semibold hover:bg-primaryDark transition"
+                type="submit"
+              >
+                Save
+              </button>
+              <button
+                className="flex-1 bg-surface text-muted border border-border rounded-md px-6 py-2 font-semibold hover:bg-background transition"
+                onClick={() => setEditingProfile(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </Form>
+      </div>
     );
 
   return (
-    <div className="w-[100%]">
-      <div className="mb-8 text-left bg-slate-100 max-w-[50%] rounded-md border-slate-300 border-2 p-4 shadow-md">
-        <div className="">Hello, {profileUser!.username}!</div>
-        {/* <div>Profile view (owner)</div> */}
-        <div>{`Full name: ${profileUser.first_name} ${profileUser.last_name}`}</div>
-        <div>
-          {`Account created: ${formatDate(new Date(profileUser.create_date))}`}
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Profile Header */}
+      <div className="mb-8 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-8 border border-border">
+        <div className="flex items-center space-x-6">
+          <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold">
+            {profileUser.username.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-text mb-2">@{profileUser.username}</h1>
+            <p className="text-muted text-lg">{`${profileUser.first_name} ${profileUser.last_name}`}</p>
+            <p className="text-muted text-sm">Joined {formatDate(new Date(profileUser.create_date))}</p>
+          </div>
         </div>
       </div>
 
-      <div className="p-4 border-2 border-slate-300 max-w-[50%] rounded-md bg-slate-100 shadow-md">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="bg-surface border border-border rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-primary">{userPosts.length}</div>
+          <div className="text-muted text-sm">Posts</div>
+        </div>
+        <div className="bg-surface border border-border rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-secondary">{userComments.length}</div>
+          <div className="text-muted text-sm">Comments</div>
+        </div>
+        <div className="bg-surface border border-border rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-accent">{likedPosts.length}</div>
+          <div className="text-muted text-sm">Likes</div>
+        </div>
+      </div>
+
+      {/* Content Tabs */}
+      <div className="bg-surface border border-border rounded-xl p-6">
         <TabGroup defaultIndex={0}>
-          <TabList className="flex justify-between mx-auto">
-            <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
+          <TabList className="flex space-x-1 bg-background p-1 rounded-lg mb-6">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 data-[selected]:bg-primary data-[selected]:text-white transition">
               Posts
             </Tab>
-            <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 data-[selected]:bg-primary data-[selected]:text-white transition">
               Comments
             </Tab>
-            <Tab className="data-[selected]:bg-slate-500 data-[selected]:text-white data-[hover]:underline transition-all rounded-xl px-4 py-1">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 data-[selected]:bg-primary data-[selected]:text-white transition">
               Likes
             </Tab>
           </TabList>
-          <TabPanels className="mt-4">
+          <TabPanels>
             <TabPanel>
-              <h1 className="mb-2 text-xl">Posts</h1>
+              <h2 className="text-xl font-semibold text-text mb-4">Posts</h2>
               {userPosts.length !== 0 ? (
-                userPosts.map((post: PostType) => {
-                  return (
+                <div className="space-y-3">
+                  {userPosts.map((post: PostType) => (
                     <div
                       key={post.post_id}
-                      className="max-w-[50%] flex flex-col mx-auto rounded-md mb-2"
+                      className="bg-background border border-border rounded-lg p-4 hover:bg-primary/5 transition"
                     >
-                      <div>{post.title}</div>
-                      <div>{formatDate(new Date(post.create_date))}</div>
+                      <div className="font-medium text-text">{post.title}</div>
+                      <div className="text-muted text-sm">{formatDate(new Date(post.create_date))}</div>
                     </div>
-                  );
-                })
+                  ))}
+                </div>
               ) : (
-                <div className={emptyArray}>User has no posts...</div>
+                <div className="text-center text-muted py-8">No posts yet...</div>
               )}
             </TabPanel>
             <TabPanel>
-              <h1 className="mb-2 text-xl">Comments</h1>
+              <h2 className="text-xl font-semibold text-text mb-4">Comments</h2>
               {userComments.length !== 0 ? (
-                userComments.map((comment: CommentType) => {
-                  return (
+                <div className="space-y-3">
+                  {userComments.map((comment: CommentType) => (
                     <div
                       key={comment.comment_id}
-                      className="max-w-[50%] flex flex-col mx-auto rounded-md mb-2"
+                      className="bg-background border border-border rounded-lg p-4 hover:bg-primary/5 transition"
                     >
-                      <div>{comment.body}</div>
-                      <div>{formatDate(new Date(comment.create_date))}</div>
+                      <div className="text-text">{comment.body}</div>
+                      <div className="text-muted text-sm mt-2">{formatDate(new Date(comment.create_date))}</div>
                     </div>
-                  );
-                })
+                  ))}
+                </div>
               ) : (
-                <div className={emptyArray}>User has no comments...</div>
+                <div className="text-center text-muted py-8">No comments yet...</div>
               )}
             </TabPanel>
             <TabPanel>
-              <h1 className="mb-2 text-xl">Likes</h1>
+              <h2 className="text-xl font-semibold text-text mb-4">Likes</h2>
               {likedPosts.length !== 0 ? (
-                likedPosts.map((post: PostType) => {
-                  return (
+                <div className="space-y-3">
+                  {likedPosts.map((post: PostType) => (
                     <div
                       key={post.post_id}
-                      className="max-w-[50%] flex flex-col mx-auto rounded-md mb-2"
+                      className="bg-background border border-border rounded-lg p-4 hover:bg-primary/5 transition"
                     >
-                      <div>{post.title}</div>
-                      <div>{formatDate(new Date(post.create_date))}</div>
+                      <div className="font-medium text-text">{post.title}</div>
+                      <div className="text-muted text-sm">{formatDate(new Date(post.create_date))}</div>
                     </div>
-                  );
-                })
-              ) : (
-                <div className={`${emptyArray}`}>
-                  User has no liked items...
+                  ))}
                 </div>
+              ) : (
+                <div className="text-center text-muted py-8">No liked posts yet...</div>
               )}
             </TabPanel>
           </TabPanels>
         </TabGroup>
       </div>
 
+      {/* Action Buttons */}
       {(user?.username === profileUser.username || userIsAdmin(user)) && (
-        <div className="max-w-[50%] flex flex-row justify-evenly">
+        <div className="flex gap-4 justify-center mt-8">
           <button
             onClick={() => setEditingProfile(true)}
-            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white transition-all duration-150"
+            className="bg-secondary text-white border border-secondary rounded-md px-6 py-2 font-semibold hover:bg-secondaryDark transition"
           >
-            Edit account
+            Edit Profile
           </button>
 
           <button
             onClick={() => setDeletingAccount(true)}
-            className="mt-32 w-32 block border-gray-400 border-opacity-50 border-2 rounded-xl p-2 hover:bg-red-500 hover:text-white transition-all duration-150"
+            className="bg-error text-white border border-error rounded-md px-6 py-2 font-semibold hover:bg-error/80 transition"
           >
-            Delete account
+            Delete Account
           </button>
         </div>
       )}
 
+      {/* Delete Account Modal */}
       {deletingAccount && (
         <Dialog
           open={deletingAccount}
           onClose={toggleDeleteAccountModal}
-          className="relative z-50"
+          className="fixed inset-0 z-50"
         >
-          <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-            <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md">
-              <DialogTitle className="font-bold">Delete Account?</DialogTitle>
-              <Description>
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" aria-hidden="true" />
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
+            <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
+              <DialogTitle className="font-bold text-text">Delete Account?</DialogTitle>
+              <Description className="text-muted">
                 This will permanently delete your account.
               </Description>
-              <p>
+              <p className="text-text">
                 Are you sure you want to delete your account? All of your posts
                 and comments will also be deleted. This is irreversible.
               </p>
               <div className="flex gap-4">
                 <button
-                  className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
+                  className="hover:bg-muted/20 text-muted rounded-md p-2 transition duration-150"
                   onClick={toggleDeleteAccountModal}
                 >
                   Cancel
                 </button>
                 <button
-                  className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
+                  className="bg-error text-white p-2 rounded-md hover:bg-error/80 transition duration-150"
                   onClick={handleAccountDelete}
                 >
                   Delete

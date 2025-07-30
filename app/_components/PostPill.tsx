@@ -5,16 +5,17 @@ export default function PostPill({
   type: string;
   text: string;
 }) {
-  let typeColor = "green-500";
-  let borderColor = "green-500";
+  let typeColor = "text-accent";
+  let borderColor = "border-accent";
   switch (type) {
     case "genus":
-      typeColor = "text-red-500";
-      borderColor = "border-red-500";
+      typeColor = "text-primary";
+      borderColor = "border-primary";
       break;
     case "postType":
-      typeColor = "text-blue-400";
-      borderColor = "border-blue-400";
+      typeColor = "text-secondary";
+      borderColor = "border-secondary";
+      break;
   }
 
   return (

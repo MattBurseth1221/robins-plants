@@ -18,10 +18,18 @@ const config: Config = {
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
-        // 'lg': '#F4FCD9',
-        // 'dg': '#C5D8A4',
-        // 'lb': '#BB9981',
-        // 'db': '#534340',
+        primary: '#2563eb', // blue-600
+        primaryDark: '#1e40af', // blue-800
+        secondary: '#f59e42', // orange-400
+        secondaryDark: '#ea580c', // orange-600
+        accent: '#10b981', // emerald-500
+        background: '#f9fafb', // gray-50
+        surface: '#ffffff', // white
+        border: '#e5e7eb', // gray-200
+        text: '#111827', // gray-900
+        muted: '#6b7280', // gray-500
+        error: '#ef4444', // red-500
+        success: '#22c55e', // green-500
       },
     },
   },

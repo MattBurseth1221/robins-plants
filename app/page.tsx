@@ -13,17 +13,22 @@ export default async function Page() {
 
   return (
     <UserProvider user={user}>
-      <main className="flex min-h-screen">
-        <div className="pt-5 flex flex-col fixed h-[100vh] px-5">
-          <MainNav active={"Home"} />
+      <main className="min-h-screen bg-background flex justify-center">
+        {/* Sidebar */}
+        <div className="hidden lg:block fixed left-0 top-0 h-full z-10">
+          <MainNav active="Home" />
         </div>
 
-        <div className="lg:p-10 md:p-10 flex flex-col text-center sm:w-[100%] lg:w-[60%] md:w-[60%] mx-auto items-center">
-          <PageTitle title="- Robin Plants -" />
-
-          <Suspense fallback={<div>Loading posts...</div>}>
-            <PostContainer />
-          </Suspense>
+        {/* Feed */}
+        <div className="flex-1 flex justify-center lg:ml-56">
+          <div className="w-full max-w-2xl px-4 py-10">
+            <div className="bg-surface rounded-xl shadow-lg border border-border p-6">
+              {/* <PageTitle title="- Robin Plants -" /> */}
+              <Suspense fallback={<div>Loading posts...</div>}>
+                <PostContainer />
+              </Suspense>
+            </div>
+          </div>
         </div>
       </main>
     </UserProvider>

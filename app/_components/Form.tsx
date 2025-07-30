@@ -31,7 +31,7 @@ export function Form({
       case 0:
         setStrengthText(
           <span
-            className={`text-red-500 rounded-md border-[1px] border-red-500 bg-red-100 p-2 mt-4`}
+            className={`text-error rounded-md border border-error bg-error/10 p-3 mt-4`}
           >
             Password strength: Very Weak
           </span>
@@ -40,7 +40,7 @@ export function Form({
       case 1:
         setStrengthText(
           <span
-            className={`text-orange-400 rounded-md border-[1px] border-orange-400 bg-orange-100 p-2 mt-4`}
+            className={`text-secondary rounded-md border border-secondary bg-secondary/10 p-3 mt-4`}
           >
             Password strength: Weak
           </span>
@@ -49,7 +49,7 @@ export function Form({
       case 2:
         setStrengthText(
           <span
-            className={`text-blue-400 rounded-md border-[1px] border-blue-400 bg-blue-100 p-2 mt-4`}
+            className={`text-primary rounded-md border border-primary bg-primary/10 p-3 mt-4`}
           >
             Password strength: Average
           </span>
@@ -59,7 +59,7 @@ export function Form({
       case 3:
         setStrengthText(
           <span
-            className={`text-green-400 rounded-md border-[1px] border-green-400 bg-green-50 p-2 mt-4`}
+            className={`text-accent rounded-md border border-accent bg-accent/10 p-3 mt-4`}
           >
             Password strength: Strong
           </span>
@@ -69,7 +69,7 @@ export function Form({
       case 4:
         setStrengthText(
           <span
-            className={`text-green-600 rounded-md border-[1px] border-green-600 bg-green-100 p-2 mt-4`}
+            className={`text-success rounded-md border border-success bg-success/10 p-3 mt-4`}
           >
             Password strength: Very Strong
           </span>
@@ -96,7 +96,7 @@ export function Form({
       {children}
       {page !== "login" && strengthText}
       {state.error && (
-        <p className="border-md border-red-500 border-[1px] bg-red-100 opacity-100 p-2 px-4 rounded-md text-red-500 text-opacity-100 text-center w-fit mt-4 mx-auto ">
+        <p className="border border-error bg-error/10 text-error p-3 rounded-md text-center w-fit mt-4 mx-auto">
           {state.error}
         </p>
       )}
