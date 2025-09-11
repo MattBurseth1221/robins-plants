@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 //export const runtime = "edge";
 
-export async function GET(request: Request, response: Response) {
+export async function GET(request: Request) {
   const { user, session } = await validateRequest();
 
   if (!session) {
@@ -13,7 +13,7 @@ export async function GET(request: Request, response: Response) {
   await lucia.invalidateSession(session.id);
 
   const sessionCookie = lucia.createBlankSessionCookie();
-  cookies().set(
+  (await cookies()).set(
     sessionCookie.name,
     sessionCookie.value,
     sessionCookie.attributes

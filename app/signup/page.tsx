@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { pool } from "../_lib/db";
-import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 import { lucia, validateRequest } from "../_lib/auth";
 import { redirect } from "next/navigation";
@@ -16,26 +15,79 @@ export default async function Page() {
   if (user) {
     return redirect("/");
   }
+
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg h-[900px] bg-cover">
-      <div className="bg-white flex flex-col items-center w-[700px] justify-center mx-auto border-opacity-20 border-gray-800 rounded-xl border-4 p-8">
-        <h1 className="text-xl">Create an account</h1>
-        <Form action={signup}>
-          <label htmlFor="username">Username</label>
-          <input name="username" id="username" />
-          <br />
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" id="email" />
-          <br />
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" id="password" />
-          <br />
-          <label htmlFor="confirm-password">Confirm Password</label>
-          <input type="password" name="confirm-password" id="password" />
-          <br />
-          <div className="flex justify-around">
-            <button className="w-32 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Create</button>
-            <Link href="/login" className="w-42 block mx-auto border-gray-400 border-opacity-50 border-2 rounded-xl p-2 px-8 hover:bg-gray-200 transition">Back to Login</Link>
+    <main className="min-h-screen flex flex-col justify-center items-center bg-login-bg bg-cover px-4">
+      <div className="bg-surface border border-border w-full max-w-md flex flex-col items-center justify-center mx-auto rounded-xl p-8 shadow-lg">
+        <h1 className="text-2xl font-bold text-text mb-6">Create an account</h1>
+        <Form action={signup} page="signup" >
+          <div className="w-full space-y-4">
+            <div>
+              <label htmlFor="firstname" className="block text-sm font-medium text-muted mb-2">First name</label>
+              <input
+                name="firstname"
+                id="firstname"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="lastname" className="block text-sm font-medium text-muted mb-2">Last name</label>
+              <input
+                name="lastname"
+                id="lastname"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-muted mb-2">Username</label>
+              <input
+                name="username"
+                id="username"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-muted mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-muted mb-2">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+            <div>
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-muted mb-2">Confirm Password</label>
+              <input
+                type="password"
+                name="confirm-password"
+                id="confirm-password"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <button className="flex-1 bg-primary text-white border border-primary rounded-md px-6 py-3 font-semibold hover:bg-primaryDark transition">
+              Create Account
+            </button>
+            <Link
+              href="/login"
+              className="flex-1 bg-surface text-muted border border-border rounded-md px-6 py-3 text-center font-semibold hover:bg-background transition"
+            >
+              Back to Login
+            </Link>
           </div>
         </Form>
       </div>
@@ -66,15 +118,21 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
 
   const hashedPassword = generateSHA256(password);
 
-  console.log("hash test: ");
-  console.log(hashedPassword);
-
   const userId = uuidv4();
   const emailAddress = formData.get("email");
+  const firstName = formData.get("firstname");
+  const lastName = formData.get("lastname");
 
   const query = {
-    text: "INSERT INTO auth_user(id, username, password_hash, email) VALUES($1, $2, $3, $4)",
-    values: [userId, username, hashedPassword, emailAddress],
+    text: "INSERT INTO auth_user(id, username, password_hash, email, first_name, last_name) VALUES($1, $2, $3, $4, $5, $6)",
+    values: [
+      userId,
+      username,
+      hashedPassword,
+      emailAddress,
+      firstName,
+      lastName,
+    ],
   };
 
   try {
@@ -82,7 +140,7 @@ async function signup(_: any, formData: FormData): Promise<ActionResult> {
 
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
+    (await cookies()).set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes

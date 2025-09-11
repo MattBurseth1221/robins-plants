@@ -8,11 +8,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLongArrowDown,
   faLongArrowUp,
+  faFilter,
+  faChevronDown,
+  faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { loadingFlower } from "@/public/flower-loading";
 
 import { UserContext } from "../_providers/UserProvider";
 import PostProvider from "../_providers/PostProvider";
+
+export interface UserType {
+  id: UUID;
+  create_date: Date;
+  username: string;
+  email: string | null;
+  first_name: string;
+  last_name: string;
+}
 
 export interface CommentType {
   comment_id: UUID;
@@ -45,7 +57,8 @@ export default function PostContainer() {
     limit: "30",
   });
   const [likedItems, setLikedItems] = useState<Array<UUID>>([]);
-  const [loadingPosts, setLoadingPosts] = useState<Boolean>(false);
+  const [loadingPosts, setLoadingPosts] = useState<Boolean>(true);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
   const user = useContext(UserContext);
 
   const PostProps = {
@@ -63,7 +76,13 @@ export default function PostContainer() {
         .then((res) => res.json())
         .then((res) => res.data);
 
-      setLikedItems(likedItemsResult);
+        let likedItems = [];
+
+        for (let i = 0; i < likedItemsResult.length; i++) {
+          likedItems.push(likedItemsResult[i].post_id);
+        }
+
+      setLikedItems(likedItems);
     }
 
     getLikedItems();
@@ -91,11 +110,12 @@ export default function PostContainer() {
       }
 
       setPosts(postArray);
+      setLoadingPosts(false);
     }
 
     getPosts();
 
-    setLoadingPosts(false);
+    //setLoadingPosts(false);
   }, [filters, sortOrder]);
 
   function toggleSortOrder() {
@@ -111,33 +131,76 @@ export default function PostContainer() {
   }
 
   return loadingPosts ? (
-    <div className="w-[50%] ">
-      <div>No posts found.</div>
+    <div className="flex flex-col items-center justify-center text-center py-12">
+      <p className="mr-2 text-text">Loading posts...</p>
+      <div className="mt-4">{loadingFlower}</div>
     </div>
   ) : posts.length > 0 ? (
-    <>
-      <div className="">
-        <select
-          value={filters.sortType}
-          name="sort"
-          onChange={(e) => setFilters({ ...filters, sortType: e.target.value })}
-          className="border-2 rounded-md border-gray p-1 cursor-pointer bg-white"
-        >
-          <option value="date">Date</option>
-          <option value="title">Title</option>
-          <option value="body">Body</option>
-        </select>
-
+    <div className="w-full max-w-2xl mx-auto">
+      {/* Filter Toggle Button */}
+      <div className="mb-6">
         <button
-          className="ml-2 p-1 bg-white rounded-md border-2"
-          onClick={toggleSortOrder}
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-2 bg-surface border border-border rounded-lg px-4 py-2 text-text hover:bg-primary/10 transition focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
-          <FontAwesomeIcon
-            icon={sortOrder === "DESC" ? faLongArrowDown : faLongArrowUp}
+          <FontAwesomeIcon icon={faFilter} className="text-muted" />
+          <span className="font-medium">Filters</span>
+          <FontAwesomeIcon 
+            icon={showFilters ? faChevronUp : faChevronDown} 
+            className="text-muted ml-auto" 
           />
         </button>
       </div>
-      <div className="sm::w-[100%] w-[75%] max-w-[800px] flex flex-col items-center p-8 rounded-md scree">
+
+      {/* Filter Panel */}
+      {showFilters && (
+        <div className="mb-6 bg-surface border border-border rounded-xl p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-text">Sort & Filter</h3>
+            <button
+              onClick={() => setShowFilters(false)}
+              className="text-muted hover:text-text transition"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-muted mb-2">
+                Sort by
+              </label>
+              <select
+                value={filters.sortType}
+                name="sort"
+                onChange={(e) => setFilters({ ...filters, sortType: e.target.value })}
+                className="w-full border border-border rounded-md p-2 cursor-pointer bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              >
+                <option value="date">Date</option>
+                <option value="title">Title</option>
+                <option value="body">Body</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-muted mb-2">
+                Order
+              </label>
+              <button
+                onClick={toggleSortOrder}
+                className="w-full flex items-center justify-center gap-2 p-2 bg-background border border-border rounded-md text-text hover:bg-primary/10 transition focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <FontAwesomeIcon
+                  icon={sortOrder === "DESC" ? faLongArrowDown : faLongArrowUp}
+                />
+                <span>{sortOrder === "DESC" ? "Newest First" : "Oldest First"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col space-y-8">
         {posts.map((post: PostType) => {
           return (
             <PostProvider key={post.post_id} post={post}>
@@ -146,11 +209,10 @@ export default function PostContainer() {
           );
         })}
       </div>
-    </>
+    </div>
   ) : (
-    <div className="flex justify-center text-center">
-      <code className="mr-2">Loading posts...</code>
-      <div className="">{loadingFlower}</div>
+    <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center py-20">
+      <div className="text-muted text-lg">No posts found.</div>
     </div>
   );
 }

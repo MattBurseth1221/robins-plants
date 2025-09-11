@@ -28,7 +28,6 @@ export async function GET(request: NextRequest) {
     ).rows;
 
     console.log("id result:");
-    console.log(idQueryResult);
 
     if (!idQueryResult || idQueryResult.length === 0) isIDValid = false;
 
@@ -39,6 +38,8 @@ export async function GET(request: NextRequest) {
       idQueryResult[0].create_date.getTime() + 1 * 24 * 60 * 60 * 1000;
 
     if (new Date() > goodDate) isIDValid = false;
+
+    console.log(isIDValid);
 
     return NextResponse.json({
       success: "Access valid password records",

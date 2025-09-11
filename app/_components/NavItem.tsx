@@ -1,18 +1,24 @@
+import Link from "next/link";
+
 type NavProps = {
-    itemName: string;
-    linkRedirect: string;
-    active: Boolean;
-  };
-  
-  export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
-    return (
-      <li
-        className={`mb-5 text-center hover:bg-slate-500
-        hover:text-white cursor-pointer py-2 transition ease-in duration-150 border-x-gray-500 border-opacity-50 border-x-[1px] ${
-          active ? "underline text-black" : ""
-        }`}
+  itemName: string;
+  linkRedirect: string;
+  active: Boolean;
+};
+
+//OLD
+//border-x-gray-500 border-opacity-50 border-x-[1px]
+
+export default function NavItem({ itemName, linkRedirect, active }: NavProps) {
+  return (
+    <Link href={linkRedirect} className="block">
+      <button
+        className={`w-full text-left px-4 py-2 rounded-lg transition duration-150 ease-in mb-1
+          ${active ? "bg-primary text-white shadow font-semibold border-l-4 border-primary" : "text-muted hover:bg-primary/10 hover:text-primary"}
+          focus:outline-none focus:ring-2 focus:ring-primary/30`}
       >
-        <a href={linkRedirect}>{itemName}</a>
-      </li>
-    );
-  }
+        {itemName}
+      </button>
+    </Link>
+  );
+}

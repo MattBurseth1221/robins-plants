@@ -95,19 +95,23 @@ export default function UpdateDialog({
     <Dialog
       open={editingPost}
       onClose={() => setEditingPost(!editingPost)}
-      className="relative z-50"
+      className="fixed inset-0 z-50"
     >
-      <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-md absolute">
-          <DialogTitle className="font-bold">Update Post</DialogTitle>
-          <Description>This will edit the post.</Description>
+      {/* Dimmed background overlay */}
+      {editingPost && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity" aria-hidden="true" />
+      )}
+      <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
+        <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
+          <DialogTitle className="font-bold text-text">Update Post</DialogTitle>
+          <Description className="text-muted">This will edit the post.</Description>
 
           {post!.image_refs!.length !== 1 && (
             <button
               onClick={() => {
                 handleImageIndexChange(1);
               }}
-              className="rounded-md border-2 hover:bg-slate-200 border-slate-300 transition p-2"
+              className="rounded-md border-2 border-border hover:bg-background transition p-2 text-text"
             >
               Change
             </button>
@@ -134,40 +138,41 @@ export default function UpdateDialog({
             />
           )}
             <label>
-              <span>Upload a Photo (JPG only I think)</span>
+              <span className="text-muted">Upload a Photo (JPG only I think)</span>
               <input type="file" name="files" accept="image/*,video/*" multiple />
             </label>
             <label>
-              <span>Title</span>
+              <span className="text-muted">Title</span>
               <input
                 defaultValue={post!.title}
                 type="text"
                 name="title"
                 maxLength={200}
                 required
+                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
               />
             </label>
             <label>
-              <span>Body</span>
+              <span className="text-muted">Body</span>
               <textarea
                 defaultValue={post!.body}
                 name="body"
                 rows={5}
-                className="w-[100%]"
                 required
+                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
               />
             </label>
           </form>
 
           <div className="flex gap-4">
             <button
-              className="hover:bg-slate-300 rounded-md p-2 transition duration-150"
+              className="hover:bg-muted/20 text-muted rounded-md p-2 transition duration-150"
               onClick={() => setEditingPost(!editingPost)}
             >
               Cancel
             </button>
             <button
-              className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400 hover:text-black transition duration-150"
+              className="bg-primary text-white p-2 rounded-md hover:bg-primaryDark hover:text-white transition duration-150"
               type="submit"
               form="edit-form"
             >

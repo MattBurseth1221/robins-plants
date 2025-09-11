@@ -37,7 +37,8 @@ export default function CommentMenu({comment}: {comment: CommentType}) {
         </MenuButton>
         <MenuItems
           anchor="bottom"
-          className="p-2 bg-slate-200 border-gray-400 rounded-md border-2"
+          transition
+          className="p-2 bg-slate-200 border-gray-400 rounded-md border-2 origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <MenuItem>
             <button className={menuItemStyle} onClick={() => setShowUpdateCommentModal(true)}>Edit</button>

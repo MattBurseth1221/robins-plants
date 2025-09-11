@@ -17,21 +17,26 @@ export default function ProfileBar() {
     }
   }
 
+  //bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2
+  //bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2
+
   return (
-    <nav className="w-40 p-5 h-64">
-      <ul className="flex flex-col justify-between items-center">
-        {user && <p>{user.username}</p>}
+    <nav className="p-4 bg-background rounded-lg shadow-inner">
+      <ul className="flex flex-col gap-2 items-start">
+        {user && <p className="text-lg text-text font-semibold mb-2">{user.username}</p>}
         {user ? (
-          <button
-            className="bg-slate-500 text-white p-2 px-4 w-auto rounded-xl hover:bg-slate-400 hover:text-black transition mt-2"
-            onClick={() => {
-              logout();
-            }}
-          >
-            Log out
-          </button>
+          <>
+            <button
+              className="bg-error text-white px-4 py-2 rounded-lg border border-error hover:bg-error/80 transition"
+              onClick={() => {
+                logout();
+              }}
+            >
+              Log Out
+            </button>
+          </>
         ) : (
-          <a href="/login">Sign in</a>
+          <a href="/login" className="text-primary hover:underline">Sign In</a>
         )}
       </ul>
     </nav>

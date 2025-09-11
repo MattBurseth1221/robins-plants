@@ -1,13 +1,9 @@
 import { redirect } from "next/navigation";
 import MainNav from "../_components/MainNav";
 import PageTitle from "../_components/PageTitle";
-import ProfileBar from "../_components/ProfileBar";
 import { validateRequest } from "../_lib/auth";
 import UploadForm from "../_components/UploadForm";
-import { userIsAdmin } from "../_utils/helper-functions";
 import UserProvider from "../_providers/UserProvider";
-
-//export const runtime = "edge";
 
 export default async function Page() {
   const { user }: any = await validateRequest();
@@ -17,16 +13,17 @@ export default async function Page() {
 
   return (
     <UserProvider user={user}>
-      <main className="flex min-h-screen">
-        <MainNav active={"Admin"} />
-
-        <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-          <PageTitle title="- Create Post -" />
-
-          <UploadForm />
+      <main className="flex min-h-screen bg-background">
+        <div className="flex flex-col fixed h-[100vh]">
+          <MainNav active={"Admin"} />
         </div>
 
-        <ProfileBar />
+        <div className="p-10 text-center lg:w-[60%] md:w-[60%] sm:w-[100%] mx-auto items-center">
+          <div className="bg-surface rounded-xl shadow-lg border border-border w-full p-8">
+            {/* <PageTitle title="- Create Post -" /> */}
+            <UploadForm />
+          </div>
+        </div>
       </main>
     </UserProvider>
   );

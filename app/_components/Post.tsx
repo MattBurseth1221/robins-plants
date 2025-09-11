@@ -27,6 +27,10 @@ import Image from "next/image";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
+import Link from "next/link";
+
+import { PillType } from "../types";
+import PostPill from "./PostPill";
 
 export type CommentContextType = {
   comments: CommentType[];
@@ -56,6 +60,7 @@ export default function Post({
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [postPills, setPostPills] = useState<PillType[]>([{ type: "genus", text: "Zinnia" }, { type: "postType", text: "Progress" }]);
 
   const UpdateDialogProps = {
     editingPost,
@@ -89,7 +94,7 @@ export default function Post({
   useEffect(() => {
     async function getComments() {
       try {
-        const commentResult = await fetch(`/api/comments?id=${post?.post_id}`, {
+        const commentResult = await fetch(`/api/comments?post_id=${post?.post_id}`, {
           method: "GET",
         }).then((res) => res.json())
         .then((data) => {
@@ -101,13 +106,13 @@ export default function Post({
           setComments(data.data);
         })
       } catch (e) {
-        console.log("Unknown error occurred when fetching comments.");
+        console.log("Error fetching comments.");
         return;
       }
     }
 
     getComments();
-  }, []);
+  }, [post]);
 
   //Initializes and populates an array for all post_id's that the current user has liked
   useEffect(() => {
@@ -147,8 +152,7 @@ export default function Post({
 
         console.log(response.success);
       } else {
-        console.log(response.error);
-        return;
+        throw(response.error);
       }
     } catch (e) {
       console.log(e);
@@ -186,7 +190,7 @@ export default function Post({
         console.log(deleteLikeResponse.success);
         setNumLikes(numLikes - 1);
       } else {
-        alert("Something went wrong.");
+        alert("Error liking post.");
       }
     }
 
@@ -211,17 +215,25 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-black border-2 bg-slate-100 mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] min-w-[600px] flex flex-col">
-        <p className="float-left my-4 text-2xl text-left">{post.title}</p>
+      <div className="border-border border-2 bg-surface mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] lg:min-w-[600px] md:min-w-[600px] flex flex-col shadow-md">
+        <p className="float-left mt-4 text-2xl text-left text-text">{post.title}</p>
+        <div className="flex flex-row">
+          {postPills.map((pill: PillType, index: number) => {
+          return (
+            <PostPill key={ index } type={ pill.type } text={ pill.text } />
+          )
+        })}
+        </div>
+        
         <div
           className={`relative ${
             post.image_refs.length > 1 ? "h-[600px]" : ""
-          } overflow-auto flex items-center justify-center rounded-md`}
+          } overflow-auto flex items-center justify-center rounded-md bg-background`}
         >
           {post.image_refs![currentImageIndex].endsWith("-video") ? (
             <video
               width="600"
-              className="rounded-md mx-auto border-2 border-black overflow-hidden max-h-full"
+              className="rounded-md mx-auto border-2 border-border overflow-hidden max-h-full"
               controls
               key={post.image_refs[currentImageIndex]}
             >
@@ -242,17 +254,22 @@ export default function Post({
                   post.image_refs![currentImageIndex]
                 }` || ""
               }
+              style={{
+                width: "100%",
+                maxWidth: "800px",
+                height: "auto"
+              }}
               height="0"
               width="1000"
-              alt="Flower?"
-              className="rounded-md mx-auto border-2 border-black block"
+              alt="A really pretty flower..."
+              className="rounded-md mx-auto border-2 border-border block"
             />
           )}
         </div>
 
         <div className="min-h-16 mt-2">
-          <div className="grid grid-cols-3 border-b-[1px] border-slate-500 border-opacity-20 pb-2">
-            <p className="text-left text-xl">{post.username}</p>
+          <div className="grid grid-cols-3 border-b border-border border-opacity-50 pb-2">
+            <Link className="text-left text-xl hover:text-muted transition-all text-text" href={`/profile/${post.username}`}>{post.username}</Link>
 
             {post.image_refs!.length !== 1 && (
               <div className="flex justify-center h-8">
@@ -263,7 +280,7 @@ export default function Post({
                 >
                   <FontAwesomeIcon
                     icon={faSquareCaretLeft}
-                    className="size-8 opacity-50"
+                    className="size-8 opacity-50 text-muted"
                   />
                 </button>
                 <button
@@ -273,7 +290,7 @@ export default function Post({
                 >
                   <FontAwesomeIcon
                     icon={faSquareCaretRight}
-                    className="size-8 opacity-50"
+                    className="size-8 opacity-50 text-muted"
                   />
                 </button>
               </div>
@@ -284,20 +301,20 @@ export default function Post({
                 post.image_refs!.length === 1 ? "col-span-2" : ""
               } flex mr-0 ml-auto`}
             >
-              <p className="text-right">
+              <p className="text-right text-muted">
                 {formatDate(new Date(post.create_date))}
               </p>
-              <button className="ml-2" onClick={handleLikePost}>
+              <button className="ml-2 hover:bg-accent/10 transition rounded-md p-1" onClick={handleLikePost}>
                 <FontAwesomeIcon
                   icon={postLiked ? faHeartSolid : faHeartOutline}
                   beat={heartBeat}
                 />
               </button>
-              <p className="text-sm mt-2">{numLikes}</p>
+              <p className="text-sm mt-2 text-muted">{numLikes}</p>
             </div>
           </div>
 
-          <p className="text-left mt-4 break-words line-clamp-3">{post.body}</p>
+          <p className="text-left mt-4 break-words line-clamp-3 text-text">{post.body}</p>
 
           <div>
             <form
@@ -308,20 +325,20 @@ export default function Post({
               <textarea
                 placeholder={"Leave a comment..."}
                 rows={1}
-                className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none max-h-[30vh]"
+                className="bg-background w-[100%] p-2 rounded-xl box-content border border-border max-h-[30vh] text-text placeholder-muted focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
                 name="comment_body"
                 value={commentValue}
                 onChange={(e) => setCommentValue(e.target.value)}
               ></textarea>
               <button
-                className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
+                className="hover:bg-primary hover:text-white bg-surface text-primary border border-primary transition rounded-md p-2 ml-2 mb-4"
                 type="submit"
               >
                 <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
               </button>
             </form>
           </div>
-          <div className="border-t-[1px] border-slate-500 border-opacity-20 py-2">
+          <div className="border-t border-border border-opacity-50 py-2">
             {comments && comments.length > 0 ? (
               comments
                 .slice(0, showAllComments ? comments.length : 3)
@@ -333,7 +350,7 @@ export default function Post({
                   )
                 })
             ) : (
-              <div className="opacity-50 text-center">
+              <div className="opacity-50 text-center text-muted">
                 <p>Be the first to comment!</p>
               </div>
             )}
@@ -345,7 +362,7 @@ export default function Post({
         {(userIsAdmin(user) || post.username === user!.username) && (
           <div className="w-[20%] mx-auto mt-4 flex justify-between">
             <button
-              className="hover:bg-slate-300 transition rounded-md p-1"
+              className="hover:bg-secondary hover:text-white bg-surface text-secondary border border-secondary transition rounded-md p-2"
               onClick={() => {
                 setEditingPost(!editingPost);
               }}
@@ -354,7 +371,7 @@ export default function Post({
             </button>
 
             <button
-              className="hover:bg-slate-300 transition rounded-md p-1"
+              className="hover:bg-error hover:text-white bg-surface text-error border border-error transition rounded-md p-2"
               onClick={() => {
                 setConfirmDeletePost(!confirmDeletePost);
               }}
