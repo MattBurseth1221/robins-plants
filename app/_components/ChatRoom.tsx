@@ -93,7 +93,9 @@ export default function ChatRoom() {
       console.log(newMessage);
 
       if (newMessage.typing === true) {
-        console.log("its true");
+        if (typing.includes(newMessage.username)) {
+          return;
+        }
         setTyping([...typing, newMessage.username]);
         return;
       } else if (newMessage.typing === false) {
