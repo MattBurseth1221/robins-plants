@@ -1,7 +1,5 @@
 import ChatRoom from "@/app/_components/ChatRoom";
 import MainNav from "@/app/_components/MainNav";
-import PageTitle from "@/app/_components/PageTitle";
-import ProfileBar from "@/app/_components/ProfileBar";
 import { validateRequest } from "@/app/_lib/auth";
 import UserProvider from "@/app/_providers/UserProvider";
 
@@ -10,27 +8,18 @@ export default async function Chat() {
 
   return (
     <UserProvider user={user}>
-      <main className="flex min-h-screen">
-        <MainNav active={"Home"} />
-
-        <div className="p-10 flex flex-col text-center w-[60%] mx-auto items-center">
-          <PageTitle title="- Messaging -" />
-
-          <ChatRoom />
-
-          {/* <Suspense fallback={<div>Loading posts...</div>}>
-              
-            </Suspense> */}
+      <main className="flex min-h-screen bg-background">
+        <div className="pt-5 flex flex-col fixed h-[100vh] px-5">
+          <MainNav active={"Home"} />
         </div>
 
-        <ProfileBar />
-
-        {/* <div className="w-[50%] h-32 bg-gradient-to-b from-lg to-dg"></div>
-        <div className="w-[50%] h-32 bg-gradient-to-b from-dg to-lb"></div>
-        <div className="w-[50%] h-32 bg-gradient-to-b from-lb to-db"></div>
-        <div className="w-[50%] h-32 bg-db"></div> */}
-
-        {/* <div className="w-[50%] h-32">{JSON.stringify(user)};</div> */}
+        <div className="flex-1 flex justify-center lg:ml-56">
+          <div className="w-full max-w-4xl px-4 py-10">
+            <div className="bg-surface rounded-xl shadow-lg border border-border p-6 h-[calc(100vh-5rem)] flex flex-col">
+              <ChatRoom />
+            </div>
+          </div>
+        </div>
       </main>
     </UserProvider>
   );

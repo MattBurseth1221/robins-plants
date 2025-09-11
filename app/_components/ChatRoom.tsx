@@ -169,60 +169,88 @@ export default function ChatRoom() {
   }
 
   return (
-    <>
-      <h1 className="text-xl mb-4">Chat Room: {chatroomId}</h1>
-      <div className="fixed bottom-12 justify-end max-w-[35%] min-w-[35%] flex flex-col px-2">
-        <div className="max-h-[70vh] overflow-y-scroll snap-start">
-          {messages.map((msg, index) => (
-            <div key={index} className={`flex flex-col px-4`}>
-              <div
-                className={`mb-2 p-2 max-w-[60%] bg-slate-100 rounded-md inline-block text-wrap break-words ${
-                  msg.username === user?.username
-                    ? "ml-auto text-left"
-                    : "mr-auto text-left"
-                }`}
-              >
-                {msg.username !== user?.username && (
-                  <p className="text-sm font-bold">{`${msg.username}`}</p>
-                )}
-                <p className="text-base ">{`${msg.content}`}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="">
-          <form
-            id="comment-form"
-            action={sendMessage}
-            className="flex justify-center items-center mt-4"
-          >
-            <input
-              placeholder={"Send a message..."}
-              // rows={1}
-              autoComplete="off"
-              className="bg-gray-300 w-[100%] p-1 pl-2 rounded-xl box-content border-none max-h-[30vh]"
-              name="comment_body"
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                //adjustTypeTime();
-              }}
-            ></input>
-            <button
-              className="hover:bg-gray-300 transition rounded-md p-1 ml-2 mb-4"
-              type="submit"
-            >
-              <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
-            </button>
-          </form>
-
-          {/* {typing
-            .filter((typer) => typer !== user?.username)
-            .map((typer, index: number) => (
-              <div key={index}>{`${typer} is typing...`}</div>
-            ))} */}
+    <div className="flex flex-col h-full">
+      {/* Chat Header */}
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <h1 className="text-xl font-bold text-text">Chat Room: {chatroomId}</h1>
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-accent rounded-full"></div>
+          <span className="text-muted text-sm">Online</span>
         </div>
       </div>
-    </>
+
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((msg, index) => {
+          const isCurrentUser = msg.username === user?.username;
+          const prevMessage = index > 0 ? messages[index - 1] : null;
+          const isConsecutiveFromSameUser = prevMessage && prevMessage.username === msg.username;
+          
+          return (
+            <div key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
+              <div className={`flex flex-col max-w-xs ${isCurrentUser ? 'items-end' : 'items-start'}`}>
+                {!isCurrentUser && !isConsecutiveFromSameUser && (
+                  <span className="text-xs text-muted mb-1">{msg.username}</span>
+                )}
+                <div
+                  className={`px-4 py-2 rounded-2xl ${
+                    isCurrentUser
+                      ? "bg-primary text-white"
+                      : "bg-background border border-border text-text"
+                  } ${isCurrentUser && isConsecutiveFromSameUser ? 'mt-1' : ''}`}
+                >
+                  <p className="text-sm break-words break-all">{msg.content}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        
+        {/* Typing Indicator */}
+        {typing.filter((typer) => typer !== user?.username).length > 0 && (
+          <div className="flex justify-start">
+            <div className="bg-background border border-border px-4 py-2 rounded-2xl">
+              <p className="text-sm text-muted">
+                {typing.filter((typer) => typer !== user?.username).join(', ')} {typing.filter((typer) => typer !== user?.username).length === 1 ? 'is' : 'are'} typing...
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Message Input */}
+      <div className="border-t border-border p-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendMessage();
+          }}
+          className="flex items-end space-x-3"
+        >
+          <input
+            placeholder="Send a message..."
+            autoComplete="off"
+            className="flex-1 p-3 border border-border rounded-xl bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+            value={message}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              adjustTypeTime();
+            }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+          />
+          <button
+            type="submit"
+            className="bg-primary text-white p-3 rounded-xl hover:bg-primaryDark transition focus:outline-none focus:ring-2 focus:ring-primary/20 flex-shrink-0"
+          >
+            <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
