@@ -69,7 +69,7 @@ export default function ChatRoom() {
     if (!chatroomId) return;
 
     //create new chat with chatroom id
-    const newSocket = new WebSocket(`wss://localhost:3001/chat/${chatroomId}`);
+    const newSocket = new WebSocket(`wss://ws.robinplants.com/chat/${chatroomId}`);
     setSocket(newSocket);
 
     newSocket.onerror = (error) => {
