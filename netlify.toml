@@ -1,0 +1,5 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+  # Minimal: allow fetch/websocket connections to your site + ws subdomain
+  Content-Security-Policy = "connect-src 'self' https: wss: https://ws.robinplants.com wss://ws.robinplants.com;"
