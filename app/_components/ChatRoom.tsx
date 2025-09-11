@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { UserContext } from "../_providers/UserProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,6 +21,13 @@ export default function ChatRoom() {
   const [typing, setTyping] = useState<Array<string>>([]);
   const [typingDebounce, setTypingDebounce] = useState<number>(Date.now());
   const [sentTyping, setSentTyping] = useState<boolean>(false);
+
+  const createChat = useCallback(async () => {
+    const createChatResult = await fetch(`/api/chat?display_id=${chatroomId}`, {
+      method: "POST",
+    }).then((res) => res.json());
+    return createChatResult;
+  }, [chatroomId]);
 
   useEffect(() => {
     async function getMessages() {
@@ -63,7 +70,7 @@ export default function ChatRoom() {
     }
 
     doesChatExist();
-  }, []);
+  }, [chatroomId, createChat]);
 
   useEffect(() => {
     if (!chatroomId) return;
@@ -106,7 +113,7 @@ export default function ChatRoom() {
     };
 
     return () => newSocket.close();
-  }, [chatroomId]);
+  }, [chatroomId, message, typing]);
 
   const sendMessage = async () => {
     if (!message || message.length === 0) {
@@ -144,13 +151,6 @@ export default function ChatRoom() {
       setMessage("");
     }
   };
-
-  async function createChat() {
-    const createChatResult = await fetch(`/api/chat?display_id=${chatroomId}`, {
-      method: "POST",
-    }).then((res) => res.json());
-    return createChatResult;
-  }
 
   async function adjustTypeTime() {
     setTypingDebounce(Date.now());

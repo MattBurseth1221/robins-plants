@@ -141,7 +141,7 @@ async function resetPasswordEmail(usernameValue: string) {
   if (emailAlreadySentResult.rows[0].count >= 1)
     return NextResponse.json({ error: "Email already sent" });
 
-  const tempPassword = await createTempPassword();
+  const tempPassword = await createTempPassword(12);
 
   //Make entry in password_change_request table
   try {
