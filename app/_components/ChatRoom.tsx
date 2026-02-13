@@ -73,7 +73,7 @@ export default function ChatRoom() {
   useEffect(() => {
     if (!chatroomId) return;
 
-    const ws = new WebSocket(`wss://ws.robinplants.com/chat/${chatroomId}`);
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_CHAT_SOCKET_URL as string}/${chatroomId}`);
     socketRef.current = ws;
 
     ws.onerror = (error) => console.log(error);

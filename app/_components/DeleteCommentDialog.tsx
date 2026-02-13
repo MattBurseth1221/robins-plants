@@ -35,7 +35,6 @@ export default function DeleteDialog({
     }).then((res) => res.json());
 
     if (response.success) {
-      console.log(response.success);
       deleteCommentFromArray();
     } else {
       console.log(response.error);

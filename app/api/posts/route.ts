@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       break;
   }
 
-  const postQuery = `SELECT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery}ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
+  const postQuery = `SELECT DISTINCT p.*, u.username FROM posts p LEFT JOIN auth_user u ON p.user_id = u.id ${whereQuery} ORDER BY ${sortQuery} ${orderParam} LIMIT ${limitParam}`;
 
   const queryResult = (await pool.query(postQuery)).rows;
 

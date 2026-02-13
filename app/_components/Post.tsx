@@ -149,8 +149,6 @@ export default function Post({
         resultingComment.username = user.username;
 
         setComments([resultingComment, ...comments]);
-
-        console.log(response.success);
       } else {
         throw(response.error);
       }
@@ -173,10 +171,9 @@ export default function Post({
       ).then((res) => res.json());
 
       if (likeResponse.success) {
-        console.log(likeResponse.success);
         setNumLikes(numLikes + 1);
       } else {
-        alert("Something went wrong.");
+        alert("Problem liking post.");
       }
     } else {
       const deleteLikeResponse = await fetch(
@@ -187,10 +184,9 @@ export default function Post({
       ).then((res) => res.json());
 
       if (deleteLikeResponse.success) {
-        console.log(deleteLikeResponse.success);
         setNumLikes(numLikes - 1);
       } else {
-        alert("Error liking post.");
+        alert("Problem unliking post.");
       }
     }
 
@@ -216,14 +212,14 @@ export default function Post({
   return post ? (
     <>
       <div className="border-border border-2 bg-surface mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] lg:min-w-[600px] md:min-w-[600px] flex flex-col shadow-md">
-        <p className="float-left mt-4 text-2xl text-left text-text">{post.title}</p>
-        <div className="flex flex-row">
+        <p className="float-left mt-4 text-2xl text-left text-text mb-2">{post.title}</p>
+        {/* <div className="flex flex-row">
           {postPills.map((pill: PillType, index: number) => {
           return (
             <PostPill key={ index } type={ pill.type } text={ pill.text } />
           )
         })}
-        </div>
+        </div> */}
         
         <div
           className={`relative ${

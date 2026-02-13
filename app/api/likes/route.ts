@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
   const user_id = searchParams.get("user_id");
 
   try {
-    const query = `SELECT p.* FROM likes l LEFT JOIN posts p on l.parent_id = p.post_id WHERE l.user_id = '${user_id}'`;
+    const query = `SELECT DISTINCT p.* FROM likes l LEFT JOIN posts p on l.parent_id = p.post_id WHERE l.user_id = '${user_id}'`;
 
     const likedItemsResponse = (await pool.query(query)).rows;
 

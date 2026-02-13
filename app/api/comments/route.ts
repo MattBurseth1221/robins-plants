@@ -83,8 +83,6 @@ export async function PUT(request: NextRequest) {
 //AND PASSED DOWN VIA PROPS TO POST COMPONENT
 //THEN YOU CAN PASS SETCOMMENT DOWN AS WELL TO EDIT AND DELETE COMMENTS WITHOUT REFRESH
 export async function GET(request: NextRequest) {
-  console.log("Fetching comments");
-
   const searchParams = request.nextUrl.searchParams;
   const post_id = searchParams.get("post_id");
   const user_id = searchParams.get("user_id");
