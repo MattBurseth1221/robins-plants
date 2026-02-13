@@ -171,7 +171,7 @@ export default function ChatRoom() {
           <div key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
             <div className={`flex flex-col max-w-xs ${isCurrentUser ? 'items-end' : 'items-start'}`}>
               {!isCurrentUser && !isConsecutiveFromSameUser && (
-                <span className="text-xs text-muted mb-1">{msg.username}</span>
+                <span className="text-xs text-muted mt-2">{msg.username}</span>
               )}
               <div
                 className={`px-4 py-2 rounded-2xl ${

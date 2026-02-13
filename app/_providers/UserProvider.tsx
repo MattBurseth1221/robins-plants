@@ -10,7 +10,7 @@ export default function ThemeProvider({
   children, user
 }: {
   children: React.ReactNode, 
-  user: User
+  user: User | null
 }) {
   // const searchParams = useSearchParams();
   const router = useRouter();

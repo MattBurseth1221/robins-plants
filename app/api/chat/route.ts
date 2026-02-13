@@ -9,7 +9,10 @@ export async function GET(req: NextRequest) {
 
   try {
     const chatResult = (
-      await pool.query(`SELECT * FROM chats WHERE display_id = '${displayId}'`)
+      await pool.query({
+        text: `SELECT * FROM chats WHERE display_id = $1`,
+        values: [displayId]
+      })
     ).rows;
 
     return NextResponse.json({ success: chatResult });
@@ -22,8 +25,6 @@ export async function POST(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const displayId = searchParams.get("display_id");
   const newUUID = uuidv4();
-
-  console.log("creating chat?");
 
   try {
     pool.query("BEGIN;");

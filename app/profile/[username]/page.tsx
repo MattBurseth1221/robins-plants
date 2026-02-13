@@ -19,7 +19,7 @@ export default async function ProfilePage(context: any) {
   return (
     <UserProvider user={user}>
       <main className="flex min-h-screen bg-background">
-        <div className="pt-5 flex flex-col fixed h-[100vh] px-5">
+        <div className="flex flex-col fixed h-[100vh]">
           <MainNav active={"Profile"} />
         </div>
 
