@@ -53,7 +53,7 @@ export default function DeleteDialog({
     >
       {/* Dimmed background overlay */}
       {confirmDeletePost && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity" aria-hidden="true" />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity" aria-hidden="true" />
       )}
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
         <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">

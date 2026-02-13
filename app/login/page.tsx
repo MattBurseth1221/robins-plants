@@ -30,7 +30,7 @@ export default async function Page() {
                 name="username"
                 id="username"
                 placeholder="Email"
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <div>
@@ -40,7 +40,7 @@ export default async function Page() {
                 name="password"
                 id="password"
                 placeholder="Password"
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <button className="w-full bg-primary text-white border border-primary rounded-md px-6 py-3 font-semibold hover:bg-primaryDark transition mt-4">

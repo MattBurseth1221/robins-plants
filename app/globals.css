@@ -1,17 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-.anybody-fonty {
-  font-family: "Jost", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+@theme {
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+  --background-image-login-bg: url('../public/login-background-min.jpg');
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-primary: #2563eb;
+  --color-primaryDark: #1e40af;
+  --color-secondary: #f59e42;
+  --color-secondaryDark: #ea580c;
+  --color-accent: #10b981;
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --color-error: #ef4444;
+  --color-success: #22c55e;
 }
 
-/* .anybody-fonty {
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@layer utilities {
+  .anybody-fonty {
+    font-family: 'Jost', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: 'wdth' 100;
+  }
+
+  /* .anybody-fonty {
   font-family: "Anybody", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
@@ -20,11 +64,11 @@
     "wdth" 100;
 } */
 
-/* * {
+  /* * {
   font-family: Georgia, serif;
 } */
 
-/* :root {
+  /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -48,21 +92,16 @@ body {
     rgb(var(--background-start-rgb));
 } */
 
-Form label {
-  width: 100%;
-}
+  Form label {
+    width: 100%;
+  }
 
-Form input,
-Form textarea {
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  padding: 4px;
-  width: 100%;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  Form input,
+  Form textarea {
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    padding: 4px;
+    width: 100%;
   }
 }
 

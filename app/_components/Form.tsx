@@ -83,7 +83,7 @@ export function Form({
 
   return (
     <form
-      className="mb-2 mt-4 flex flex-col justify-center items-center w-[100%] max-w-md"
+      className="mb-2 mt-4 flex flex-col justify-center items-center w-full max-w-md"
       action={formAction}
       onChange={(e: any) => {
         if (page !== "login" && e.target.id === "password") {

@@ -145,7 +145,7 @@ export default function Page() {
               onChange={(e) => {
                 setUsernameValue(e.target.value);
               }}
-              className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition disabled:opacity-50"
+              className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition disabled:opacity-50"
             />
           </div>
           {!isSendEmailButtonHidden && (
@@ -193,7 +193,7 @@ export default function Page() {
               onChange={(e) => {
                 setPasswordValue(e.target.value);
               }}
-              className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
             />
           </div>
           <div>
@@ -206,7 +206,7 @@ export default function Page() {
               onChange={(e) => {
                 setConfirmPasswordValue(e.target.value);
               }}
-              className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+              className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
             />
           </div>
           <button

@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useContext, useEffect, useRef, createContext, useMemo } from "react";
+import {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  createContext,
+  useMemo,
+} from "react";
 import { CommentType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import { formatDate, userIsAdmin } from "../_utils/helper-functions";
@@ -35,9 +42,12 @@ import PostPill from "./PostPill";
 export type CommentContextType = {
   comments: CommentType[];
   setComments: Function;
-}
+};
 
-export const CommentContext = createContext<CommentContextType>({comments: [], setComments: () => {}});
+export const CommentContext = createContext<CommentContextType>({
+  comments: [],
+  setComments: () => {},
+});
 
 export default function Post({
   deletePostFromArray,
@@ -49,7 +59,7 @@ export default function Post({
   const user = useContext(UserContext);
   const post = useContext(PostContext);
   const [comments, setComments] = useState<CommentType[]>([]);
-  const value = useMemo(() => ({comments, setComments}), [comments])
+  const value = useMemo(() => ({ comments, setComments }), [comments]);
   const [numLikes, setNumLikes] = useState<number>(post!.total_likes);
   const [confirmDeletePost, setConfirmDeletePost] = useState<boolean>(false);
   const [editingPost, setEditingPost] = useState<boolean>(false);
@@ -60,7 +70,10 @@ export default function Post({
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [heartBeat, setHeartBeat] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const [postPills, setPostPills] = useState<PillType[]>([{ type: "genus", text: "Zinnia" }, { type: "postType", text: "Progress" }]);
+  const [postPills, setPostPills] = useState<PillType[]>([
+    { type: "genus", text: "Zinnia" },
+    { type: "postType", text: "Progress" },
+  ]);
 
   const UpdateDialogProps = {
     editingPost,
@@ -94,17 +107,21 @@ export default function Post({
   useEffect(() => {
     async function getComments() {
       try {
-        const commentResult = await fetch(`/api/comments?post_id=${post?.post_id}`, {
-          method: "GET",
-        }).then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
-            return;
-          }
+        const commentResult = await fetch(
+          `/api/comments?post_id=${post?.post_id}`,
+          {
+            method: "GET",
+          },
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              console.log(data.error);
+              return;
+            }
 
-          setComments(data.data);
-        })
+            setComments(data.data);
+          });
       } catch (e) {
         console.log("Error fetching comments.");
         return;
@@ -150,7 +167,7 @@ export default function Post({
 
         setComments([resultingComment, ...comments]);
       } else {
-        throw(response.error);
+        throw response.error;
       }
     } catch (e) {
       console.log(e);
@@ -167,7 +184,7 @@ export default function Post({
         `/api/likes?post_id=${post!.post_id}&user_id=${user.id}`,
         {
           method: "POST",
-        }
+        },
       ).then((res) => res.json());
 
       if (likeResponse.success) {
@@ -180,7 +197,7 @@ export default function Post({
         `/api/likes?parent_id=${post!.post_id}&user_id=${user.id}`,
         {
           method: "DELETE",
-        }
+        },
       ).then((res) => res.json());
 
       if (deleteLikeResponse.success) {
@@ -211,8 +228,10 @@ export default function Post({
 
   return post ? (
     <>
-      <div className="border-border border-2 bg-surface mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-[100%] lg:min-w-[600px] md:min-w-[600px] flex flex-col shadow-md">
-        <p className="float-left mt-4 text-2xl text-left text-text mb-2">{post.title}</p>
+      <div className="border-border border-2 bg-surface mb-8 rounded-2xl text-center px-8 pb-8 justify-center w-full lg:min-w-[600px] md:min-w-[600px] flex flex-col shadow-md">
+        <p className="float-left mt-4 text-2xl text-left text-text mb-2">
+          {post.title}
+        </p>
         {/* <div className="flex flex-row">
           {postPills.map((pill: PillType, index: number) => {
           return (
@@ -220,7 +239,7 @@ export default function Post({
           )
         })}
         </div> */}
-        
+
         <div
           className={`relative ${
             post.image_refs.length > 1 ? "h-[600px]" : ""
@@ -253,7 +272,7 @@ export default function Post({
               style={{
                 width: "100%",
                 maxWidth: "800px",
-                height: "auto"
+                height: "auto",
               }}
               height="0"
               width="1000"
@@ -261,46 +280,58 @@ export default function Post({
               className="rounded-md mx-auto border-2 border-border block"
             />
           )}
+
+          <button
+            className="absolute cursor-pointer left-0"
+            onClick={() => {
+              handleImageIndexChange(-1);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faSquareCaretLeft}
+              className="size-8 opacity-75 text-muted"
+            />
+          </button>
+          <button
+            className="absolute cursor-pointer right-0"
+            onClick={() => {
+              handleImageIndexChange(1);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faSquareCaretRight}
+              className="size-8 opacity-75 text-muted"
+            />
+          </button>
         </div>
 
         <div className="min-h-16 mt-2">
           <div className="grid grid-cols-3 border-b border-border border-opacity-50 pb-2">
-            <Link className="text-left text-xl hover:text-muted transition-all text-text" href={`/profile/${post.username}`}>{post.username}</Link>
+            <div className="text-left">
+              <Link
+                className="text-left text-xl hover:text-muted transition-all text-text"
+                href={`/profile/${post.username}`}
+              >
+                {post.username}
+              </Link>
+            </div>
 
             {post.image_refs!.length !== 1 && (
-              <div className="flex justify-center h-8">
-                <button
-                  onClick={() => {
-                    handleImageIndexChange(-1);
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faSquareCaretLeft}
-                    className="size-8 opacity-50 text-muted"
-                  />
-                </button>
-                <button
-                  onClick={() => {
-                    handleImageIndexChange(1);
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faSquareCaretRight}
-                    className="size-8 opacity-50 text-muted"
-                  />
-                </button>
-              </div>
+              <div className="flex justify-center h-8"></div>
             )}
 
             <div
               className={`${
                 post.image_refs!.length === 1 ? "col-span-2" : ""
-              } flex mr-0 ml-auto`}
+              } flex mr-0 ml-auto items-center`}
             >
-              <p className="text-right text-muted">
+              <p className="text-right text-muted text-sm">
                 {formatDate(new Date(post.create_date))}
               </p>
-              <button className="ml-2 hover:bg-accent/10 transition rounded-md p-1" onClick={handleLikePost}>
+              <button
+                className="ml-2 hover:bg-accent/10 transition rounded-md p-1"
+                onClick={handleLikePost}
+              >
                 <FontAwesomeIcon
                   icon={postLiked ? faHeartSolid : faHeartOutline}
                   beat={heartBeat}
@@ -310,7 +341,9 @@ export default function Post({
             </div>
           </div>
 
-          <p className="text-left mt-4 break-words line-clamp-3 text-text">{post.body}</p>
+          <p className="text-left mt-4 wrap-break-word line-clamp-3 text-text">
+            {post.body}
+          </p>
 
           <div>
             <form
@@ -343,7 +376,7 @@ export default function Post({
                     <CommentContext.Provider key={index} value={value}>
                       <Comment {...comment} />
                     </CommentContext.Provider>
-                  )
+                  );
                 })
             ) : (
               <div className="opacity-50 text-center text-muted">
@@ -358,7 +391,7 @@ export default function Post({
         {(userIsAdmin(user) || post.username === user!.username) && (
           <div className="w-[20%] mx-auto mt-4 flex justify-between">
             <button
-              className="hover:bg-secondary hover:text-white bg-surface text-secondary border border-secondary transition rounded-md p-2"
+              className="hover:bg-secondary hover:text-white bg-surface text-secondary border border-secondary transition rounded-md p-2 hover:cursor-pointer"
               onClick={() => {
                 setEditingPost(!editingPost);
               }}
@@ -367,7 +400,7 @@ export default function Post({
             </button>
 
             <button
-              className="hover:bg-error hover:text-white bg-surface text-error border border-error transition rounded-md p-2"
+              className="hover:bg-error hover:text-white bg-surface text-error border border-error transition rounded-md p-2 hover:cursor-pointer"
               onClick={() => {
                 setConfirmDeletePost(!confirmDeletePost);
               }}

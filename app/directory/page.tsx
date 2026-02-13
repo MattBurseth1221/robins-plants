@@ -12,7 +12,7 @@ export default async function Directory() {
   return (
     <UserProvider user={user} >
       <main className="flex min-h-screen bg-background">
-      <div className="flex flex-col fixed h-[100vh]">
+      <div className="flex flex-col fixed h-screen">
         <MainNav active={"Directory"} />
       </div>
 

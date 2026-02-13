@@ -180,7 +180,7 @@ export default function ChatRoom() {
                     : "bg-background border border-border text-text"
                 } mt-1`}
               >
-                <p className="text-sm break-words break-all">{msg.content}</p>
+                <p className="text-sm wrap-break-word break-all">{msg.content}</p>
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function ChatRoom() {
           <input
             placeholder="Send a message..."
             autoComplete="off"
-            className="flex-1 p-3 border border-border rounded-xl bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+            className="flex-1 p-3 border border-border rounded-xl bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);
@@ -231,7 +231,7 @@ export default function ChatRoom() {
           />
           <button
             type="submit"
-            className="bg-primary text-white p-3 rounded-xl hover:bg-primaryDark transition focus:outline-none focus:ring-2 focus:ring-primary/20 flex-shrink-0"
+            className="bg-primary text-white p-3 rounded-xl hover:bg-primaryDark transition focus:outline-hidden focus:ring-2 focus:ring-primary/20 shrink-0"
           >
             <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
           </button>

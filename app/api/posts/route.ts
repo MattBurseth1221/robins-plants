@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
   //   const commentQuery = `select c.*, u.username
   //   from comments c
-  //   left join auth_user u 
+  //   left join auth_user u
   //   on c.user_id = u.id
   //   where c.post_id = '${post_id}'
   //   order by c.create_date DESC`;
@@ -133,27 +133,30 @@ export async function PUT(request: NextRequest) {
     const body = formData.get("body");
 
     const oldImageRefsString = formData.get("image_refs") as string;
-    const oldImageRefs = oldImageRefsString!.split(',');
-    
-    //Get files from formData and filter out weird ghost file 
-    let files = formData.getAll("files") as File[];
-    files = files.filter((file) => file.type !== 'application/octet-stream');
+    const oldImageRefs = oldImageRefsString!.split(",");
 
-    var query = "";
+    //Get files from formData and filter out weird ghost file
+    let files = formData.getAll("files") as File[];
+    files = files.filter((file) => file.type !== "application/octet-stream");
+
+    let query;
 
     await pool.query("BEGIN;");
 
     //If there was no file changes AKA photo is not changing, then we don't update image_ref
     if (files.length === 0) {
       console.log("got here?");
-      query = `UPDATE posts SET title = '${title}', body = '${body}' WHERE post_id = '${id}'`;
+      query = {
+        text: `UPDATE posts SET title = $1, body = $2 WHERE post_id = $3`,
+        values: [title, body, id],
+      };
 
       console.log(query);
     } else {
       //Go through all previous images in post and delete from S3
       oldImageRefs.forEach(async (ref) => {
         await deleteFileFromS3(ref);
-      })
+      });
 
       //Upload images to S3
       let fileName = "";
@@ -166,7 +169,10 @@ export async function PUT(request: NextRequest) {
 
       console.log(fileName + " success");
 
-      query = `UPDATE posts SET title = '${title}', body = '${body}', image_ref = '${fileName.slice(0, -1)}' WHERE post_id = '${id}'`;
+      query = {
+        text: `UPDATE posts SET title = $1, body = $2, image_ref = $3 WHERE post_id = $4`,
+        values: [title, body, fileName.slice(0, -1), id],
+      };
     }
 
     await pool.query(query);

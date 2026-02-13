@@ -37,7 +37,7 @@ export default async function RootLayout({
           </style>
         </head>
 
-        <body className="bg-gradient-to-b  from-slate-200 from-50% via-slate-300  to-slate-500 to-90% anybody-fonty">
+        <body className="bg-linear-to-b  from-slate-200 from-50% via-slate-300  to-slate-500 to-90% anybody-fonty">
           <SessionProvider value={session}>{children}</SessionProvider>
         </body>
       </html>
