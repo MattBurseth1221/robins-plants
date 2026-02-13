@@ -8,7 +8,7 @@ import { UUID } from "node:crypto";
 export default function Page() {
   const [usernameValue, setUsernameValue] = useState<string>("");
   const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
-  const [displayMessage, setDisplayMessage] = useState<JSX.Element>(<></>);
+  const [displayMessage, setDisplayMessage] = useState<any>(<></>);
   const [passwordValue, setPasswordValue] = useState<string>("");
   const [confirmPasswordValue, setConfirmPasswordValue] = useState<string>("");
   const [changingUserID, setChangingUserID] = useState<UUID | null>(null);
