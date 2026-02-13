@@ -29,7 +29,7 @@ export default async function Page() {
                 id="firstname"
                 minLength={2}
                 maxLength={32}
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <div>
@@ -39,7 +39,7 @@ export default async function Page() {
                 id="lastname"
                 minLength={2}
                 maxLength={32}
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <div>
@@ -47,7 +47,7 @@ export default async function Page() {
               <input
                 name="username"
                 id="username"
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <div>
@@ -56,7 +56,7 @@ export default async function Page() {
                 type="email"
                 name="email"
                 id="email"
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <div>
@@ -65,7 +65,7 @@ export default async function Page() {
                 type="password"
                 name="password"
                 id="password"
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
             <div>
@@ -74,7 +74,7 @@ export default async function Page() {
                 type="password"
                 name="confirm-password"
                 id="confirm-password"
-                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-3 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </div>
           </div>

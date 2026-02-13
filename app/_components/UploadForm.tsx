@@ -145,7 +145,7 @@ export default function UploadForm() {
             type="file"
             name="files"
             accept="image/jpeg,video/*,image/png"
-            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 file:rounded-full file:shadow-md file:bg-primary file:border-0 file:text-white file:text-sm file:py-2 file:px-4 file:font-sans hover:file:bg-primaryDark cursor-pointer transition"
+            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 file:rounded-full file:shadow-md file:bg-primary file:border-0 file:text-white file:text-sm file:py-2 file:px-4 file:font-sans hover:file:bg-primaryDark cursor-pointer transition"
             multiple
             required
           />
@@ -164,7 +164,7 @@ export default function UploadForm() {
             <div className={`absolute top-0.5 left-1 bg-background border border-border rounded-full h-5 w-5 transition-all ${detectChecked ? 'translate-x-5 border-primary' : ''}`}></div>
           </div>
           <p className="text-sm mt-1">
-            <span className="text-muted outline-none">
+            <span className="text-muted outline-hidden">
               <span className="mr-1">&#x24D8;</span>Will detect the plant species in future releases
             </span>
           </p>
@@ -172,7 +172,7 @@ export default function UploadForm() {
         <label className="block text-left w-full mb-4">
           <span className="text-text font-medium">Title</span>
           <input
-            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
             type="text"
             name="title"
             placeholder="Title"
@@ -186,7 +186,7 @@ export default function UploadForm() {
             textValue={bodyText}
             setTextValue={setBodyText}
             name="body"
-            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+            className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
             placeholder="Body"
             required={true}
           />
@@ -249,7 +249,7 @@ export default function UploadForm() {
                     height="100"
                     className="rounded-md h-auto inline-block w-[100px]"
                   />
-                  <div className="flex-grow text-left flex flex-col pl-4">
+                  <div className="grow text-left flex flex-col pl-4">
                     <span className="font-semibold">
                       {result.species.commonNames.length !== 0
                         ? `${result.species.scientificName}, or "${result.species.commonNames[0]}"`

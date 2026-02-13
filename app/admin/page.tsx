@@ -14,11 +14,11 @@ export default async function Page() {
   return (
     <UserProvider user={user}>
       <main className="flex min-h-screen bg-background">
-        <div className="flex flex-col fixed h-[100vh]">
+        <div className="flex flex-col fixed h-screen">
           <MainNav active={"Admin"} />
         </div>
 
-        <div className="p-10 text-center lg:w-[60%] md:w-[60%] sm:w-[100%] mx-auto items-center">
+        <div className="p-10 text-center lg:w-[60%] md:w-[60%] sm:w-full mx-auto items-center">
           <div className="bg-surface rounded-xl shadow-lg border border-border w-full p-8">
             {/* <PageTitle title="- Create Post -" /> */}
             <UploadForm />

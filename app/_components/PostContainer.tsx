@@ -141,7 +141,7 @@ export default function PostContainer() {
       <div className="mb-6">
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 bg-surface border border-border rounded-lg px-4 py-2 text-text hover:bg-primary/10 transition focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="flex items-center gap-2 bg-surface border border-border rounded-lg px-4 py-2 text-text hover:bg-primary/10 transition focus:outline-hidden focus:ring-2 focus:ring-primary/20"
         >
           <FontAwesomeIcon icon={faFilter} className="text-muted" />
           <span className="font-medium">Filters</span>
@@ -154,7 +154,7 @@ export default function PostContainer() {
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="mb-6 bg-surface border border-border rounded-xl p-6 shadow-sm">
+        <div className="mb-6 bg-surface border border-border rounded-xl p-6 shadow-xs">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-text">Sort & Filter</h3>
             <button
@@ -174,7 +174,7 @@ export default function PostContainer() {
                 value={filters.sortType}
                 name="sort"
                 onChange={(e) => setFilters({ ...filters, sortType: e.target.value })}
-                className="w-full border border-border rounded-md p-2 cursor-pointer bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full border border-border rounded-md p-2 cursor-pointer bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               >
                 <option value="date">Date</option>
                 <option value="title">Title</option>
@@ -188,7 +188,7 @@ export default function PostContainer() {
               </label>
               <button
                 onClick={toggleSortOrder}
-                className="w-full flex items-center justify-center gap-2 p-2 bg-background border border-border rounded-md text-text hover:bg-primary/10 transition focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full flex items-center justify-center gap-2 p-2 bg-background border border-border rounded-md text-text hover:bg-primary/10 transition focus:outline-hidden focus:ring-2 focus:ring-primary/20"
               >
                 <FontAwesomeIcon
                   icon={sortOrder === "DESC" ? faLongArrowDown : faLongArrowUp}

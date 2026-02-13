@@ -22,7 +22,7 @@ export default function Comment(comment: CommentType) {
         </p>
       </div>
 
-      <p className="text-left break-words line-clamp-3 text-text">{comment.body}</p>
+      <p className="text-left wrap-break-word line-clamp-3 text-text">{comment.body}</p>
     </div>
   );
 }

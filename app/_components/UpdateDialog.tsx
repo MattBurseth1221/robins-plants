@@ -99,7 +99,7 @@ export default function UpdateDialog({
     >
       {/* Dimmed background overlay */}
       {editingPost && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity" aria-hidden="true" />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity" aria-hidden="true" />
       )}
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
         <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
@@ -149,7 +149,7 @@ export default function UpdateDialog({
                 name="title"
                 maxLength={200}
                 required
-                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </label>
             <label>
@@ -159,7 +159,7 @@ export default function UpdateDialog({
                 name="body"
                 rows={5}
                 required
-                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
               />
             </label>
           </form>

@@ -19,7 +19,7 @@ export default function PostPill({
   }
 
   return (
-    <div className={`rounded-3xl border-[1px] ${borderColor} px-2 m-2`}>
+    <div className={`rounded-3xl border ${borderColor} px-2 m-2`}>
       <span className={`${typeColor} text-sm`}>{`${text}`}</span>
     </div>
   );

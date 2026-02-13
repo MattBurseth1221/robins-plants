@@ -158,7 +158,7 @@ export default function ProfileOwner({
                 id="firstname"
                 minLength={2}
                 maxLength={32}
-                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
                 defaultValue={profileUser.first_name}
               />
             </div>
@@ -170,7 +170,7 @@ export default function ProfileOwner({
                 id="lastname"
                 minLength={2}
                 maxLength={32}
-                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
                 defaultValue={profileUser.last_name}
               />
             </div>
@@ -196,7 +196,7 @@ export default function ProfileOwner({
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Profile Header */}
-      <div className="mb-8 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-8 border border-border">
+      <div className="mb-8 bg-linear-to-r from-primary/10 to-secondary/10 rounded-xl p-8 border border-border">
         <div className="flex items-center space-x-6">
           <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold">
             {profileUser.username.charAt(0).toUpperCase()}
@@ -229,13 +229,13 @@ export default function ProfileOwner({
       <div className="bg-surface border border-border rounded-xl p-6">
         <TabGroup defaultIndex={0}>
           <TabList className="flex space-x-1 bg-background p-1 rounded-lg mb-6">
-            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 data-[selected]:bg-primary data-[selected]:text-white transition">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primary data-selected:text-white transition">
               Posts
             </Tab>
-            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 data-[selected]:bg-primary data-[selected]:text-white transition">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primary data-selected:text-white transition">
               Comments
             </Tab>
-            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 data-[selected]:bg-primary data-[selected]:text-white transition">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primary data-selected:text-white transition">
               Likes
             </Tab>
           </TabList>
@@ -324,7 +324,7 @@ export default function ProfileOwner({
           onClose={toggleDeleteAccountModal}
           className="fixed inset-0 z-50"
         >
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" aria-hidden="true" />
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40" aria-hidden="true" />
           <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
             <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
               <DialogTitle className="font-bold text-text">Delete Account?</DialogTitle>
