@@ -1,12 +1,4 @@
--- =========================
--- Schema Init Script
--- =========================
-
 CREATE SCHEMA IF NOT EXISTS public;
-
--- =========================
--- Tables
--- =========================
 
 CREATE TABLE IF NOT EXISTS public.auth_user (
     id uuid NOT NULL,

@@ -59,16 +59,28 @@ export async function POST(request: Request) {
     const postBody = formData.get("body");
     const user_id = formData.get("user_id");
 
-    const files = formData.getAll("files") as File[];
+    const originalFiles = formData.getAll("files") as File[];
+
+    const files = originalFiles.filter((file) => file.size !== 0);
+
+    console.log(files);
 
     let fileName = "";
 
-    //Upload images to S3
-    for (let i = 0; i < files.length; i++) {
-      fileName += (await uploadFileToS3(files[i], files[i].name)) + ";";
-    }
+    if (files && files.length !== 0) {
+      //Upload images to S3
+      for (let i = 0; i < files.length; i++) {
+        let s3Result = (await uploadFileToS3(files[i], files[i].name));
 
-    if (fileName === "") throw new Error();
+        if (s3Result.success) fileName += s3Result.success + ";"
+        if (s3Result.error) {
+          console.log(s3Result.error);
+          return;
+        } 
+      }
+
+      if (fileName === "") throw new Error();
+    }
 
     //Upload post info to database
     const newUUID = uuidv4();

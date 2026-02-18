@@ -106,7 +106,7 @@ export default function PostContainer() {
         });
 
       for (let i = 0; i < postArray.length; i++) {
-        postArray[i].image_refs = postArray[i].image_ref.split(";");
+        postArray[i].image_refs = postArray[i].image_ref !== "" ? postArray[i].image_ref.split(";") : [];
       }
 
       setPosts(postArray);
@@ -121,9 +121,7 @@ export default function PostContainer() {
   function toggleSortOrder() {
     setSortOrder(sortOrder === "DESC" ? "ASC" : "DESC");
 
-    let newPosts = [...posts];
-    newPosts.reverse();
-    setPosts(newPosts);
+    setPosts(posts.reverse());
   }
 
   function deletePostFromArray(id: UUID) {

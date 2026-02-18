@@ -170,19 +170,30 @@ export default function ProfileOwner({
                 id="lastname"
                 minLength={2}
                 maxLength={32}
-                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
+                className="w-full p-2 rounded-md bg-background text-text transition"
                 defaultValue={profileUser.last_name}
               />
             </div>
+            {/* <div>
+              <label htmlFor="pronouns" className="block text-text font-medium mb-2">Pronouns</label>
+              <input
+                name="pronouns"
+                id="pronouns"
+                minLength={2}
+                maxLength={32}
+                className="w-full p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition"
+                defaultValue={ "He/Him" }
+              />
+            </div> */}
             <div className="flex gap-4">
               <button
-                className="flex-1 bg-primary text-white border border-primary rounded-md px-6 py-2 font-semibold hover:bg-primaryDark transition"
+                className="flex-1 bg-primaryDark text-white border border-primaryDark rounded-md px-6 py-2 font-semibold hover:bg-primary hover:border-primary cursor-pointer transition"
                 type="submit"
               >
                 Save
               </button>
               <button
-                className="flex-1 bg-surface text-muted border border-border rounded-md px-6 py-2 font-semibold hover:bg-background transition"
+                className="flex-1 bg-surface text-muted border border-border rounded-md px-6 py-2 font-semibold hover:bg-background cursor-pointer transition"
                 onClick={() => setEditingProfile(false)}
               >
                 Cancel
@@ -195,8 +206,7 @@ export default function ProfileOwner({
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* Profile Header */}
-      <div className="mb-8 bg-linear-to-r from-primary/10 to-secondary/10 rounded-xl p-8 border border-border">
+      <div className="mb-8 bg-linear-to-r from-primary/20 to-secondary/20 rounded-xl p-8 border border-border">
         <div className="flex items-center space-x-6">
           <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold">
             {profileUser.username.charAt(0).toUpperCase()}
@@ -209,30 +219,28 @@ export default function ProfileOwner({
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="bg-surface border border-border rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-primary">{userPosts.length}</div>
+          <div className="text-2xl font-bold text-primaryDark">{userPosts.length}</div>
           <div className="text-muted text-sm">Posts</div>
         </div>
         <div className="bg-surface border border-border rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-secondary">{userComments.length}</div>
+          <div className="text-2xl font-bold text-secondaryDark">{userComments.length}</div>
           <div className="text-muted text-sm">Comments</div>
         </div>
         <div className="bg-surface border border-border rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-accent">{likedPosts.length}</div>
+          <div className="text-2xl font-bold text-primary">{likedPosts.length}</div>
           <div className="text-muted text-sm">Likes</div>
         </div>
       </div>
 
-      {/* Content Tabs */}
-      <div className="bg-surface border border-border rounded-xl p-6">
+      <div className="bg-surface border border-border rounded-xl">
         <TabGroup defaultIndex={0}>
-          <TabList className="flex space-x-1 bg-background p-1 rounded-lg mb-6">
-            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primary data-selected:text-white transition">
+          <TabList className="flex space-x-1 bg-background p-1 rounded-lg m-6">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primaryDark data-selected:text-white transition">
               Posts
             </Tab>
-            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primary data-selected:text-white transition">
+            <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-secondaryDark data-selected:text-white transition">
               Comments
             </Tab>
             <Tab className="flex-1 py-2 px-4 rounded-md text-sm font-medium text-muted hover:text-text hover:bg-surface focus:outline-hidden focus:ring-2 focus:ring-primary/20 data-selected:bg-primary data-selected:text-white transition">
@@ -241,13 +249,13 @@ export default function ProfileOwner({
           </TabList>
           <TabPanels>
             <TabPanel>
-              <h2 className="text-xl font-semibold text-text mb-4">Posts</h2>
+              <h2 className="text-xl font-semibold text-text mb-4 ml-6">Posts</h2>
               {userPosts.length !== 0 ? (
                 <div className="space-y-3">
                   {userPosts.map((post: PostType) => (
                     <div
                       key={post.post_id}
-                      className="bg-background border border-border rounded-lg p-4 hover:bg-primary/5 transition"
+                      className="not-even:bg-background w-full p-2 transition"
                     >
                       <div className="font-medium text-text">{post.title}</div>
                       <div className="text-muted text-sm">{formatDate(new Date(post.create_date))}</div>
@@ -259,13 +267,13 @@ export default function ProfileOwner({
               )}
             </TabPanel>
             <TabPanel>
-              <h2 className="text-xl font-semibold text-text mb-4">Comments</h2>
+              <h2 className="text-xl font-semibold text-text mb-4 ml-6">Comments</h2>
               {userComments.length !== 0 ? (
                 <div className="space-y-3">
                   {userComments.map((comment: CommentType) => (
                     <div
                       key={comment.comment_id}
-                      className="bg-background border border-border rounded-lg p-4 hover:bg-primary/5 transition"
+                      className="not-even:bg-background w-full p-2 transition"
                     >
                       <div className="text-text">{comment.body}</div>
                       <div className="text-muted text-sm mt-2">{formatDate(new Date(comment.create_date))}</div>
@@ -277,13 +285,13 @@ export default function ProfileOwner({
               )}
             </TabPanel>
             <TabPanel>
-              <h2 className="text-xl font-semibold text-text mb-4">Likes</h2>
+              <h2 className="text-xl font-semibold text-text mb-4 ml-6">Likes</h2>
               {likedPosts.length !== 0 ? (
-                <div className="space-y-3">
+                <div className="">
                   {likedPosts.map((post: PostType) => (
                     <div
                       key={post.post_id}
-                      className="bg-background border border-border rounded-lg p-4 hover:bg-primary/5 transition"
+                      className="not-even:bg-background w-full p-2 transition"
                     >
                       <div className="font-medium text-text">{post.title}</div>
                       <div className="text-muted text-sm">{formatDate(new Date(post.create_date))}</div>
@@ -298,26 +306,24 @@ export default function ProfileOwner({
         </TabGroup>
       </div>
 
-      {/* Action Buttons */}
       {(user?.username === profileUser.username || userIsAdmin(user)) && (
         <div className="flex gap-4 justify-center mt-8">
           <button
             onClick={() => setEditingProfile(true)}
-            className="bg-secondary text-white border border-secondary rounded-md px-6 py-2 font-semibold hover:bg-secondaryDark transition"
+            className="bg-primaryDark text-white border border-primaryDark rounded-md px-6 py-2 font-semibold hover:bg-primaryDark/90 cursor-pointer transition"
           >
             Edit Profile
           </button>
 
-          <button
+          {/* <button
             onClick={() => setDeletingAccount(true)}
-            className="bg-error text-white border border-error rounded-md px-6 py-2 font-semibold hover:bg-error/80 transition"
+            className="bg-error text-white border border-error rounded-md px-6 py-2 font-semibold hover:bg-error/80 cursor-pointer transition"
           >
             Delete Account
-          </button>
+          </button> */}
         </div>
       )}
 
-      {/* Delete Account Modal */}
       {deletingAccount && (
         <Dialog
           open={deletingAccount}

@@ -65,7 +65,7 @@ export default function Page() {
     ).then((res) => res.json());
 
     if (passwordChangeResponse.error) {
-      
+      console.log(passwordChangeResponse.error)
       return;
     }
 

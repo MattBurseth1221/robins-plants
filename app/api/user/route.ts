@@ -14,9 +14,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "No username supplied to API." });
 
   try {
-    const fetchedUser = await pool.query(
-      `SELECT * FROM auth_user WHERE username = '${username}'`
-    );
+    const fetchedUser = await pool.query({
+      text: `SELECT * FROM auth_user WHERE username = $1`,
+      values: [username],
+    });
     delete fetchedUser.rows[0]["password_hash"];
     delete fetchedUser.rows[0]["email"];
 
@@ -34,15 +35,17 @@ export async function PUT(request: NextRequest) {
   const action = searchParams.get("action");
 
   if (action === "update-profile") {
-    console.log("got here aasdfa");
     const formData = await request.formData();
 
     try {
-      const updateProfileQuery = `UPDATE auth_user SET first_name = '${formData.get(
-        "firstname"
-      )}', last_name = '${formData.get("lastname")}' WHERE id = '${formData.get(
-        "user_id"
-      )}'`;
+      const updateProfileQuery = {
+        text: `UPDATE auth_user SET first_name = $1, last_name = $2 WHERE id = $3`,
+        values: [
+          formData.get("firstname"),
+          formData.get("lastname"),
+          formData.get("user_id"),
+        ],
+      };
 
       await pool.query("BEGIN;");
 
@@ -51,7 +54,6 @@ export async function PUT(request: NextRequest) {
       await pool.query("COMMIT;");
     } catch (e) {
       await pool.query("ROLLBACK;");
-      console.log(e);
       return NextResponse.json({ error: e });
     } finally {
       return NextResponse.json({ success: "Updated profile info." });
@@ -75,24 +77,25 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  console.log("trying to delete")
-
   try {
     const body = await request.json();
     const userId = body.user_id;
-
-    console.log(userId);
 
     if (!userId) throw new Error("No user ID supplied");
 
     await pool.query("BEGIN;");
 
     //Delete user session before account
-    await pool.query(`DELETE FROM user_session WHERE user_id = '${userId}'`)
-    await pool.query(`DELETE FROM auth_user WHERE id = '${userId}'`);
+    await pool.query({
+      text: `DELETE FROM user_session WHERE user_id = $1`,
+      values: [userId],
+    });
+    await pool.query({
+      text: `DELETE FROM auth_user WHERE id = $1`,
+      values: [userId],
+    });
 
     await pool.query("COMMIT;");
-
   } catch (e) {
     await pool.query("ROLLBACK;");
 
@@ -107,11 +110,17 @@ async function resetPassword(user_id: UUID, newPasswordHash: string) {
     await pool.query("BEGIN;");
 
     //Update password to new hash value
-    const passwordChangeQuery = `UPDATE auth_user SET password_hash = '${newPasswordHash}' WHERE id = '${user_id}'`;
+    const passwordChangeQuery = {
+      text: `UPDATE auth_user SET password_hash = $1 WHERE id = $2`,
+      values: [newPasswordHash, user_id],
+    };
     await pool.query(passwordChangeQuery);
 
     //Remove password request from DB
-    const deleteRequestQuery = `DELETE FROM password_change_requests WHERE user_id = '${user_id}'`;
+    const deleteRequestQuery = {
+      text: `DELETE FROM password_change_requests WHERE user_id = $1`,
+      values: [user_id],
+    };
     await pool.query(deleteRequestQuery);
 
     await pool.query("COMMIT;");
@@ -119,25 +128,26 @@ async function resetPassword(user_id: UUID, newPasswordHash: string) {
     return NextResponse.json({ success: "Password changed successfully" });
   } catch (e) {
     await pool.query("ROLLBACK;");
-    console.log(e);
     return NextResponse.json({ error: e });
   }
 }
 
 async function resetPasswordEmail(usernameValue: string) {
-  console.log("username value");
-  console.log(usernameValue);
-
-  const usernameQuery = `SELECT id, email, username FROM auth_user WHERE username = '${usernameValue}' OR email = '${usernameValue}'`;
+  const usernameQuery = {
+    text: `SELECT id, email, username FROM auth_user WHERE username = $1 OR email = $1`,
+    values: [usernameValue],
+  };
   const queryResult = (await pool.query(usernameQuery)).rows;
 
   if (!queryResult || queryResult.length === 0) {
     return NextResponse.json({ error: "No user found" });
   }
 
-  const emailAlreadySentQuery = `SELECT COUNT(*) FROM password_change_requests WHERE user_id = '${queryResult[0].id}'`;
+  const emailAlreadySentQuery = {
+    text: `SELECT COUNT(*) FROM password_change_requests WHERE user_id = $1`,
+    values: [queryResult[0].id],
+  };
   const emailAlreadySentResult = await pool.query(emailAlreadySentQuery);
-  console.log(emailAlreadySentResult);
   if (emailAlreadySentResult.rows[0].count >= 1)
     return NextResponse.json({ error: "Email already sent" });
 
@@ -160,7 +170,6 @@ async function resetPasswordEmail(usernameValue: string) {
     await pool.query("COMMIT;");
   } catch (e) {
     await pool.query("ROLLBACK;");
-    console.log(e);
     return NextResponse.json({ error: "something went wrong" });
   }
 
