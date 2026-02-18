@@ -11,8 +11,8 @@ import {
 import { CommentType } from "@/app/_components/PostContainer";
 import { UUID } from "crypto";
 import { formatDate, userIsAdmin } from "../_utils/helper-functions";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   faTrashCan,
   faEdit,
@@ -20,17 +20,13 @@ import {
   faAnglesDown,
   faAnglesUp,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faSquareCaretLeft,
-  faSquareCaretRight,
-} from "@fortawesome/free-regular-svg-icons";
+
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 
 import { UserContext } from "../_providers/UserProvider";
 import { PostContext } from "../_providers/PostProvider";
 
-import Image from "next/image";
 import UpdateDialog from "./UpdateDialog";
 import DeleteDialog from "./DeleteDialog";
 import Comment from "./Comment";
@@ -38,6 +34,10 @@ import Link from "next/link";
 
 import { PillType } from "../types";
 import PostPill from "./PostPill";
+import PostPhotoContainer from "./PostPhotoContainer";
+
+import { AutoTextArea } from "react-textarea-auto-witdth-height";
+import TextArea from "./TextArea";
 
 export type CommentContextType = {
   comments: CommentType[];
@@ -86,6 +86,12 @@ export default function Post({
     deletePostFromArray,
     confirmDeletePost,
     setConfirmDeletePost,
+  };
+
+  const PostPhotoContainerProps = {
+    images: post!.image_refs,
+    handleImageIndexChange,
+    currentImageIndex,
   };
 
   const showCommentDiv = (
@@ -240,73 +246,12 @@ export default function Post({
         })}
         </div> */}
 
-        <div
-          className={`relative ${
-            post.image_refs.length > 1 ? "h-[600px]" : ""
-          } overflow-auto flex items-center justify-center rounded-md bg-background`}
-        >
-          {post.image_refs![currentImageIndex].endsWith("-video") ? (
-            <video
-              width="600"
-              className="rounded-md mx-auto border-2 border-border overflow-hidden max-h-full"
-              controls
-              key={post.image_refs[currentImageIndex]}
-            >
-              <source
-                src={
-                  `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
-                    post.image_refs![currentImageIndex]
-                  }` || ""
-                }
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <Image
-              src={
-                `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
-                  post.image_refs![currentImageIndex]
-                }` || ""
-              }
-              style={{
-                width: "100%",
-                maxWidth: "800px",
-                height: "auto",
-              }}
-              height="0"
-              width="1000"
-              alt="A really pretty flower..."
-              className="rounded-md mx-auto border-2 border-border block"
-            />
-          )}
-
-          <button
-            className="absolute cursor-pointer left-0"
-            onClick={() => {
-              handleImageIndexChange(-1);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faSquareCaretLeft}
-              className="size-8 opacity-75 text-muted"
-            />
-          </button>
-          <button
-            className="absolute cursor-pointer right-0"
-            onClick={() => {
-              handleImageIndexChange(1);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faSquareCaretRight}
-              className="size-8 opacity-75 text-muted"
-            />
-          </button>
-        </div>
+        {post.image_refs.length > 0 && (
+          <PostPhotoContainer {...PostPhotoContainerProps} />
+        )}
 
         <div className="min-h-16 mt-2">
-          <div className="grid grid-cols-3 border-b border-border border-opacity-50 pb-2">
+          <div className="flex flex-row border-b border-border border-opacity-50 pb-2 relative">
             <div className="text-left">
               <Link
                 className="text-left text-xl hover:text-muted transition-all text-text"
@@ -316,15 +261,7 @@ export default function Post({
               </Link>
             </div>
 
-            {post.image_refs!.length !== 1 && (
-              <div className="flex justify-center h-8"></div>
-            )}
-
-            <div
-              className={`${
-                post.image_refs!.length === 1 ? "col-span-2" : ""
-              } flex mr-0 ml-auto items-center`}
-            >
+            <div className="flex flex-row items-center text-right absolute right-0">
               <p className="text-right text-muted text-sm">
                 {formatDate(new Date(post.create_date))}
               </p>
@@ -351,16 +288,16 @@ export default function Post({
               action={addComment}
               className="flex justify-center items-center mt-4"
             >
-              <textarea
+              <TextArea
                 placeholder={"Leave a comment..."}
-                rows={1}
-                className="bg-background w-[100%] p-2 rounded-xl box-content border border-border max-h-[30vh] text-text placeholder-muted focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
+                className="bg-background w-full p-2 rounded-xl box-content border border-border max-h-[30vh] text-text placeholder-muted focus:border-primary focus:ring-2 focus:ring-primary outline-0 transition"
                 name="comment_body"
-                value={commentValue}
-                onChange={(e) => setCommentValue(e.target.value)}
-              ></textarea>
+                textValue={commentValue}
+                setTextValue={setCommentValue}
+                required={true}
+              ></TextArea>
               <button
-                className="hover:bg-primary hover:text-white bg-surface text-primary border border-primary transition rounded-md p-2 ml-2 mb-4"
+                className="hover:bg-primary hover:text-white hover:cursor-pointer bg-surface text-primary border border-primary transition rounded-md p-2 ml-2 mb-4"
                 type="submit"
               >
                 <FontAwesomeIcon icon={faPaperPlane} shake={shouldShake} />
@@ -391,7 +328,7 @@ export default function Post({
         {(userIsAdmin(user) || post.username === user!.username) && (
           <div className="w-[20%] mx-auto mt-4 flex justify-between">
             <button
-              className="hover:bg-secondary hover:text-white bg-surface text-secondary border border-secondary transition rounded-md p-2 hover:cursor-pointer"
+              className="hover:bg-primary hover:text-white bg-surface text-primary border border-primary transition rounded-md p-2 hover:cursor-pointer"
               onClick={() => {
                 setEditingPost(!editingPost);
               }}

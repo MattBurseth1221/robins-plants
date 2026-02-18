@@ -23,7 +23,10 @@ export async function POST(request: NextRequest) {
     await pool.query(query);
 
     const resultingComment = (
-      await pool.query(`SELECT * FROM comments WHERE comment_id = '${newUUID}'`)
+      await pool.query({
+        text: `SELECT * FROM comments WHERE comment_id = $1`,
+        values: [newUUID],
+      })
     ).rows;
 
     console.log(resultingComment);
@@ -45,7 +48,10 @@ export async function DELETE(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const commendId = searchParams.get("id");
 
-    const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = '${commendId}'`;
+    const deleteCommentQuery = {
+      text: `DELETE FROM comments WHERE comment_id = $1`,
+      values: [commendId],
+    };
     await pool.query(deleteCommentQuery);
 
     await pool.query("COMMIT;");
@@ -66,7 +72,10 @@ export async function PUT(request: NextRequest) {
 
     await pool.query("BEGIN;");
 
-    const editCommentQuery = `UPDATE comments SET body = '${newCommentBody}', been_edited = 'true' WHERE comment_id = '${commentId}'`;
+    const editCommentQuery = {
+      text: `UPDATE comments SET body = $1, been_edited = 'true' WHERE comment_id = $2`,
+      values: [newCommentBody, commentId],
+    };
     await pool.query(editCommentQuery);
 
     await pool.query("COMMIT;");
@@ -87,22 +96,28 @@ export async function GET(request: NextRequest) {
   const post_id = searchParams.get("post_id");
   const user_id = searchParams.get("user_id");
 
-  let commentQuery = "";
+  let commentQuery = {text: "", values: [""]};
 
   if (post_id) {
-    commentQuery = `select c.*, u.username
+    commentQuery = {
+      text: `select c.*, u.username
       from comments c
       left join auth_user u 
       on c.user_id = u.id
-      where c.post_id = '${post_id}'
-      order by c.create_date DESC`;
+      where c.post_id = $1
+      order by c.create_date DESC`,
+      values: [post_id],
+    };
   } else if (user_id) {
-    commentQuery = `select c.*, u.username
+    commentQuery = {
+      text: `select c.*, u.username
       from comments c
       left join auth_user u 
       on c.user_id = u.id
       where c.user_id = '${user_id}'
-      order by c.create_date DESC`;
+      order by c.create_date DESC`,
+      values: [user_id],
+    };
   }
 
   try {

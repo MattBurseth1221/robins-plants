@@ -14,7 +14,7 @@ export default function ResetPasswordEmail({ firstName, tempPasswordID }: EmailT
 
       <p>{process.env.HOME_URL}/reset-password?id={tempPasswordID}</p>
 
-      <h3>Thank you for your continued support on the site. If you have any issues or find any bugs, email me at <code>mattburseth2@gmail.com.</code></h3>
+      <h3>Thank you for your continued support on the site. If you have any issues or find any bugs, email me at <code>mattburseth1@gmail.com.</code></h3>
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import MainNav from "../_components/MainNav";
-import PageTitle from "../_components/PageTitle";
 import ProfileBar from "../_components/ProfileBar";
 import { validateRequest } from "../_lib/auth";
 import UserProvider from "../_providers/UserProvider";
@@ -9,7 +8,7 @@ export default async function Page() {
 
   return (
     <UserProvider user={user}>
-      <main className="flex min-h-screen bg-background">
+      <main className="flex min-h-screen bg-secondary">
         <div className="flex flex-col fixed h-screen">
           <MainNav active={"About"} />
         </div>

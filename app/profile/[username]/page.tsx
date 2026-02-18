@@ -1,5 +1,4 @@
 import MainNav from "@/app/_components/MainNav";
-import PageTitle from "@/app/_components/PageTitle";
 import ProfileContainer from "@/app/_components/ProfileContainer";
 import { validateRequest } from "@/app/_lib/auth";
 import UserProvider from "@/app/_providers/UserProvider";

@@ -13,7 +13,7 @@ const PlantTips = z.object({
         soil_type: z.string(),
         watering: z.string(),
         sunlight: z.string(),
-        extra_details_to_leep_in_mind: z.string(),
+        extra_details_to_keep_in_mind: z.string(),
     }),
 
 })
