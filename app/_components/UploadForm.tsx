@@ -100,8 +100,6 @@ export default function UploadForm() {
     setLoadingResult(true);
     setPlantDetectResults([]);
 
-    console.log(formState);
-
     const formData = new FormData();
     formState.files.forEach((file) => {
       formData.append("files", file);
@@ -115,15 +113,9 @@ export default function UploadForm() {
       .then((res) => res.success)
       .catch((error) => error);
 
-      console.log(plantDetectionResponse);
-
     const plantResults = plantDetectionResponse.results;
-    //console.log(plantResults);
-    for (let i = 0; i < plantResults.length; i++) {
-      console.log(plantResults[i]);
-    }
+    
     setPlantDetectResults(plantResults);
-
     setLoadingResult(false);
   };
 
@@ -155,9 +147,6 @@ export default function UploadForm() {
   const postUpload = async (formData: FormData) => {
     setLoading(true);
     const originalFiles = formData.getAll("files") as File[];
-
-    console.log(originalFiles);
-    console.log(formData);
 
     // Filter out the empty file - if no file is uploaded, an empty octet-stream gets uploaded, so filtering and checking if length === 0 is needed
     const files = originalFiles.filter((file) => file.size !== 0);
@@ -267,7 +256,11 @@ export default function UploadForm() {
           </label>
           <div className="flex flex-row justify-between">
             <button
-              onClick={() => detectPlants()}
+              onClick={(e) => {
+                e.preventDefault();
+                detectPlants()
+              }}
+              type="button"
               className=" text-center bg-primary text-white border border-primary rounded-md px-6 py-2 font-semibold hover:bg-primaryDark hover:text-white transition disabled:text-muted disabled:border-border disabled:bg-surface"
               disabled={loading}
               hidden={!formState.detect}
