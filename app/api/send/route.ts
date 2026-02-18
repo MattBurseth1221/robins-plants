@@ -3,8 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { jsx } from 'react/jsx-runtime'
 
-const resend = new Resend("re_HsX7qMNm_PoDHPThyrnkqtrpVTTSLMj3h");
-//export const runtime = "edge";
+const resend = new Resend(process.env.RESEND_EMAIL_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
