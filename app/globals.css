@@ -10,10 +10,10 @@
 
   --color-transparent: transparent;
   --color-current: currentColor;
-  --color-primary: #2563eb;
-  --color-primaryDark: #1e40af;
-  --color-secondary: #f59e42;
-  --color-secondaryDark: #ea580c;
+  --color-primary: #8ba888;
+  --color-primaryDark: #69816e;
+  --color-secondary: #f1ebe1;
+  --color-secondaryDark: #c0cfb2;
   --color-accent: #10b981;
   --color-background: #f9fafb;
   --color-surface: #ffffff;
@@ -102,6 +102,11 @@ body {
     border-radius: 4px;
     padding: 4px;
     width: 100%;
+  }
+
+  Form input:focus {
+    outline: none;
+    border: #8ba888 2px;
   }
 }
 

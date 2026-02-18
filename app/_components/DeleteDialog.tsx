@@ -59,7 +59,7 @@ export default function DeleteDialog({
         <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
           <DialogTitle className="font-bold text-text">Delete post?</DialogTitle>
           <Description className="text-muted">
-            This will (semi) permanently delete the post.
+            This will permanently delete the post.
           </Description>
           <p className="text-text">
             Are you sure you want to delete this post?

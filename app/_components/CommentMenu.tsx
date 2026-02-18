@@ -27,18 +27,18 @@ export default function CommentMenu({comment}: {comment: CommentType}) {
   };
 
   const menuItemStyle =
-    "block p-2 rounded-md hover:bg-slate-500 hover:text-white transition";
+    "block p-2 rounded-md hover:bg-secondary hover:text-white transition";
 
   return (
     <div className="ml-2">
       <Menu>
         <MenuButton>
-          <FontAwesomeIcon className="opacity-80" icon={faEllipsis} />
+          <FontAwesomeIcon className="opacity-50 cursor-pointer hover:opacity-100 hover:text-primaryDark transition duration-300" icon={faEllipsis} />
         </MenuButton>
         <MenuItems
           anchor="bottom"
           transition
-          className="p-2 bg-slate-200 border-gray-400 rounded-md border-2 origin-top transition duration-200 ease-out data-closed:scale-95 data-closed:opacity-0"
+          className="p-2 w-32 bg-surface border-border rounded-md border-2 origin-top transition duration-[8s] data-closed:scale-10 data-closed:opacity-0"
         >
           <MenuItem>
             <button className={menuItemStyle} onClick={() => setShowUpdateCommentModal(true)}>Edit</button>

@@ -17,7 +17,7 @@ export function Form({
     error: null,
   });
   const [passwordStrength, setPasswordStrength] = useState<number>(-1);
-  const [strengthText, setStrengthText] = useState<JSX.Element>(<></>);
+  const [strengthText, setStrengthText] = useState<any>(<></>);
   const [passwordValue, setPasswordValue] = useState<string>("");
 
   useEffect(() => {

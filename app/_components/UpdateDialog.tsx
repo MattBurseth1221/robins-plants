@@ -9,6 +9,7 @@ import {
 import { PostContext } from "../_providers/PostProvider";
 import { useContext } from "react";
 import Image from "next/image";
+import PostPhotoContainer from "./PostPhotoContainer";
 
 type UpdateDialogProps = {
   editingPost: boolean;
@@ -24,6 +25,12 @@ export default function UpdateDialog({
   handleImageIndexChange,
 }: UpdateDialogProps) {
   const post = useContext(PostContext);
+
+  const PostPhotoContainerProps = {
+    images: post!.image_refs,
+    handleImageIndexChange,
+    currentImageIndex,
+  };
 
   function refreshPage() {
     setTimeout(() => {
@@ -48,7 +55,7 @@ export default function UpdateDialog({
         alert("File size of 500MB exceeded.");
         return;
       }
-    } 
+    }
 
     const title = formData.get("title");
     const body = formData.get("body");
@@ -99,47 +106,33 @@ export default function UpdateDialog({
     >
       {/* Dimmed background overlay */}
       {editingPost && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity" aria-hidden="true" />
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity"
+          aria-hidden="true"
+        />
       )}
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
         <DialogPanel className="max-w-lg space-y-4 border border-border bg-surface p-12 rounded-xl shadow-2xl relative z-50">
-          <DialogTitle className="font-bold text-text">Update Post</DialogTitle>
-          <Description className="text-muted">This will edit the post.</Description>
-
-          {post!.image_refs!.length !== 1 && (
-            <button
-              onClick={() => {
-                handleImageIndexChange(1);
-              }}
-              className="rounded-md border-2 border-border hover:bg-background transition p-2 text-text"
-            >
-              Change
-            </button>
-          )}
+          <DialogTitle className="font-bold text-text text-2xl">
+            Update Post
+          </DialogTitle>
+          <Description className="text-muted">
+            This will edit the post.
+          </Description>
+          
           <form action={updatePost} id="edit-form">
-          {post!.image_refs![currentImageIndex].endsWith("-video") ? (
-            <video width="200" className="rounded-md mx-auto border-2 border-black" controls><source src={
-              `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
-                post!.image_refs![currentImageIndex]
-              }` || ""} />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <Image
-              src={
-                `https://robinsplantsphotosbucket.s3.us-east-2.amazonaws.com/${
-                  post!.image_refs![currentImageIndex]
-                }` || ""
-              }
-              height="600"
-              width="200"
-              alt="Flower?"
-              className="rounded-md mx-auto border-2 border-black "
-            />
-          )}
-            <label>
-              <span className="text-muted">Upload a Photo (JPG only I think)</span>
-              <input type="file" name="files" accept="image/*,video/*" multiple />
+            {post?.image_refs.length !== 0 && (
+              <PostPhotoContainer {...PostPhotoContainerProps} />
+            )}
+            <label className="block mt-4">
+              <span className="text-muted">Upload a Photo</span>
+              <input
+                type="file"
+                name="files"
+                accept="image/jpeg,video/*,image/png"
+                className="w-full mt-1 p-2 border border-border rounded-md bg-background text-text focus:outline-hidden focus:ring-2 focus:ring-primary/20 file:rounded-full file:shadow-md file:bg-primary file:border-0 file:text-white file:text-sm file:py-2 file:px-4 file:font-sans hover:file:bg-primaryDark cursor-pointer transition-all duration-300"
+                multiple
+              />
             </label>
             <label>
               <span className="text-muted">Title</span>
