@@ -52,6 +52,8 @@ export default function UploadForm() {
       .then((res) => res.success)
       .catch((error) => error);
 
+      console.log(plantDetectionResponse);
+
     const plantResults = plantDetectionResponse.results;
     console.log(plantResults);
     for (let i = 0; i < plantResults.length; i++) {
